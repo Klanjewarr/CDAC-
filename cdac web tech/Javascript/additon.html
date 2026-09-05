@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Additon</title>
+</head>
+
+<body>
+
+    <!-- create func of add -->
+    <!-- +is overloaded operator -->
+    <!-- onclick add button run the func we need to run that nuber   -->
+    <!-- parsing refers to the process of analyzing n1 string of data and converting it into n1 usable JavaScript value, object, or format  -->
+
+    <!-- what is func pass and calling in js -->
+
+    <input type="number" name="t1" id="t1" value="">
+    <input type="number" name="t2" id="t2" value="">
+    <input type="number" name="t3" id="t3" value="" placeholder="For third variable only">
+
+    <button onclick="addition()">ADD</button>
+    <button onclick="sub()">Subtraction</button>
+    <button onclick="mul()">Multiplication</button>
+    <button onclick="divide()">Divide</button>
+    <button onclick="mod()">Get Reminder</button>
+
+    <!-- can we call 2 func same click77 -->
+    <button onclick="powerof()">Power of </button>
+    <button onclick="arearect()">Area of rectangle </button>
+    <button onclick="perirect()">Perimeter of rectangle </button>
+    <button onclick="pointvar()">Sum of 0.1+0.2 </button>
+    <button onclick="simpleInterest()">Simple Interset</button>
+    <button onclick="thridangle()">Third Angle of Triangle</button>
+    <button onclick="surfaceCylender()"> surface of the cylinder</button>
+    <button onclick="prime()">Print prime upto first input</button>
+    <button onclick="fact()">Print Factorial of first input</button>
+
+
+    <h1 id="output"></h1>
+
+    <h1>5 marks extra if we make fulllstack app database server</h1>
+    <h2>Desing is secondray func is priority</h2>
+
+    <script>
+        function addition() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let add = parseInt(n1.value) + parseInt(n2.value)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = add
+
+        }
+        function thridangle() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let thridangle = 180 - (parseInt(n1.value) + parseInt(n2.value))
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = thridangle
+
+        }
+
+        function sub() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let sub = parseInt(n1.value) - parseInt(n2.value)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = sub
+
+        }
+        function mul() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let mul = parseInt(n1.value) * parseInt(n2.value)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = mul
+
+        }
+        function divide() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let divide = parseInt(n1.value) / parseInt(n2.value)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = divide
+
+        }
+        function mod() {
+            let n1 = document.getElementById("t1") // by default js take input as string thats why using parse
+            let n2 = document.getElementById("t2")
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let mod = parseInt(n1.value) % parseInt(n2.value)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = mod
+
+        }
+
+        function powerof() {
+            let n1 = parseInt(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseInt(document.getElementById("t2").value)
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let powerof = n1 ** n2
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = powerof
+
+        }
+
+        function arearect() {
+            let n1 = parseInt(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseInt(document.getElementById("t2").value)
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let arearect = n1 * n2
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = arearect
+
+        }
+        function perirect() {
+            let n1 = parseInt(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseInt(document.getElementById("t2").value)
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let perirect = 2 * (n1 + n2)
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = perirect
+
+        }
+
+        function pointvar() {
+            let n1 = parseFloat(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseFloat(document.getElementById("t2").value)
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let pointvar = n1 + n2
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = pointvar
+
+        }
+
+        function simpleInterest() {
+            let n1 = parseFloat(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseFloat(document.getElementById("t2").value)
+            let n3 = parseFloat(document.getElementById("t3").value)
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let simpleInterest = (n1 * n2 * n3) / 100
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = simpleInterest
+
+        }
+        function surfaceCylender() {
+            let n1 = parseFloat(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let n2 = parseFloat(document.getElementById("t2").value)
+            let pi = 3.14
+            // but we are not getting the value of it so we use blank value attribute to use the value of it 
+
+
+            let surfaceCylender = 2 * n1 * n2 * pi
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = surfaceCylender
+
+        }
+        function fact() {
+            let n1 = parseInt(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            
+            let fact=1;
+            for(let i=1;i<=n1;i++){
+            fact= fact*i;
+                }
+
+            let p = document.getElementById("output")
+
+            p.innerHTML = fact;
+
+        }
+
+        function prime() {
+
+             let result = [];//arry for the output
+
+            let n1 = parseFloat(document.getElementById("t1").value) // by default js take input as string thats why using parse
+            let p = document.getElementById("output")
+
+            for (let i = 1; i <= n1; i++) {
+                let div = 0;
+                for (let j = 1; j <= i; j++) {
+                    if (i % j == 0) {
+                        div++
+                    }
+                }
+                if (div == 2) {
+                    result.push(i);//pusing in the array
+                }
+            }
+
+                p.innerHTML = result.join(", ");
+
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+#include<iostream>
+using namespace std;
+
+class Car{
+public:
+    void drive(){
+        cout<<"Car is Starting...";
+    }
+};
+class Gps{
+public: 
+    void nav(){
+        cout<<"Turning on Gps......";
+    }
+};
+class smartCar: public Car, public Gps{
+    public:
+    void autopilot(){
+        drive();
+        Gps();
+        cout<<"Engaging Self Drive mode...";}
+};
+
+int main(){
+  smartCar tesla;
+  tesla.autopilot();
+}

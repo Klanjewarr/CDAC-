@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator with History</title>
+
+    <style>
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+
+            padding: 35px;
+            border-radius: 24px;
+
+            border: 1px solid rgba(255, 255, 255, 0.7);
+
+            box-shadow:
+                0 20px 50px rgba(15, 23, 42, 0.1);
+
+            text-align: center;
+        }
+
+        .inputs {
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator-card">
+
+        <h1>Smart Calculator</h1>
+
+        <div class="inputs">
+            <input type="number" id="t1" placeholder="First number">
+            <input type="number" id="t2" placeholder="Second number">
+            <input type="number" id="t3" placeholder="Third number">
+        </div>
+
+        <div class="buttons">
+            <!-- your existing buttons here -->
+        </div>
+
+        <h2 id="output">Result will appear here</h2>
+
+    </div>
+
+    <button onclick="addition()">ADD</button>
+    <button onclick="sub()">Subtraction</button>
+    <button onclick="mul()">Multiplication</button>
+    <button onclick="divide()">Divide</button>
+    <button onclick="mod()">Remainder</button>
+    <button onclick="powerof()">Power</button>
+
+    <button onclick="arearect()">Area Rectangle</button>
+    <button onclick="perirect()">Perimeter Rectangle</button>
+    <button onclick="pointvar()">0.1 + 0.2</button>
+    <button onclick="simpleInterest()">Simple Interest</button>
+    <button onclick="thridangle()">Third Angle</button>
+    <button onclick="surfaceCylender()">Cylinder Surface</button>
+    <button onclick="prime()">Prime Numbers</button>
+    <button onclick="fact()">Factorial</button>
+
+    <h2 id="output"></h2>
+
+    <hr>
+
+    <!-- Table created -->
+
+    <h2>Operation History</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Operation</th>
+                <th>Input</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+
+        <tbody id="history"></tbody>
+    </table>
+
+
+    <script>
+
+        // Array that stores all operations
+        let operations = [];
+
+
+        // Get input values
+        function getNumbers() {
+
+            let n1 = parseFloat(document.getElementById("t1").value);
+            let n2 = parseFloat(document.getElementById("t2").value);
+            let n3 = parseFloat(document.getElementById("t3").value);
+
+            return { n1, n2, n3 };
+        }
+
+
+        // This function stores the operation
+        function storeOperation(operation, input, result) {
+
+            // Create an object
+            let data = {
+                operation: operation,
+                input: input,
+                result: result
+            };
+
+            // Store object inside array
+            operations.push(data);
+
+            // Display history
+            displayHistory();
+        }
+
+
+        // Display operations in table
+        function displayHistory() {
+
+            let tbody = document.getElementById("history");
+
+            // Clear old table
+            tbody.innerHTML = "";
+
+            operations.forEach(function (item, index) {
+
+                let tr = document.createElement("tr");
+
+                let number = document.createElement("td");
+                let operation = document.createElement("td");
+                let input = document.createElement("td");
+                let result = document.createElement("td");
+
+                number.textContent = index + 1;
+                operation.textContent = item.operation;
+                input.textContent = item.input;
+                result.textContent = item.result;
+
+                tr.appendChild(number);
+                tr.appendChild(operation);
+                tr.appendChild(input);
+                tr.appendChild(result);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+
+        function showResult(result) {
+            document.getElementById("output").textContent = result;
+        }
+
+
+        // ADDITION
+        function addition() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 + n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Addition",
+                `${n1} + ${n2}`,
+                result
+            );
+        }
+
+
+        // SUBTRACTION
+        function sub() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 - n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Subtraction",
+                `${n1} - ${n2}`,
+                result
+            );
+        }
+
+
+        // MULTIPLICATION
+        function mul() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 * n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Multiplication",
+                `${n1} × ${n2}`,
+                result
+            );
+        }
+
+
+        // DIVISION
+        function divide() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 / n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Division",
+                `${n1} ÷ ${n2}`,
+                result
+            );
+        }
+
+
+        // REMAINDER
+        function mod() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 % n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Remainder",
+                `${n1} % ${n2}`,
+                result
+            );
+        }
+
+
+        // POWER
+        function powerof() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 ** n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Power",
+                `${n1} ^ ${n2}`,
+                result
+            );
+        }
+
+
+        // AREA OF RECTANGLE
+        function arearect() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = n1 * n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Area of Rectangle",
+                `${n1} × ${n2}`,
+                result
+            );
+        }
+
+
+        // PERIMETER
+        function perirect() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = 2 * (n1 + n2);
+
+            showResult(result);
+
+            storeOperation(
+                "Perimeter of Rectangle",
+                `2 × (${n1} + ${n2})`,
+                result
+            );
+        }
+
+
+        // 0.1 + 0.2
+        function pointvar() {
+            let { n1, n2 } = getNumbers();
+            let result = n1 + n2;
+
+            showResult(result);
+
+            storeOperation(
+                "Decimal Addition",
+                `${n1} + ${n2}`,
+                result
+            );
+        }
+
+
+        // SIMPLE INTEREST
+        function simpleInterest() {
+
+            let { n1, n2, n3 } = getNumbers();
+
+            let result = (n1 * n2 * n3) / 100;
+
+            showResult(result);
+
+            storeOperation(
+                "Simple Interest",
+                `P=${n1}, R=${n2}, T=${n3}`,
+                result
+            );
+        }
+
+
+        // THIRD ANGLE
+        function thridangle() {
+
+            let { n1, n2 } = getNumbers();
+
+            let result = 180 - (n1 + n2);
+
+            showResult(result);
+
+            storeOperation(
+                "Third Angle",
+                `${n1}° + ${n2}°`,
+                result
+            );
+        }
+
+
+        // CYLINDER SURFACE
+        function surfaceCylender() {
+
+            let { n1, n2 } = getNumbers();
+
+            let pi = 3.14;
+
+            let result = 2 * n1 * n2 * pi;
+
+            showResult(result);
+
+            storeOperation(
+                "Cylinder Surface",
+                `r=${n1}, h=${n2}`,
+                result
+            );
+        }
+
+
+        // FACTORIAL
+        function fact() {
+
+            let { n1 } = getNumbers();
+
+            let result = 1;
+
+            for (let i = 1; i <= n1; i++) {
+                result = result * i;
+            }
+
+            showResult(result);
+
+            storeOperation(
+                "Factorial",
+                `${n1}!`,
+                result
+            );
+        }
+
+
+        // PRIME NUMBERS
+        function prime() {
+
+            let { n1 } = getNumbers();
+
+            let result = [];
+
+            for (let i = 2; i <= n1; i++) {
+
+                let div = 0;
+
+                for (let j = 1; j <= i; j++) {
+
+                    if (i % j === 0) {
+                        div++;
+                    }
+                }
+
+                if (div === 2) {
+                    result.push(i);
+                }
+            }
+
+            let output = result.join(", ");
+
+            showResult(output);
+
+            storeOperation(
+                "Prime Numbers",
+                `Up to ${n1}`,
+                output
+            );
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrays and Objects</title>
+</head>
+<body>
+<!-- 50%js: if else loops func objects -->
+
+    <script>
+        // if else if else use less processing than if if 
+        // loops
+
+        let num=[10,20,30,"true","seven"] //by default array takes as a similar data types but js allow to use different types of data
+
+        
+        // let i=0;
+        // while(i<num.length){
+        //     console.log(num[i])
+        //     i++
+        // }
+
+        // you can sue operator to defn multiple case in for 
+
+
+        // array predefined function
+        console.table(num)
+        num.push(50)
+        console.table(num)
+        num.unshift(45)
+        console.table(num)
+        num.pop()
+        console.table(num)
+        // splice(index,delete-count,add-elements,add-elements) add+delete
+
+        // num.splice(5,0,60,202)//add 60 at index 5
+        num.splice(4,2,60,202)//remove 2 elements from 4 and 5 index then add new elements
+
+        console.table(num)
+// index of 
+        
+// sort
+num.sort()
+console.log(num)
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<script>
+    const students = [
+  {
+    rollno: 1,
+    name: "Aarav",
+    math: 85,
+    science: 78,
+    english: 90,
+    hindi: 82,
+    computer: 95
+  },
+  {
+    rollno: 2,
+    name: "Vivaan",
+    math: 76,
+    science: 88,
+    english: 81,
+    hindi: 79,
+    computer: 92
+  },
+  {
+    rollno: 3,
+    name: "Aditya",
+    math: 92,
+    science: 85,
+    english: 89,
+    hindi: 90,
+    computer: 96
+  },
+  {
+    rollno: 4,
+    name: "Vihaan",
+    math: 68,
+    science: 74,
+    english: 80,
+    hindi: 72,
+    computer: 85
+  },
+  {
+    rollno: 5,
+    name: "Arjun",
+    math: 88,
+    science: 91,
+    english: 84,
+    hindi: 86,
+    computer: 90
+  },
+  {
+    rollno: 6,
+    name: "Reyansh",
+    math: 79,
+    science: 83,
+    english: 77,
+    hindi: 81,
+    computer: 88
+  },
+  {
+    rollno: 7,
+    name: "Kabir",
+    math: 95,
+    science: 89,
+    english: 93,
+    hindi: 87,
+    computer: 98
+  },
+  {
+    rollno: 8,
+    name: "Ishaan",
+    math: 72,
+    science: 69,
+    english: 75,
+    hindi: 78,
+    computer: 82
+  },
+  {
+    rollno: 9,
+    name: "Rohan",
+    math: 84,
+    science: 80,
+    english: 86,
+    hindi: 88,
+    computer: 91
+  },
+  {
+    rollno: 10,
+    name: "Aryan",
+    math: 90,
+    science: 94,
+    english: 88,
+    hindi: 85,
+    computer: 93
+  },
+  {
+    rollno: 11,
+    name: "Ananya",
+    math: 87,
+    science: 92,
+    english: 95,
+    hindi: 89,
+    computer: 94
+  },
+  {
+    rollno: 12,
+    name: "Diya",
+    math: 78,
+    science: 82,
+    english: 90,
+    hindi: 85,
+    computer: 88
+  },
+  {
+    rollno: 13,
+    name: "Aadhya",
+    math: 93,
+    science: 90,
+    english: 87,
+    hindi: 92,
+    computer: 96
+  },
+  {
+    rollno: 14,
+    name: "Myra",
+    math: 81,
+    science: 77,
+    english: 84,
+    hindi: 80,
+    computer: 89
+  },
+  {
+    rollno: 15,
+    name: "Saanvi",
+    math: 89,
+    science: 86,
+    english: 91,
+    hindi: 94,
+    computer: 90
+  },
+  {
+    rollno: 16,
+    name: "Kiara",
+    math: 74,
+    science: 79,
+    english: 83,
+    hindi: 76,
+    computer: 85
+  },
+  {
+    rollno: 17,
+    name: "Meera",
+    math: 96,
+    science: 93,
+    english: 92,
+    hindi: 95,
+    computer: 97
+  },
+  {
+    rollno: 18,
+    name: "Ira",
+    math: 83,
+    science: 87,
+    english: 79,
+    hindi: 84,
+    computer: 86
+  },
+  {
+    rollno: 19,
+    name: "Rahul",
+    math: 70,
+    science: 75,
+    english: 82,
+    hindi: 73,
+    computer: 80
+  },
+  {
+    rollno: 20,
+    name: "Karan",
+    math: 91,
+    science: 88,
+    english: 85,
+    hindi: 90,
+    computer: 94
+  }
+];
+
+// obj ke obj andar acc ke like arr.obj.obj
+
+const marksheet=students.map(function(e){
+    const total= e.computer + e.math + e.hindi + e.english + e.science
+    const avg= total/5.0
+    let grade
+    if(avg>=90){
+        grade ="A"
+    }
+    else if(avg>=70){
+        grade="B"
+    }
+    else if(avg>=60){
+        grade="C"
+    }
+    else if(avg>=40){
+        grade="D"
+    }
+    else{
+        grade="F"
+    }
+    
+    e.total=total
+    e.avgrage=avg
+    e.grade=grade
+
+    return e
+})
+
+console.log(marksheet)
+
+</script>

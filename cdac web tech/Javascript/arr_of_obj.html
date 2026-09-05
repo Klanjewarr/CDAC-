@@ -1,0 +1,56 @@
+<script>
+    // obj=func+variabel
+    // cannot create class in js
+    // only obj and contructor
+    // object
+    const person = {
+        name: "Rahul",//name is property and Rahul is value
+        age: 23,
+        mobile: "43432324",
+        // showName: function () {
+        //     alert("Name " + this.name)
+        // },
+        // setName: function (name) {
+        //     this.name = name
+        // },
+        setPerson: function (name, age, mobile) {
+            this.name = name,
+            this.age = age,
+            this.mobile = mobile
+        },
+        showPerson: function () {
+            console.log(this.name)
+            console.log(this.age)
+            console.log(this.mobile)
+
+            alert("Name: "+this.name +", Age: "+this.age+ ", Mobile: "+this.mobile)
+
+        },
+        ageIncrese: function(){
+            this.age=this.age + 1;
+        },
+        showAge: function(){
+            alert(this.age)
+        }
+    }
+
+
+    //    console.log(person.name) 
+    //    console.log(person.age=12) 
+    //    console.log(person.mobile=1111111111)
+
+    // console.log(person)
+    // person.showName()
+    // person.setName("Yogesh")
+    // person.setPerson("Dravid", 80, 849283423)
+    // person.showPerson()
+    person.showAge()
+    person.ageIncrese()
+    person.showAge()
+    person.ageIncrese()
+    person.showAge()
+    person.ageIncrese()
+    person.ageIncrese()
+    person.showAge()
+
+</script>

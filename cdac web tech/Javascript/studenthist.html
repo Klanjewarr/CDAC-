@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Diagonal gradient background */
+            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* Card styling for both the form and table containers */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        /* Form specific styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #20c997;
+            padding: 8px 0;
+            font-size: 14px;
+            outline: none;
+            color: #555;
+            background: transparent;
+        }
+
+        input::placeholder {
+            color: #bbb;
+        }
+
+        .btn-register {
+            width: 100%;
+            background: linear-gradient(90deg, #007bff, #20c997);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: opacity 0.3s;
+        }
+
+        .btn-register:hover {
+            opacity: 0.9;
+        }
+
+        /* Table specific styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background: linear-gradient(90deg, #007bff, #20c997);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Rounding table header corners */
+        th:first-child { border-top-left-radius: 6px; }
+        th:last-child { border-top-right-radius: 6px; }
+
+        td {
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* Alternating row colors */
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Action Buttons styling */
+        .btn-edit, .btn-delete {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            margin: 0 4px;
+        }
+
+        .btn-edit { background-color: #0d6efd; }
+        .btn-delete { background-color: #e83e8c; }
+
+    </style>
+</head>
+
+<body>
+    <!-- Form Card -->
+    <div class="card">
+        <h2>• Registration Form •</h2>
+        <!-- Passed 'event' to prevent default submission properly -->
+        <form onsubmit="addRow(event)">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="Enter your name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" name="age" id="age" min="1" max="150" placeholder="Enter your age" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="mobile">Mobile No</label>
+                <input type="number" name="mobile" id="mobile" placeholder="Enter your mobile number" required>
+            </div>
+
+            <button type="submit" class="btn-register">REGISTER</button>
+        </form>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card">
+        <h2>• Registered Users •</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Mobile No</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="data-rows">
+                <!-- Data will be appended here -->
+            </tbody>
+        </table>
+
+        <script>
+            let i = 1;
+
+            // append data in the table
+            function addRow(event) {
+                event.preventDefault();
+
+                let values = [];
+                
+                const nameInput = document.querySelector("#name");
+                const ageInput = document.querySelector("#age");
+                const mobileInput = document.querySelector("#mobile");
+
+                values.push(nameInput.value);
+                values.push(ageInput.value);
+                values.push(mobileInput.value);
+
+                const tbody = document.querySelector("#data-rows");
+                
+                let tr = document.createElement("tr");
+                let tdSn = document.createElement("td");
+                let tdName = document.createElement("td");
+                let tdAge = document.createElement("td");
+                let tdMobile = document.createElement("td");
+                let tdActions = document.createElement("td");
+
+                // Edit Button
+                let btnEdit = document.createElement("button");
+                btnEdit.textContent = "Edit";
+                btnEdit.className = "btn-edit"; // Added CSS class
+                btnEdit.onclick = function() {
+                    alert("Edit button");
+                };
+
+                // Delete Button
+                let btnDelete = document.createElement("button");
+                btnDelete.textContent = "Delete";
+                btnDelete.className = "btn-delete"; // Added CSS class
+                btnDelete.onclick = function() {
+                    // Removes the entire tr element
+                    this.parentElement.parentElement.remove(); 
+                };
+
+                tdActions.appendChild(btnEdit);
+                tdActions.appendChild(btnDelete);
+                
+                tdSn.textContent = i;
+                tdName.textContent = values[0];
+                tdAge.textContent = values[1];
+                tdMobile.textContent = values[2];
+
+                tr.appendChild(tdSn);
+                tr.appendChild(tdName);
+                tr.appendChild(tdAge);
+                tr.appendChild(tdMobile);
+                tr.appendChild(tdActions);
+
+                tbody.appendChild(tr);
+
+                // Increment counter and clear form inputs
+                i++;
+                nameInput.value = "";
+                ageInput.value = "";
+                mobileInput.value = "";
+            }
+        </script>
+    </div>
+</body>
+
+</html>

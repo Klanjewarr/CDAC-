@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <form onsubmit="addRow()">
+            <label for="name">Name: </label>
+            <!-- id and for should be same to connect -->
+            <input type="text" name="name" id="name">
+            <label for="age">Age: </label>
+            <input type="number" name="age" id="age" min="1" max="150">
+            <label for="mobile">Mobile No.: </label>
+            <input type="number" name="mobile" id="mobile">
+
+            <button>Register</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Mobile no.</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="data-rows"></tbody>
+        </table>
+
+        <script>
+            let i=1
+            // append data in the table
+            function addRow() {
+                event.preventDefault()
+
+
+                let values = []
+                
+                const name = document.querySelector("#name").value
+                const age = document.querySelector("#age").value
+                const mobile = document.querySelector("#mobile").value
+
+                values.push(name)
+                values.push(age)
+                values.push(mobile)
+
+                const tbody = document.querySelector("#data-rows")
+
+                
+                let tr=document.createElement("tr")
+                let tdName=document.createElement("td")
+                let tdAge=document.createElement("td")
+                let tdMobile=document.createElement("td")
+
+                let tdSn=document.createElement("td")
+                let tdActions=document.createElement("td")
+
+                let btnEdit = document.createElement("button")
+                btnEdit.textContent="Edit"
+                btnEdit.onclick=function(){
+                    alert("Edit button")
+                }
+
+                let btnDelete = document.createElement("button")
+                btnDelete.textContent="Delete"
+                btnDelete.onclick=function(){ //anonomus function directly passing the func in onclick
+                    // this - kewyword it represent the current obj
+
+                   (this.parentElement.parentElement).remove() //td-->tr element
+
+                }
+
+                tdActions.appendChild(btnEdit)
+                tdActions.appendChild(btnDelete)
+                tdSn.textContent=i
+
+                tdName.textContent=values[0]
+                tdAge.textContent=values[1]
+                tdMobile.textContent=values[2]
+
+
+                tr.appendChild(tdSn)
+                tr.appendChild(tdName)
+                tr.appendChild(tdAge)
+                tr.appendChild(tdMobile)
+                tr.appendChild(tdActions)
+
+                
+
+                
+                // tr.innerHTML += "<tr><td>" + values[0] + "</td></tr>" + "<tr><td>" + values[1] + "</tr></td>" + "<tr><td>" + values[2] + "</td></tr>"
+
+                tbody.appendChild(tr)
+
+                i++
+            }
+        </script>
+    </div>
+</body>
+
+</html>

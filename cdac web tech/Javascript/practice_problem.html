@@ -1,0 +1,105 @@
+<!-- // JavaScript Object + Functions — Programming Question
+// 1. Question: Student Result Management System
+// Create a JavaScript program to manage a student's academic result using an object.
+// Create an object named student with the following properties:
+// name
+// rollNo
+// course
+// marks
+// The marks property should contain marks for 3 subjects:
+// HTML
+// CSS
+// JavaScript
+// Also create the following functions/methods inside the object:
+// 1. calculateTotal()
+// Calculate and return the total marks.
+// 2. calculatePercentage()
+// Calculate and return the percentage.
+// 3. getGrade()
+// Return the grade according to:
+// 90 or above → A+
+// 80–89 → A
+// 70–79 → B
+// 60–69 → C
+// Below 60 → D
+// 4. displayResult()
+// Display the student's complete information, total, percentage, and grade.
+// Expected Output
+// Student Name: Rahul
+// Roll No: 101
+// Course: Web Development
+// HTML: 85
+// CSS: 78
+// JavaScript: 92
+// Total Marks: 255
+// Percentage: 85%
+// Grade: A
+// Conditions
+// Use an object to store all student information.
+// Store subject marks inside an object or suitable data structure.
+// Define the calculation functions inside the student object.
+// Use this to access the object's properties.
+// Do not use classes.
+// Do not use DOM, HTML, or CSS.
+// Take values directly in the JavaScript code -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Student Mangement System</title>
+</head>
+
+<body>
+    <script>
+        const studentName = {
+           
+                sname:"Rahul",
+                rollno:"47",
+                course:"Web Development",
+                s1 :"HTML",
+                s2 :"CSS",
+                s3 :"JavaScript",
+                sub1:12,
+                sub2:22,
+                sub3:32,
+            showTotal: function () {
+                 return this.sub1 + this.sub2 + this.sub3;
+                
+            },
+            showPercentage: function () {
+            let a= this.showTotal()
+            const percentage=(a/300)*100
+            return (percentage)
+            },
+        showGrades: function () {
+        const percentage = this.showPercentage();
+        if (percentage >= 90) return "A+";
+        else if (percentage >= 80) return "A";
+        else if (percentage >= 70) return "B";
+        else if (percentage >= 60) return "C";
+        else return "D";
+    },
+
+            showResult: function(){
+                console.log("Studen Name: ", this.sname)
+                console.log("Studen Roll: ", this.rollno)
+                console.log("Studen Course: ", this.course)
+                console.log("Studen Subject: ", this.s1)
+                console.log("Studen Subject: ", this.s2)
+                console.log("Studen Subject: ", this.s3)
+                console.log("Studen Marks in ",this.s1, " are : ", this.sub1)
+                console.log("Studen Marks in ",this.s2, " are : ", this.sub2)
+                console.log("Studen Marks in ",this.s3, " are : ", this.sub3)
+                console.log("The Total of three Subjects is: ", this.showTotal())
+                console.log("The Percentages are: ", this.showPercentage())
+                console.log("The grades of the Student is: ", this.showGrades())
+            }
+
+        } 
+
+        studentName.showResult()
+    </script>
+</body>
+
+</html>

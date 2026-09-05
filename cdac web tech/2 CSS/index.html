@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* serif means - sharp corners */
+            /* sans - without self */
+            /* Mono space - equal spaces */
+            /* 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif - using multiple fonts to fallback */
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            height: 100vh;
+            /* border: 5px solid rgb(168, 12, 12); */
+            overflow: auto;
+        }
+
+        .navbar {
+            height: 10vh;
+            /* border: 5px solid rgb(168, 12, 12); */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* margin gap outside padding gap inside */
+            background: #000;
+
+        }
+
+        /* child selector ">"  is for direct child*/
+        .navbar>div {
+            /* border: 1px solid rebeccapurple; */
+            height: 50%;
+            /* background-color: aqua; */
+            padding-left: 10px;
+            padding-right: 20px;
+            line-height: 2;
+            margin-right: 20px;
+            color: white;
+
+        }
+
+        /*  .navbar a space is for decendent*/
+        .navbar a {
+            text-decoration: none;
+        }
+
+        .navbar a:link {
+            color: white;
+
+        }
+
+        .navbar a:visited {
+            color: white;
+        }
+
+        .navbar a:hover {
+            font-size: 1.1em;
+        }
+
+        .hero-section {
+            /* background-image: url("pages/assests/imgs/bg.jpg"); */
+            height: 90vh;
+            /* background-repeat: no-repeat;
+            background-size: cover; */
+            /* background-color: aquamarine; */
+            background-image: linear-gradient(rgb(232, 209, 209), rgb(0, 247, 255), rgb(178, 223, 242));
+            display: flex;
+            /* flex by defaul by row */
+            /* flex-direction: column; */
+            align-items: center;
+            /* justify-content: left; */
+
+        }
+
+        .hero-section h1 {
+            font-size: 80px;
+            text-transform: uppercase;
+            color: rgb(255, 255, 255);
+            margin-bottom: 0.2em;
+        }
+
+        .hero-section p {
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-section div {
+            width: 50vw;
+            margin-left: 5vw;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: space-around;
+
+        }
+
+        .card {
+            border: solid black;
+            height: 50vh;
+            width: 25vw;
+        }
+
+        .card img {
+            width: 100%;
+            height: 45%;
+        }
+
+        .card div {
+            height: 55%;
+
+        }
+        .service-title>h1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20vh;
+            font-size: 50px;
+        }
+        .footer{
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <!-- at a glance -->
+            <nav class="navbar">
+                <div><a href="index.html">Home</a></div>
+                <div><a href="pages/about.html">About</a></div>
+                <div><a href="pages/contact.html">Contact</a></div>
+                <div><a href="pages/service.html">Services</a></div>
+                <div><a href="pages/login.html">Login</a></div>
+
+            </nav>
+            <section class="hero-section">
+                <!-- img and big text -->
+                <div>
+                    <h1>Website Title</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus ratione doloribus impedit
+                        adipisci minus ea, voluptates minima numquam explicabo beatae porro fugit,</p>
+                </div>
+
+            </section>
+        </header>
+
+        <main>
+            <div class="service-title">
+                <!-- text -->
+                <h1>
+                    THE CARD
+                </h1>
+                <div class="cards">
+
+                    <div class="card"> <img src="pages/assests/astro.jpg">
+
+
+                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates ipsa pariatur eum
+                            libero recusandae beatae delectus!</p>
+                    </div>
+                    <div class="card"> <img src="pages/assests/cat.jpg">
+
+
+                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates ipsa pariatur eum
+                            libero recusandae beatae delectus!</p>
+                    </div>
+                    <div class="card"> <img src="pages/assests/dog.jpg">
+
+
+                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates ipsa pariatur eum
+                            libero recusandae beatae delectus!</p>
+                    </div>
+                </div>
+        </main>
+
+        <footer></footer>
+    </div>
+
+
+</body>
+
+</html>

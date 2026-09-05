@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>login</title>
+      <style>
+        /* Keep the image hidden by default */
+        #img {
+            display: none;
+            margin-top: 10px;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        <input type="email" placeholder="Email ID" name="ho" ><br>
+        <input type="password" placeholder="Password" name="pass"><br>
+        <input type="checkbox" id="click" onchange="toggleimg()">Check Me<br>
+
+        <img src="https://pub-e6e58aeeeb9c474fb0d35a5f6f05b8ca.r2.dev/uploads/main/E4B3CA8E-F55D-4F5E-AB32-669F232909C0-31637-000028B67BE8639E.png" alt="cat img" id="img">
+
+        <!-- <input type="submit" value="login"> -->
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        function toggleimg(){ 
+            let checkbox = document.getElementById("click")
+        let img = document.getElementById("img")
+
+        if(checkbox.checked ==true){
+            img.style.display="block";
+        }
+        else{
+            img.style.display="none"
+        }}
+       
+    </script>
+</body>
+</html>
+
+login.html?ho=akll%40ff&pass=kkoo
