@@ -1,5 +1,342 @@
-<!-- form to take input of student and it get in a array -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a53d0;
+            --danger-color: #ef233c;
+            --danger-hover: #d90429;
+            --warning-color: #f72585;
+            --text-dark: #2b2d42;
+            --text-light: #8d99ae;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+        }
 
-<!-- when submitted -->
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-<!-- it should display table at the end  -->
+        h1 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        /* Card Containers */
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            margin-bottom: 40px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            max-width: 500px;
+        }
+
+        .table-container {
+            max-width: 1000px;
+            overflow-x: auto;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background-color: #fdfdfd;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            color: white;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1.05rem;
+            padding: 12px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-clear {
+            background-color: var(--warning-color);
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-clear:hover {
+            background-color: #d81b60;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Registration Form -->
+    <div class="container form-container">
+        <h1>Student Registration</h1>
+        <form onsubmit="addRow(event)">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" type="text" placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rollNo">Roll No.</label>
+                <input id="rollNo" type="number" placeholder="Enter roll number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="maths">Maths</label>
+                <input id="maths" type="number" placeholder="Marks out of 100" required max="100" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="science">Science</label>
+                <input id="science" type="number" placeholder="Marks out of 100" required max="100" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="english">English</label>
+                <input id="english" type="number" placeholder="Marks out of 100" required max="100" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="hindi">Hindi</label>
+                <input id="hindi" type="number" placeholder="Marks out of 100" required max="100" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="computer">Computer</label>
+                <input id="computer" type="number" placeholder="Marks out of 100" required max="100" min="0">
+            </div>
+
+            <button type="submit" class="btn-submit">Register Student</button>
+        </form>
+    </div>
+
+    <!-- Results Table -->
+    <div class="container table-container">
+        <h1>Registered Records</h1>
+        <button type="button" class="btn-clear" onclick="clearHistory()">Clear All History</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr no.</th>
+                    <th>Name</th>
+                    <th>Roll No.</th>
+                    <th>Maths</th>
+                    <th>Science</th>
+                    <th>English</th>
+                    <th>Hindi</th>
+                    <th>Computer</th>
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="data-rows">
+                <tr>
+                    <td colspan="12" class="empty-state">No students registered yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let users = [];
+
+        function addRow(event) {
+            event.preventDefault();
+
+            const user = {
+                name: document.querySelector("#name").value,
+                rollNo: document.querySelector("#rollNo").value,
+                maths: document.querySelector("#maths").value,
+                science: document.querySelector("#science").value,
+                english: document.querySelector("#english").value,
+                hindi: document.querySelector("#hindi").value,
+                computer: document.querySelector("#computer").value
+            };
+
+            users = [...users, user];
+            renderRows();
+            event.target.reset();
+            document.querySelector("#name").focus(); // Focus back on name field after submit
+        }
+
+        function renderRows() {
+            const tbody = document.querySelector("#data-rows");
+            
+            if(users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="12" class="empty-state">No students registered yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map((user, index) => `
+                ${getResult(user)}
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><strong>${user.name}</strong></td>
+                    <td>${user.rollNo}</td>
+                    <td>${user.maths}</td>
+                    <td>${user.science}</td>
+                    <td>${user.english}</td>
+                    <td>${user.hindi}</td>
+                    <td>${user.computer}</td>
+                    <td><strong>${user.total}</strong></td>
+                    <td>${user.average}%</td>
+                    <td><strong>${user.grade}</strong></td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteUser(${index})">Delete</button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        function getResult(user) {
+            const marks = [
+                Number(user.maths),
+                Number(user.science),
+                Number(user.english),
+                Number(user.hindi),
+                Number(user.computer)
+            ];
+
+            user.total = marks.reduce((sum, mark) => sum + mark, 0);
+            user.average = (user.total / marks.length).toFixed(2);
+            user.grade = user.average >= 90 ? "A" :
+                user.average >= 75 ? "B" :
+                user.average >= 60 ? "C" :
+                user.average >= 45 ? "D" : "F";
+
+            return "";
+        }
+
+        function deleteUser(index) {
+            users = users.filter((_, userIndex) => userIndex !== index);
+            renderRows();
+        }
+
+        function clearHistory() {
+            if(confirm("Are you sure you want to clear all records?")) {
+                users = [];
+                renderRows();
+            }
+        }
+    </script>
+</body>
+</html>
