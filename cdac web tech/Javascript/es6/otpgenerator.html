@@ -1,0 +1,27 @@
+<!-- use math random to generate otp -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otp Genrator</title>
+</head>
+<body>
+    <div>
+        <button onclick="generate()">
+            Genrate
+        </button>
+    </div>
+    <div id="disp">
+
+    </div>
+    <script>
+        function generate(){
+        let diplay=document.getElementById("disp");
+        let num = Math.floor(100000 + Math.random() * 900000)
+        diplay.innerHTML=num
+        }
+    </script>
+</body>
+</html>

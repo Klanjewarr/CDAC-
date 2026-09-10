@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Digital Clock</title>
+
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+/* Background video */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    z-index: -2;
+}
+
+/* Soft dark overlay */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(5, 15, 25, 0.35);
+
+    z-index: -1;
+}
+
+/* Center the clock */
+.clock-container {
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main clock circle */
+.clock {
+    width: 360px;
+    height: 360px;
+
+    border: 2px solid rgba(255, 255, 255, 0.55);
+
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Glass effect */
+    background: rgba(255, 255, 255, 0);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    /* Very soft shadow */
+    box-shadow:
+        0 0 40px rgba(255, 255, 255, 0.08),
+        inset 0 0 40px rgba(255, 255, 255, 0.05);
+
+    /* Gentle breathing animation */
+    animation: breathe 6s ease-in-out infinite;
+}
+
+
+/* Time */
+#disp {
+    font-size: 3.2rem;
+
+    font-weight: 400;
+
+    letter-spacing: 4px;
+
+    text-shadow:
+        0 0 15px rgba(255, 255, 255, 0.25);
+}
+
+
+/* AM / PM */
+#ampm {
+    margin-top: 18px;
+
+    font-size: 1rem;
+
+    font-weight: 300;
+
+    letter-spacing: 8px;
+
+    opacity: 0.8;
+}
+
+
+/* Date */
+#date {
+    margin-top: 20px;
+
+    font-size: 0.9rem;
+
+    font-weight: 300;
+
+    letter-spacing: 2px;
+
+    opacity: 0.55;
+}
+
+
+/* Gentle breathing effect */
+@keyframes breathe {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.015);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button onclick="history.go(2)">Forward</button>
+        <button onclick="history.go(-2)">Backward</button>
+        <a href="#">Clock</a>
+        <a href="/es6/stopwatch.html">Stop Watch</a>
+        <a href="/es6/otpgenerator.html">Otp Generator</a>
+        <a href="/es6/reverofastr.html">Reverse of string</a>
+    </nav>
+
+    <!-- Background video -->
+    <video autoplay muted loop playsinline class="video-background">
+        <source src="bg.mp4" type="video/mp4">
+    </video>
+
+    <div class="video-overlay"></div>
+
+    <!-- Clock -->
+    <div class="clock-container">
+
+        <div class="clock">
+
+            <div id="disp">
+                00:00:00
+            </div>
+
+            <div id="ampm">
+                AM
+            </div>
+
+            <div id="date">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let clock_disp = document.getElementById("disp");
+        let ampm_disp = document.getElementById("ampm");
+        let date_disp = document.getElementById("date");
+
+
+        function showTime() {
+
+            let now = new Date();
+
+            // Get hours, minutes and seconds
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+
+            // -------------------------
+            // AM / PM LOGIC
+            // -------------------------
+
+            let ampm;
+
+            if (hours >= 12) {//extracting the hr firs kyu ki 12 pahle am hota hai
+                ampm = "PM";
+            } else {
+                ampm = "AM";
+            }
+
+
+            // -------------------------
+            // 24 HOUR → 12 HOUR
+            // -------------------------
+
+            hours = hours % 12;
+
+            // If hours is 0, display 12
+            if (hours === 0) {
+                hours = 12;
+            }
+
+
+            // -------------------------
+            // ADD ZERO
+            // -------------------------
+
+            hours = String(hours).padStart(2, "0");
+            minutes = String(minutes).padStart(2, "0");
+            seconds = String(seconds).padStart(2, "0");
+
+
+            // Display time
+            clock_disp.innerHTML =
+                hours + ":" + minutes + ":" + seconds;
+
+
+            // Display AM / PM
+            ampm_disp.innerHTML = ampm;
+
+
+            // -------------------------
+            // DISPLAY DATE
+            // -------------------------
+
+            let day = String(now.getDate()).padStart(2, "0");
+            let month = String(now.getMonth() + 1).padStart(2, "0");
+            let year = now.getFullYear();
+
+            date_disp.innerHTML =
+                day + "/" + month + "/" + year;
+        }
+
+
+        // Run immediately
+        showTime();
+
+
+        // Update every second
+        setInterval(showTime, 1000);
+
+    </script>
+
+</body>
+
+</html>
+
