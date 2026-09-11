@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration</title>
+
+    <style>
+
+        .error {
+            border: 2px solid red;
+        }
+
+        .success {
+            border: 2px solid green;
+        }
+
+        #error-msg {
+            color: red;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <form id="studentForm">
+
+        <span id="error-msg"></span>
+
+        <label for="name">Full Name</label>
+        <input type="text" id="name" minlength="3" maxlength="40" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+
+        <label for="mobile">Mobile</label>
+        <input type="tel" id="mobile" required>
+
+        <label for="age">Age</label>
+        <input type="number" id="age" min="18" max="60" required>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" minlength="8" required>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required>
+
+        <label for="website">Website</label>
+        <input type="url" id="website">
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+
+    <script>
+
+        const form = document.querySelector("#studentForm");
+
+
+        // Regular Expressions
+
+        const nameRegex = /^[A-Za-z ]{3,30}$/;
+
+        const emailRegex =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        const mobileRegex =
+            /^[0-9]{10}$/;
+
+        const usernameRegex =
+            /^[A-Za-z0-9_]{5,15}$/;
+
+        const passwordRegex =
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+
+        form.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+
+            const name = document.querySelector("#name");
+
+            const email = document.querySelector("#email");
+
+            const mobile = document.querySelector("#mobile");
+
+            const age = document.querySelector("#age");
+
+            const username = document.querySelector("#username");
+
+            const password = document.querySelector("#password");
+
+            const confirmPassword =
+                document.querySelector("#confirmPassword");
+
+
+            let isValid = true;
+
+            let errorMsg = "";
+
+
+            // Clear previous error message
+
+            document.querySelector("#error-msg").innerHTML = "";
+
+
+            // Full Name Validation
+
+            if (!nameRegex.test(name.value.trim())) {
+
+                name.classList.add("error");
+
+                name.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Invalid Name";
+
+            } else {
+
+                name.classList.remove("error");
+
+                name.classList.add("success");
+
+            }
+
+
+            // Email Validation
+
+            if (!emailRegex.test(email.value.trim())) {
+
+                email.classList.add("error");
+
+                email.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Invalid Email ID";
+
+            } else {
+
+                email.classList.remove("error");
+
+                email.classList.add("success");
+
+            }
+
+
+            // Mobile Validation
+
+            if (!mobileRegex.test(mobile.value.trim())) {
+
+                mobile.classList.add("error");
+
+                mobile.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Invalid Mobile No.";
+
+            } else {
+
+                mobile.classList.remove("error");
+
+                mobile.classList.add("success");
+
+            }
+
+
+            // Age Validation
+
+            if (age.value < 18 || age.value > 60 || age.value === "") {
+
+                age.classList.add("error");
+
+                age.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Age must be between 18 and 60";
+
+            } else {
+
+                age.classList.remove("error");
+
+                age.classList.add("success");
+
+            }
+
+
+            // Username Validation
+
+            if (!usernameRegex.test(username.value.trim())) {
+
+                username.classList.add("error");
+
+                username.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Invalid User Name";
+
+            } else {
+
+                username.classList.remove("error");
+
+                username.classList.add("success");
+
+            }
+
+
+            // Password Validation
+
+            if (!passwordRegex.test(password.value)) {
+
+                password.classList.add("error");
+
+                password.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Invalid Password";
+
+            } else {
+
+                password.classList.remove("error");
+
+                password.classList.add("success");
+
+            }
+
+
+            // Confirm Password Validation
+
+            if (
+                password.value !== confirmPassword.value ||
+                confirmPassword.value === ""
+            ) {
+
+                confirmPassword.classList.add("error");
+
+                confirmPassword.classList.remove("success");
+
+                isValid = false;
+
+                errorMsg = "Passwords do not match";
+
+            } else {
+
+                confirmPassword.classList.remove("error");
+
+                confirmPassword.classList.add("success");
+
+            }
+
+
+            // Final Result
+
+            if (isValid) {
+
+                document.querySelector("#error-msg").innerHTML = "";
+
+                alert("Registration successful!");
+
+            } else {
+
+                document.querySelector("#error-msg").innerHTML = errorMsg;
+
+                alert("Please enter valid details.");
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+

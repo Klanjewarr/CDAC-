@@ -1,11 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stop Watch</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background:
+            radial-gradient(circle at top left, #243b55, transparent 40%),
+            radial-gradient(circle at bottom right, #141e30, transparent 45%),
+            #080d17;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        z-index: 10;
+    }
+
+    nav a,
+    nav button {
+        padding: 9px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        font-size: 13px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    nav a:hover,
+    nav button:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .stopwatch-container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 110px 20px 30px;
+    }
+
+    .stopwatch {
+        width: min(560px, 100%);
+        padding: 55px 40px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.45),
+            inset 0 0 40px rgba(255, 255, 255, 0.03);
+        animation: appear 0.7s ease;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: 2px;
+    }
+
+    .subtitle {
+        margin-bottom: 40px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+    }
+
+    #disp {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 45px;
+        font-size: clamp(38px, 9vw, 64px);
+        font-weight: 300;
+        letter-spacing: 3px;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    #disp span:not(.separator) {
+        min-width: 1.15em;
+    }
+
+    .separator {
+        margin: 0 4px;
+        opacity: 0.5;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .controls button {
+        min-width: 120px;
+        padding: 13px 22px;
+        border: none;
+        border-radius: 9px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    #startBtn { background: #198754; }
+    #startBtn:hover { background: #157347; transform: translateY(-2px); }
+
+    #pauseBtn { background: #d97706; }
+    #pauseBtn:hover { background: #b45309; transform: translateY(-2px); }
+
+    #resetBtn { background: #dc3545; }
+    #resetBtn:hover { background: #bb2d3b; transform: translateY(-2px); }
+
+    .controls button:active {
+        transform: scale(0.96);
+    }
+
+    .controls button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    #status {
+        margin-top: 25px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 1px;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        nav {
+            padding: 10px;
+            gap: 6px;
+        }
+
+        nav a,
+        nav button {
+            padding: 7px 9px;
+            font-size: 11px;
+        }
+
+        .stopwatch {
+            padding: 40px 18px;
+            border-radius: 20px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        .subtitle {
+            margin-bottom: 30px;
+        }
+
+        #disp {
+            margin-bottom: 35px;
+        }
+
+        .controls {
+            gap: 10px;
+        }
+
+        .controls button {
+            min-width: 100px;
+            padding: 11px 15px;
+            font-size: 12px;
+        }
+    }
+</style>
 </head>
+
 <body>
-    
+
+<nav>
+    <button onclick="history.forward()">Forward</button>
+    <button onclick="history.back()">Backward</button>
+    <a href="/make_clock.html">Clock</a>
+    <a href="/stopwatch.html">Stop Watch</a>
+    <a href="/otpgenerator.html">OTP Generator</a>
+    <a href="/reverofastr.html">Reverse of String</a>
+</nav>
+
+<main class="stopwatch-container">
+    <div class="stopwatch">
+
+        <h1>Stopwatch</h1>
+        <p class="subtitle">Track your time accurately</p>
+
+        <div id="disp">
+            <span id="hour">00</span>
+            <span class="separator">:</span>
+            <span id="minute">00</span>
+            <span class="separator">:</span>
+            <span id="second">00</span>
+            <span class="separator">.</span>
+            <span id="milliseconds">00</span>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn" onclick="startclick()">▶ START</button>
+            <button id="pauseBtn" onclick="pauseclick()">⏸ PAUSE</button>
+            <button id="resetBtn" onclick="resetclick()">↻ RESET</button>
+        </div>
+
+        <div id="status">Ready</div>
+    </div>
+</main>
+
+<script>
+    // Get HTML elements
+    const sec = document.getElementById("second");
+    const milliseconds = document.getElementById("milliseconds");
+    const min = document.getElementById("minute");
+    const hr = document.getElementById("hour");
+    const status = document.getElementById("status");
+
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+
+    // Stopwatch values
+    let millisec = 0;
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+
+    let timer = null;
+    let running = false;
+
+    function updateDisplay() {
+        milliseconds.textContent = String(millisec).padStart(2, "0");
+        sec.textContent = String(seconds).padStart(2, "0");
+        min.textContent = String(minutes).padStart(2, "0");
+        hr.textContent = String(hours).padStart(2, "0");
+    }
+
+    function startclick() {
+        if (running) {
+            return;
+        }
+
+        running = true;
+        status.textContent = "Running...";
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+
+        timer = setInterval(function () {
+            millisec++;
+
+            if (millisec === 100) {
+                millisec = 0;
+                seconds++;
+            }
+
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+
+            if (minutes === 60) {
+                minutes = 0;
+                hours++;
+            }
+
+            updateDisplay();
+        }, 10);
+    }
+
+    function pauseclick() {
+        if (!running) {
+            return;
+        }
+
+        clearInterval(timer);
+        timer = null;
+        running = false;
+
+        status.textContent = "Paused";
+        startBtn.disabled = false;
+    }
+
+    function resetclick() {
+        clearInterval(timer);
+
+        timer = null;
+        running = false;
+
+        millisec = 0;
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+
+        updateDisplay();
+
+        status.textContent = "Ready";
+        startBtn.disabled = false;
+    }
+
+    updateDisplay();
+</script>
+
 </body>
 </html>

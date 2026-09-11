@@ -1,27 +1,185 @@
-<!-- use math random to generate otp -->
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Otp Genrator</title>
-</head>
-<body>
-    <div>
-        <button onclick="generate()">
-            Genrate
-        </button>
-    </div>
-    <div id="disp">
 
-    </div>
-    <script>
-        function generate(){
-        let diplay=document.getElementById("disp");
-        let num = Math.floor(100000 + Math.random() * 900000)
-        diplay.innerHTML=num
+
+<title>OTP Generator</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        background: #f5f7fa;
+        color: #333;
+    }
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 20px;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    nav button,
+    nav a {
+        padding: 9px 15px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        color: #374151;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    nav button:hover,
+    nav a:hover {
+        background: #f3f4f6;
+        border-color: #9ca3af;
+    }
+
+    /* Main Container */
+    .container {
+        width: 90%;
+        max-width: 450px;
+        margin: 100px auto;
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+        margin-bottom: 10px;
+        font-size: 28px;
+        color: #111827;
+    }
+
+    .subtitle {
+        margin-bottom: 30px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    /* Generate Button */
+    .generate-btn {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 7px;
+        background: #2563eb;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .generate-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .generate-btn:active {
+        transform: translateY(0);
+    }
+
+    /* OTP Display */
+    #disp {
+        margin-top: 30px;
+        padding: 18px;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 8px;
+        color: #111827;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+        nav {
+            flex-wrap: wrap;
+            gap: 8px;
         }
-    </script>
+
+        .container {
+            margin: 60px auto;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+
+<nav>
+
+    <button onclick="history.forward()">Forward</button>
+
+    <button onclick="history.back()">Backward</button>
+
+    <a href="/make_clock.html">Clock</a>
+
+    <a href="/stopwatch.html">Stop Watch</a>
+
+    <a href="/otpgenerator.html">OTP Generator</a>
+
+    <a href="/reverofastr.html">Reverse of String</a>
+
+</nav>
+
+<main class="container">
+    <h1>OTP Generator</h1>
+
+    <p class="subtitle">
+        Click the button to generate a 6-digit OTP
+    </p>
+
+    <button class="generate-btn" onclick="generate()">
+        Generate OTP
+    </button>
+
+    <div id="disp"></div>
+</main>
+
+<script>
+    function generate() {
+        let display = document.getElementById("disp");
+
+        let num = Math.floor(100000 + Math.random() * 900000);
+
+        display.innerHTML = num;
+    }
+</script>
+
+
 </body>
 </html>
