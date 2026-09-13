@@ -1,0 +1,82 @@
+{
+  "persons": [
+    {
+      "name": "Rahul",
+      "age": 23,
+      "Mobile": "52785388384",
+      "city": "Nagpur",
+      "id": "bFXtHcXtjgc"
+    },
+    {
+      "name": "Amit",
+      "age": 25,
+      "Mobile": "9876543210",
+      "city": "Pune",
+      "id": "pJyHYj7jJfE"
+    },
+    {
+      "name": "Priya",
+      "age": 22,
+      "Mobile": "8765432109",
+      "city": "Mumbai",
+      "id": "UW4i1qKAscs"
+    },
+    {
+      "name": "Vikas",
+      "age": 26,
+      "Mobile": "6543210987",
+      "city": "Aurangabad",
+      "id": "4w2pqmD3Uwo"
+    },
+    {
+      "name": "Neha",
+      "age": 21,
+      "Mobile": "5432109876",
+      "city": "Amravati",
+      "id": "ICQHWZij5Y4"
+    },
+    {
+      "id": "wIdP6fwV1-M"
+    },
+    {
+      "name": "Rohan",
+      "age": 27,
+      "Mobile": "9123456780",
+      "city": "Bhopal",
+      "id": "1y-eu0qs4EM"
+    },
+    {
+      "name": "Kanchankumar",
+      "age": 23,
+      "Mobile": "9012345678",
+      "city": "Nagpur",
+      "id": "zxG7tQwfTdc"
+    },
+    {
+      "name": "Pawan",
+      "age": 27,
+      "Mobile": "9123456780",
+      "city": "Meruth",
+      "id": "AelZZ7Gm45g"
+    },
+    {
+      "name": "Somya",
+      "age": 23,
+      "Mobile": "9123454080",
+      "city": "Nagpur",
+      "id": "TdFdp-4xb5o"
+    },
+    {
+      "name": "Kanchan Lanjewar",
+      "age": "24",
+      "email": "kanchankumar200312@gmail.com",
+      "password": "Kanchan@7507",
+      "website": "http://punchcart.store",
+      "mobile": "7972522761",
+      "username": "vegeta010511",
+      "dob": "2003-03-12",
+      "id": "GSCxZU1bPBw"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+class Course
+{
+private:
+    string course_name;
+    double cost;
+
+public:
+};
+class Person
+{
+private:
+    string name;
+    double phone_number;
+
+public:
+};
+class Student : Person// inherit from func
+{ 
+private:
+    int roll_no;
+    string course_taken[5]; //arr
+    int course_count;
+
+public:
+};
+
+int main()
+{
+    
+}
