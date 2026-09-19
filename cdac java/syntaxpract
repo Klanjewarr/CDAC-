@@ -1,0 +1,24 @@
+import java.util.*;
+class SyntaxPractice{
+int n1,n2;
+void getNos(){
+	Scanner sc=new Scanner (System.in);
+	System.out.println("Please enter value of n1 and n2");
+	n1=sc.nextInt();
+	n2=sc.nextInt();
+	}
+	void swap(){
+	getNos();
+	System.out.println("Original value of n1= "+n1+" and n2= "+n2);
+	n1=n1+n2;
+	n2=n1-n2;
+	n1=n1-n2;
+	System.out.println("Swapped value of n1= "+n1+" and n2= "+n2);
+	}
+	public static void main(String ar[]){
+	SyntaxPractice sp=new SyntaxPractice();
+	sp.swap();
+	System.out.println("End of the program....");
+	
+	}
+}
