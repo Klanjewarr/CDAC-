@@ -1,0 +1,360 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\kanch\Desktop\cdac\Database> mysqlsh
+MySQL Shell 26.7.1
+
+Copyright (c) 2016, 2026, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  SQL > \connect root@localhost:3306
+Creating a session to 'root@localhost:3306'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 9
+Server version: 8.0.46 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases
+                               -> ^C
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.0055 sec)
+ MySQL  localhost:3306 ssl  SQL > create database cdac-aug-2026;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-aug-2026' at line 1
+ MySQL  localhost:3306 ssl  SQL > create database cdac2026
+                               -> create database cdac-aug-2026;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'create database cdac-aug-2026' at line 2
+ MySQL  localhost:3306 ssl  SQL > create database cdac2026
+                               -> ;
+Query OK, 1 row affected (0.0160 sec)
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| cdac2026           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.0015 sec)
+ MySQL  localhost:3306 ssl  SQL > use databases cdac2026;
+Incorrect number of arguments for use command, usage:
+\use <schema_name>
+ MySQL  localhost:3306 ssl  SQL > create table Student{
+                               -> id int primary key,
+                               -> name varchar(100) not null;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{
+id int primary key,
+name varchar(100) not null' at line 1
+ MySQL  localhost:3306 ssl  SQL > create table Student{
+                               ->                                -> id int primary key,
+                               -> ^C
+ MySQL  localhost:3306 ssl  SQL > create table Student{ id int primary key, name varchar(100) not null,
+                               -> city varchar(50) default 'Nagpur',
+                               -> email varchar(100) unique,
+                               -> age int check(age>18),
+                               -> qualification ENUM('UG','PG','PhD'),
+                               -> gender char(1)
+                               -> };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null,
+city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  SQL > create table Student{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur', email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  SQL > create table Student{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur', email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  SQL > use database cdac2026
+Incorrect number of arguments for use command, usage:
+\use <schema_name>
+ MySQL  localhost:3306 ssl  SQL > create table Student{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur', email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  SQL > use cdac2026
+Default schema set to `cdac2026`.
+Fetching global names, object names from `cdac2026` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  cdac2026  SQL > create table Student{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur', email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > create table Student{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur' , email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) };
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '{ id int primary key, name varchar(100) not null, city varchar(50) default 'Nagp' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > create table Student( id int primary key, name varchar(100) not null, city varchar(50) default 'Nagpur', email varchar(100) unique, age int check(age>18), qualification ENUM('UG','PG','PhD'), gender char(1) );
+Query OK, 0 rows affected (0.0518 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > desc Student;
++---------------+-----------------------+------+-----+---------+-------+
+| Field         | Type                  | Null | Key | Default | Extra |
++---------------+-----------------------+------+-----+---------+-------+
+| id            | int                   | NO   | PRI | NULL    |       |
+| name          | varchar(100)          | NO   |     | NULL    |       |
+| city          | varchar(50)           | YES  |     | Nagpur  |       |
+| email         | varchar(100)          | YES  | UNI | NULL    |       |
+| age           | int                   | YES  |     | NULL    |       |
+| qualification | enum('UG','PG','PhD') | YES  |     | NULL    |       |
+| gender        | char(1)               | YES  |     | NULL    |       |
++---------------+-----------------------+------+-----+---------+-------+
+7 rows in set (0.0087 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student
+                                         -> values(101,"Ramesh",default, "ran@gmail.com", 19, 'Twelth', 'M');
+ERROR: 1265 (01000): Data truncated for column 'qualification' at row 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(101,"Ramesh",default, "ran@gmail.com", 19, 'PG', 'M');
+Query OK, 1 row affected (0.0133 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from student;
++-----+--------+--------+---------------+-----+---------------+--------+
+| id  | name   | city   | email         | age | qualification | gender |
++-----+--------+--------+---------------+-----+---------------+--------+
+| 101 | Ramesh | Nagpur | ran@gmail.com |  19 | PG            | M      |
++-----+--------+--------+---------------+-----+---------------+--------+
+1 row in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(102,"Dinesh",'Indore', "ran@gmail.com", 19, 'PhD', 'M');
+ERROR: 1062 (23000): Duplicate entry 'ran@gmail.com' for key 'student.email'
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(102,"Dinesh",'Indore', "din@gmail.com", 19, 'PhD', 'M');
+Query OK, 1 row affected (0.0072 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(102,"Dinesh",'Indore', "din@gmail.com", 19, 'PhD', 'M');
+ERROR: 1062 (23000): Duplicate entry '102' for key 'student.PRIMARY'
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(103,"Rin",'Deori', "rin@gmail.com", 23, 'PG', 'F');
+Query OK, 1 row affected (0.0088 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+--------+--------+---------------+-----+---------------+--------+
+| id  | name   | city   | email         | age | qualification | gender |
++-----+--------+--------+---------------+-----+---------------+--------+
+| 101 | Ramesh | Nagpur | ran@gmail.com |  19 | PG            | M      |
+| 102 | Dinesh | Indore | din@gmail.com |  19 | PhD           | M      |
+| 103 | Rin    | Deori  | rin@gmail.com |  23 | PG            | F      |
++-----+--------+--------+---------------+-----+---------------+--------+
+3 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(103,"Rin", 20, 'UG', );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(104,"Zeus", 20, 'UG');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(104,"Ragner",default, NULL, 23, 'PG', NULL);
+Query OK, 1 row affected (0.0089 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+--------+--------+---------------+-----+---------------+--------+
+| id  | name   | city   | email         | age | qualification | gender |
++-----+--------+--------+---------------+-----+---------------+--------+
+| 101 | Ramesh | Nagpur | ran@gmail.com |  19 | PG            | M      |
+| 102 | Dinesh | Indore | din@gmail.com |  19 | PhD           | M      |
+| 103 | Rin    | Deori  | rin@gmail.com |  23 | PG            | F      |
+| 104 | Ragner | Nagpur | NULL          |  23 | PG            | NULL   |
++-----+--------+--------+---------------+-----+---------------+--------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > insert into Student values(105,"Zeus",default, NULL,NULL,NULL, NULL);
+Query OK, 1 row affected (0.0081 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+--------+--------+---------------+------+---------------+--------+
+| id  | name   | city   | email         | age  | qualification | gender |
++-----+--------+--------+---------------+------+---------------+--------+
+| 101 | Ramesh | Nagpur | ran@gmail.com |   19 | PG            | M      |
+| 102 | Dinesh | Indore | din@gmail.com |   19 | PhD           | M      |
+| 103 | Rin    | Deori  | rin@gmail.com |   23 | PG            | F      |
+| 104 | Ragner | Nagpur | NULL          |   23 | PG            | NULL   |
+| 105 | Zeus   | Nagpur | NULL          | NULL | NULL          | NULL   |
++-----+--------+--------+---------------+------+---------------+--------+
+5 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > Insert into Student
+                                         -> (id, name, qualification) values(106,'Truces')
+                                         -> ;
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > Insert into Student (id, name, qualification) values(105,'Truces',PG) ;
+ERROR: 1054 (42S22): Unknown column 'PG' in 'field list'
+ MySQL  localhost:3306 ssl  cdac2026  SQL > Insert into Student (id, name, qualification) values(105,'Truces','PG') ;
+ERROR: 1062 (23000): Duplicate entry '105' for key 'student.PRIMARY'
+ MySQL  localhost:3306 ssl  cdac2026  SQL > INSERT INTO Student (id, name, qualification)
+                                         -> VALUES (106, 'Truces', 'PG');
+Query OK, 1 row affected (0.0094 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+--------+--------+---------------+------+---------------+--------+
+| id  | name   | city   | email         | age  | qualification | gender |
++-----+--------+--------+---------------+------+---------------+--------+
+| 101 | Ramesh | Nagpur | ran@gmail.com |   19 | PG            | M      |
+| 102 | Dinesh | Indore | din@gmail.com |   19 | PhD           | M      |
+| 103 | Rin    | Deori  | rin@gmail.com |   23 | PG            | F      |
+| 104 | Ragner | Nagpur | NULL          |   23 | PG            | NULL   |
+| 105 | Zeus   | Nagpur | NULL          | NULL | NULL          | NULL   |
+| 106 | Truces | Nagpur | NULL          | NULL | PG            | NULL   |
++-----+--------+--------+---------------+------+---------------+--------+
+6 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set city='Pune' where id=101;
+Query OK, 1 row affected (0.0096 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set age='21' where id=102;
+Query OK, 1 row affected (0.0102 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set qualification='UG' where id=103;
+Query OK, 1 row affected (0.0053 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Studenet set name='Rehalla' where id=104;
+ERROR: 1146 (42S02): Table 'cdac2026.studenet' doesn't exist
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set name='Rehalla' where id=104;
+Query OK, 1 row affected (0.0081 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set gender='F' where id=104;
+Query OK, 1 row affected (0.0087 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > update Student set city='Mumbai', age=22  where id=106;
+Query OK, 1 row affected (0.0094 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete at id=105;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id=105' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete id=105;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=105' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete from Students where id=105;
+ERROR: 1146 (42S02): Table 'cdac2026.students' doesn't exist
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+---------+--------+---------------+------+---------------+--------+
+| id  | name    | city   | email         | age  | qualification | gender |
++-----+---------+--------+---------------+------+---------------+--------+
+| 101 | Ramesh  | Pune   | ran@gmail.com |   19 | PG            | M      |
+| 102 | Dinesh  | Indore | din@gmail.com |   21 | PhD           | M      |
+| 103 | Rin     | Deori  | rin@gmail.com |   23 | UG            | F      |
+| 104 | Rehalla | Nagpur | NULL          |   23 | PG            | F      |
+| 105 | Zeus    | Nagpur | NULL          | NULL | NULL          | NULL   |
+| 106 | Truces  | Mumbai | NULL          |   22 | PG            | NULL   |
++-----+---------+--------+---------------+------+---------------+--------+
+6 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete from Students
+                                         -> WHERE id=105;
+ERROR: 1146 (42S02): Table 'cdac2026.students' doesn't exist
+ MySQL  localhost:3306 ssl  cdac2026  SQL > DELETE FROM Students
+                                         -> WHERE id=105;
+ERROR: 1146 (42S02): Table 'cdac2026.students' doesn't exist
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete from Student where id = 105;
+Query OK, 1 row affected (0.0083 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete from Student where name='Ragner';
+Query OK, 0 rows affected (0.0006 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > delete from Student where age<21;
+Query OK, 1 row affected (0.0094 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student;
++-----+---------+--------+---------------+-----+---------------+--------+
+| id  | name    | city   | email         | age | qualification | gender |
++-----+---------+--------+---------------+-----+---------------+--------+
+| 102 | Dinesh  | Indore | din@gmail.com |  21 | PhD           | M      |
+| 103 | Rin     | Deori  | rin@gmail.com |  23 | UG            | F      |
+| 104 | Rehalla | Nagpur | NULL          |  23 | PG            | F      |
+| 106 | Truces  | Mumbai | NULL          |  22 | PG            | NULL   |
++-----+---------+--------+---------------+-----+---------------+--------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student where city='Pune';
+Empty set (0.0004 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student where city='Deori';
++-----+------+-------+---------------+-----+---------------+--------+
+| id  | name | city  | email         | age | qualification | gender |
++-----+------+-------+---------------+-----+---------------+--------+
+| 103 | Rin  | Deori | rin@gmail.com |  23 | UG            | F      |
++-----+------+-------+---------------+-----+---------------+--------+
+1 row in set (0.0007 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student where age<20;
+Empty set (0.0008 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student where age>20;
++-----+---------+--------+---------------+-----+---------------+--------+
+| id  | name    | city   | email         | age | qualification | gender |
++-----+---------+--------+---------------+-----+---------------+--------+
+| 102 | Dinesh  | Indore | din@gmail.com |  21 | PhD           | M      |
+| 103 | Rin     | Deori  | rin@gmail.com |  23 | UG            | F      |
+| 104 | Rehalla | Nagpur | NULL          |  23 | PG            | F      |
+| 106 | Truces  | Mumbai | NULL          |  22 | PG            | NULL   |
++-----+---------+--------+---------------+-----+---------------+--------+
+4 rows in set (0.0007 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > desc name,qualification;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',qualification' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > desc name
+                                         -> ;
+ERROR: 1146 (42S02): Table 'cdac2026.name' doesn't exist
+ MySQL  localhost:3306 ssl  cdac2026  SQL > desc Student
+                                         -> ;
++---------------+-----------------------+------+-----+---------+-------+
+| Field         | Type                  | Null | Key | Default | Extra |
++---------------+-----------------------+------+-----+---------+-------+
+| id            | int                   | NO   | PRI | NULL    |       |
+| name          | varchar(100)          | NO   |     | NULL    |       |
+| city          | varchar(50)           | YES  |     | Nagpur  |       |
+| email         | varchar(100)          | YES  | UNI | NULL    |       |
+| age           | int                   | YES  |     | NULL    |       |
+| qualification | enum('UG','PG','PhD') | YES  |     | NULL    |       |
+| gender        | char(1)               | YES  |     | NULL    |       |
++---------------+-----------------------+------+-----+---------+-------+
+7 rows in set (0.0047 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select name, qualification from Student;
++---------+---------------+
+| name    | qualification |
++---------+---------------+
+| Dinesh  | PhD           |
+| Rin     | UG            |
+| Rehalla | PG            |
+| Truces  | PG            |
++---------+---------------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student where qualification='PG' ;
++-----+---------+--------+-------+-----+---------------+--------+
+| id  | name    | city   | email | age | qualification | gender |
++-----+---------+--------+-------+-----+---------------+--------+
+| 104 | Rehalla | Nagpur | NULL  |  23 | PG            | F      |
+| 106 | Truces  | Mumbai | NULL  |  22 | PG            | NULL   |
++-----+---------+--------+-------+-----+---------------+--------+
+2 rows in set (0.0007 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student  ;
++-----+---------+--------+---------------+-----+---------------+--------+
+| id  | name    | city   | email         | age | qualification | gender |
++-----+---------+--------+---------------+-----+---------------+--------+
+| 102 | Dinesh  | Indore | din@gmail.com |  21 | PhD           | M      |
+| 103 | Rin     | Deori  | rin@gmail.com |  23 | UG            | F      |
+| 104 | Rehalla | Nagpur | NULL          |  23 | PG            | F      |
+| 106 | Truces  | Mumbai | NULL          |  22 | PG            | NULL   |
++-----+---------+--------+---------------+-----+---------------+--------+
+4 rows in set (0.0007 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > alter table Student modify columb name
+                                         -> varchar(50);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name
+varchar(50)' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > alter Student modify colmb name(varchar(50));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Student modify colmb name(varchar(50))' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > alter table Student add columb phone  int;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'phone  int' at line 1
+ MySQL  localhost:3306 ssl  cdac2026  SQL > alter table Student add column phone  int;
+Query OK, 0 rows affected (0.0437 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > alter table Student modify column name  varchar(50);
+Query OK, 4 rows affected (0.1000 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  cdac2026  SQL > desc Student;
++---------------+-----------------------+------+-----+---------+-------+
+| Field         | Type                  | Null | Key | Default | Extra |
++---------------+-----------------------+------+-----+---------+-------+
+| id            | int                   | NO   | PRI | NULL    |       |
+| name          | varchar(50)           | YES  |     | NULL    |       |
+| city          | varchar(50)           | YES  |     | Nagpur  |       |
+| email         | varchar(100)          | YES  | UNI | NULL    |       |
+| age           | int                   | YES  |     | NULL    |       |
+| qualification | enum('UG','PG','PhD') | YES  |     | NULL    |       |
+| gender        | char(1)               | YES  |     | NULL    |       |
+| phone         | int                   | YES  |     | NULL    |       |
++---------------+-----------------------+------+-----+---------+-------+
+8 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL > select * from Student  ;
++-----+---------+--------+---------------+-----+---------------+--------+-------+
+| id  | name    | city   | email         | age | qualification | gender | phone |
++-----+---------+--------+---------------+-----+---------------+--------+-------+
+| 102 | Dinesh  | Indore | din@gmail.com |  21 | PhD           | M      |  NULL |
+| 103 | Rin     | Deori  | rin@gmail.com |  23 | UG            | F      |  NULL |
+| 104 | Rehalla | Nagpur | NULL          |  23 | PG            | F      |  NULL |
+| 106 | Truces  | Mumbai | NULL          |  22 | PG            | NULL   |  NULL |
++-----+---------+--------+---------------+-----+---------------+--------+-------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  cdac2026  SQL >
