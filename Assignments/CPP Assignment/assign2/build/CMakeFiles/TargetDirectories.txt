@@ -1,0 +1,3 @@
+C:/Users/kanch/Desktop/cdac/Assignments/CPP Assignment/assign2/build/CMakeFiles/inventory.dir
+C:/Users/kanch/Desktop/cdac/Assignments/CPP Assignment/assign2/build/CMakeFiles/edit_cache.dir
+C:/Users/kanch/Desktop/cdac/Assignments/CPP Assignment/assign2/build/CMakeFiles/rebuild_cache.dir

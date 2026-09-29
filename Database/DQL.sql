@@ -1,0 +1,13 @@
+select * from student;
+select name, city from student;
+select name, city, qualification from student where city = 'Nagpur' or qualification='PhD';
+select name, city, qualification from studenet where city not in ('Indore', 'Delhi');
+select name , city, age from student where age between 22 and 24;
+select name from student where name like ('%sh');
+select name from student where age is not null;
+select distinct city from student;
+select name, city from student limit 5 offset 5;
+select name, city, age from student order by age desc limit 3;
+select qualification, max(age) from student group by qualification having qualification != 'Phd';
+select city, avg(age) as StudentAge from student group by city having city!='Nagpur';
+select sum(age) as 'Total Age' from student;
