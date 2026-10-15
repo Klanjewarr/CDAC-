@@ -1,5 +1,4 @@
 
-package constructorTest;
 
 public class ConstDemoo {
     int x,y,z;

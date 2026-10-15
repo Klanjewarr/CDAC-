@@ -1,6 +1,4 @@
 
-package constructorTest;
-
 public class ConstDemo3 {
     int x,y,z;
     static int s;

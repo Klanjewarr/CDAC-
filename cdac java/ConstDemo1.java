@@ -1,6 +1,3 @@
-
-package constructorTest;
-
 public class ConstDemo1 {
     int x,y,z;
    
@@ -27,9 +24,9 @@ public class ConstDemo1 {
     
     public static void main(String[] args) {
         //Instantiation of Object
-        ConstDemo cd=new ConstDemo();
-        ConstDemo cd1=new ConstDemo(25);
-        ConstDemo cd2=new ConstDemo(10,20,30);
+        ConstDemo1 cd=new ConstDemo1();
+        ConstDemo1 cd1=new ConstDemo1(25);
+        ConstDemo1 cd2=new ConstDemo1(10,20,30);
         
         cd.display();
         cd1.display();
@@ -37,4 +34,3 @@ public class ConstDemo1 {
     }
    
 }
-

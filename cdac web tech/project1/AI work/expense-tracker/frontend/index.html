@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Expense Tracker</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" id="dashboard-link">Dashboard</a></li>
+                    <li><a href="#" id="transactions-link">Transactions</a></li>
+                    <li><a href="#" id="upload-link">Upload CSV</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section active">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Income</h3>
+                        <p id="total-income">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Expenses</h3>
+                        <p id="total-expenses">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Balance</h3>
+                        <p id="balance">$0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Transaction Count</h3>
+                        <p id="transaction-count">0</p>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-wrapper">
+                        <canvas id="expenses-by-category-chart"></canvas>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="monthly-expenses-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions-section" class="section">
+                <h2>Transactions</h2>
+                <div class="transactions-header">
+                    <button id="add-transaction-btn">Add Transaction</button>
+                    <input type="date" id="filter-date" placeholder="Filter by date">
+                    <button id="filter-btn">Filter</button>
+                </div>
+                
+                <div id="transactions-table-container">
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Transactions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="pagination-container">
+                    <button id="prev-page">Previous</button>
+                    <span id="page-info">Page 1 of 1</span>
+                    <button id="next-page">Next</button>
+                </div>
+            </section>
+
+            <!-- Add Transaction Modal -->
+            <div id="transaction-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 id="modal-title">Add Transaction</h2>
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label for="modal-date">Date:</label>
+                            <input type="date" id="modal-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-type">Type:</label>
+                            <select id="modal-type" required>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-amount">Amount ($):</label>
+                            <input type="number" id="modal-amount" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-category">Category:</label>
+                            <input type="text" id="modal-category" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-description">Description:</label>
+                            <input type="text" id="modal-description">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="submit-transaction-btn">Save Transaction</button>
+                            <button type="button" id="cancel-transaction-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Transaction Modal (hidden by default) -->
+            <div id="edit-transaction-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-edit-btn">&times;</span>
+                    <h2 id="edit-modal-title">Edit Transaction</h2>
+                    <form id="edit-transaction-form">
+                        <input type="hidden" id="edit-transaction-id">
+                        <div class="form-group">
+                            <label for="edit-modal-date">Date:</label>
+                            <input type="date" id="edit-modal-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-modal-type">Type:</label>
+                            <select id="edit-modal-type" required>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-modal-amount">Amount ($):</label>
+                            <input type="number" id="edit-modal-amount" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-modal-category">Category:</label>
+                            <input type="text" id="edit-modal-category" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-modal-description">Description:</label>
+                            <input type="text" id="edit-modal-description">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="update-transaction-btn">Update Transaction</button>
+                            <button type="button" id="cancel-edit-transaction-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Upload CSV Section -->
+            <section id="upload-section" class="section">
+                <h2>Upload Bank Statement</h2>
+                <div class="upload-container">
+                    <div class="upload-area" id="upload-area">
+                        <p>Drag & drop CSV file here or click to browse</p>
+                        <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+                        <p class="upload-hint">Supported format: CSV with columns for date, amount, type, category, description</p>
+                    </div>
+                    <div id="upload-preview">
+                        <h3>Preview:</h3>
+                        <div id="preview-table-container">
+                            <table id="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Preview rows will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button id="import-btn" disabled>Import Transactions</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Expense Tracker. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

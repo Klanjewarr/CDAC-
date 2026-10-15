@@ -1,0 +1,454 @@
+Microsoft Windows [Version 10.0.26300.9550]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\kanch>mongosh
+Current Mongosh Log ID: 6acdfe35062f291bc1f13ad6
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.13.0
+Using MongoDB:          9.0.2
+Using Mongosh:          2.13.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2026-10-13T10:44:51.418+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs;
+admin   40.00 KiB
+config  72.00 KiB
+local   64.00 KiB
+test> use cdacDB
+switched to db cdacDB
+cdacDB> db
+cdacDB
+cdacDB> show collections
+
+cdacDB> db.createCollection("students")
+{ ok: 1 }
+cdacDB> db.students.drop()
+true
+cdacDB> db.dropDatabase()
+{ ok: 1, dropped: 'cdacDB' }
+cdacDB> use cdacDB db.students.insertMany([  { roll_no: 101, name: "Amit",  course: "PGDAC",  marks: 85,    city: "Nagpur", skills: ["Java", "SQL"], fees_paid: true },  { roll_no: 102, name: "Priya", course: "PGDAC",  marks: 92,    city: "Pune", skills: ["Java", "Spring Boot"], fees_paid: true },  { rolroll_no: 103, name: "Rahul", course: "PGDAC",  marks: 67,    city: "Nagpur", skills: ["Python", "SQL"], fees_paid: false },  { roll_no: 104, name: "Sneha", course: "PGDAC",  marks: 78,    city: "Mumbai", skills: ["Java", "MongoDB"], fees_paid: true },  { roll_no: 105, name: "Rohit", course: "PGDBDA", marks: 88,    city: "Pune", skills: ["Python", "MongoDB"], fees_paid: false } ])
+already on db cdacDB
+cdacDB> db.students.find()
+
+cdacDB> db.students.find().pretty()
+
+cdacDB> db.students.countDocuments({})
+0
+cdacDB> db.students.insertOne({ roll_no: 106, name: "Neha", marks: 90 }) db.students.insertMany([  { roll_no: 107, name: "Vikas", marks: 73 },  { roll_nroll_no: 108, name: "Pooja", marks: 95 } ])
+Uncaught:
+SyntaxError: Missing semicolon. (1:64)
+
+> 1 | db.students.insertOne({ roll_no: 106, name: "Neha", marks: 90 }) db.students.insertMany([  { roll_no: 107, name: "Vikas", marks: 73 },  { roll_no: 108, name: "Pooja", marks: 95 } ])
+    |                                                                 ^
+  2 |
+
+cdacDB> db.students.insertOne({ roll_no: 106, name: "Neha", marks: 90 }) db.students.insertMany([  { roll_no: 107, name: "Vikas", marks: 73 },  { roll_nroll_no: 108, name: "Pooja", marks: 95 } ]);
+Uncaught:
+SyntaxError: Missing semicolon. (1:64)
+
+> 1 | db.students.insertOne({ roll_no: 106, name: "Neha", marks: 90 }) db.students.insertMany([  { roll_no: 107, name: "Vikas", marks: 73 },  { roll_no: 108, name: "Pooja", marks: 95 } ]);
+    |                                                                 ^
+  2 |
+
+cdacDB> db.students.insertOne({ roll_no: 106, name: "Neha", marks: 90 })
+{
+  acknowledged: true,
+  insertedId: ObjectId('6acdff56062f291bc1f13ad7')
+}
+cdacDB> db.students.insertMany([  { roll_no: 107, name: "Vikas", marks: 73 },  { roll_no: 108, name: "Pooja", marks: 95 } ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6acdff5d062f291bc1f13ad8'),
+    '1': ObjectId('6acdff5d062f291bc1f13ad9')
+  }
+}
+cdacDB> db.students.find()                              // all documents db.students.findOne({ roll_no: 101 })            // one matching document db.students.find({ city: "Nagpur" })             // filter db.students.find({ marks: { $gt: 80 } })         // comparison db.students.find({}, { _id: 0, name: 1, marks: 1 }) // projection
+[
+  {
+    _id: ObjectId('6acdff56062f291bc1f13ad7'),
+    roll_no: 106,
+    name: 'Neha',
+    marks: 90
+  },
+  {
+    _id: ObjectId('6acdff5d062f291bc1f13ad8'),
+    roll_no: 107,
+    name: 'Vikas',
+    marks: 73
+  },
+  {
+    _id: ObjectId('6acdff5d062f291bc1f13ad9'),
+    roll_no: 108,
+    name: 'Pooja',
+    marks: 95
+  }
+]
+cdacDB> db.students.find()                              // all documents db.students.findOne({ roll_no: 101 })            // one matching document db.students.find({ city: "Nagpur" })             // filter db.students.find({ marks: { $gt: 80 } })         // comparison db.students.find({}, { _id: 0, namecdacDB> db.students.find()                              // all documents db.students.findOne({ roll_no: 101 })            // one matching document db.students.find({ city: "Nagpur" })             // filter db.students.find({ marks: { $gt: 80 } })         // comparison db.students.find({}, { _id: 0, name: 1, marks: 1 }) // projection
+[
+  {
+    _id: ObjectId('6acdff56062f291bc1f13ad7'),
+    roll_no: 106,
+    name: 'Neha',
+    marks: 90
+  },
+  {
+    _id: ObjectId('6acdff5d062f291bc1f13ad8'),
+    roll_no: 107,
+    name: 'Vikas',
+    marks: 73
+  },
+  {
+    _id: ObjectId('6acdff5d062f291bc1f13ad9'),
+    roll_no: 108,
+    name: 'Pooja',
+    marks: 95
+  }
+]
+cdacDB> db.students.findOne({ roll_no: 101 })
+null
+cdacDB> db.students.find({ city: "Nagpur" })
+
+cdacDB> db.students.find({ marks: { $gt: 80 } })
+[
+  {
+    _id: ObjectId('6acdff56062f291bc1f13ad7'),
+    roll_no: 106,
+    name: 'Neha',
+    marks: 90
+  },
+  {
+    _id: ObjectId('6acdff5d062f291bc1f13ad9'),
+    roll_no: 108,
+    name: 'Pooja',
+    marks: 95
+  }
+]
+cdacDB> db.students.find({}, { _id: 0, name: 1, marks: 1 })
+[
+  { name: 'Neha', marks: 90 },
+  { name: 'Vikas', marks: 73 },
+  { name: 'Pooja', marks: 95 }
+]
+cdacDB> db.students.updateOne(  { roll_no: 101 },  { $set: { marks: 90 } } )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateMany(  { course: "PGDAC" },  { $inc: { marks: 2 } } )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.replaceOne(  { roll_no: 104 },  { roll_no: 104, name: "Sneha", course: "PGDAC", marks: 80 } )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne(  { roll_no: 109 },  { $set: { name: "Kiran", course: "PGDAC", marks: 81 } },  { upsert: true } )
+{
+  acknowledged: true,
+  insertedId: ObjectId('6acdffc0455d4b3ca38bedb5'),
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 1
+}
+cdacDB> db.students.deleteOne({ roll_no: 108 })
+{ acknowledged: true, deletedCount: 1 }
+cdacDB> db.students.deleteMany({ fees_paid: false })
+{ acknowledged: true, deletedCount: 0 }
+cdacDB> db.students.deleteMany({})
+{ acknowledged: true, deletedCount: 3 }
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $set: { city: "Pune" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $unset: { city: "" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $inc: { marks: 5 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $push: { skills: "MongoDB" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $addToSet: { skills: "Java" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.updateOne({ roll_no: 101 }, { $pull: { skills: "SQL" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+cdacDB> db.students.find({ skills: "Java" })
+
+cdacDB> db.students.find({ skills: { $all: ["Java", "SQL"] } })
+
+cdacDB> db.students.find({ skills: ["Java", "SQL"] })
+
+cdacDB> db.students.find({ "address.city": "Nagpur" })
+
+cdacDB> db.students.find({}, { _id: 0, name: 1, marks: 1 })
+
+cdacDB> db.students.find({}, { _id: 0, "address.city": 1 })
+
+cdacDB> db.students.find().sort({ marks: 1 })
+
+cdacDB> db.students.find().sort({ marks: -1 })
+
+cdacDB> db.students.find().sort({ course: 1, marks: -1, roll_no: 1 })
+
+cdacDB> db.students.find().sort({ roll_no: 1 }).limit(10)
+
+cdacDB> db.students.find().sort({ roll_no: 1 }).skip(10).limit(10)
+
+cdacDB> db.students.createIndex({ name: 1 })
+name_1
+cdacDB> db.students.createIndex({ course: 1, marks: -1 })
+course_1_marks_-1
+cdacDB> db.students.createIndex({ roll_no: 1 }, { unique: true })
+roll_no_1
+cdacDB> db.students.getIndexes()
+[
+  {
+    v: 2,
+    key: { _id: 1 },
+    name: '_id_',
+    collation: { locale: 'simple' }
+  },
+  {
+    v: 2,
+    key: { name: 1 },
+    name: 'name_1',
+    collation: { locale: 'simple' }
+  },
+  {
+    v: 2,
+    key: { course: 1, marks: -1 },
+    name: 'course_1_marks_-1',
+    collation: { locale: 'simple' }
+  },
+  {
+    v: 2,
+    key: { roll_no: 1 },
+    name: 'roll_no_1',
+    unique: true,
+    collation: { locale: 'simple' }
+  }
+]
+cdacDB> db.students.dropIndex("name_1")
+{ nIndexesWas: 4, ok: 1 }
+cdacDB> db.students.find({ course: "PGDAC" }).explain("executionStats")
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'cdacDB.students',
+    parsedQuery: { course: { '$eq': 'PGDAC' } },
+    indexFilterSet: false,
+    queryHash: '24122C2D',
+    planCacheShapeHash: '24122C2D',
+    planCacheKey: 'EC9E42EE',
+    optimizationTimeMillis: 5,
+    optimizationTimeMicros: 5116,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'FETCH',
+      nss: 'cdacDB.students',
+      inputStage: {
+        stage: 'IXSCAN',
+        nss: 'cdacDB.students',
+        keyPattern: { course: 1, marks: -1 },
+        indexName: 'course_1_marks_-1',
+        isMultiKey: false,
+        multiKeyPaths: { course: [], marks: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: {
+          course: [ '["PGDAC", "PGDAC"]' ],
+          marks: [ '[MaxKey, MinKey]' ]
+        }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 0,
+    executionTimeMillis: 9,
+    executionTimeMicros: 9823,
+    totalKeysExamined: 0,
+    totalDocsExamined: 0,
+    executionStages: {
+      isCached: false,
+      stage: 'FETCH',
+      nReturned: 0,
+      executionTimeMillisEstimate: 0,
+      works: 1,
+      advanced: 0,
+      needTime: 0,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      nss: 'cdacDB.students',
+      docsExamined: 0,
+      alreadyHasObj: 0,
+      inputStage: {
+        stage: 'IXSCAN',
+        nReturned: 0,
+        executionTimeMillisEstimate: 0,
+        works: 1,
+        advanced: 0,
+        needTime: 0,
+        needYield: 0,
+        saveState: 0,
+        restoreState: 0,
+        isEOF: 1,
+        nss: 'cdacDB.students',
+        keyPattern: { course: 1, marks: -1 },
+        indexName: 'course_1_marks_-1',
+        isMultiKey: false,
+        multiKeyPaths: { course: [], marks: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: {
+          course: [ '["PGDAC", "PGDAC"]' ],
+          marks: [ '[MaxKey, MinKey]' ]
+        },
+        keysExamined: 0,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0,
+        peakTrackedMemBytes: 0
+      }
+    }
+  },
+  queryShapeHash: '5A175981F501C7BB0D7BEC961870F1A688685408C0F0F087EC94F59170A7D3F5',
+  command: { find: 'students', filter: { course: 'PGDAC' }, '$db': 'cdacDB' },
+  serverInfo: {
+    host: 'MSI',
+    port: 27017,
+    version: '9.0.2',
+    gitVersion: 'c4d309807b94ac30edcca32e35e88a9598eadfc8'
+  },
+  serverParameters: {
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+cdacDB> db.students.aggregate([  { $group: { _id: "$course", totalStudents: { $sum: 1 } } },  { $sort: { totalStudents: -1 } } ])
+
+cdacDB> db.students.aggregate([  { $group: { _id: "$course", averageMarks: { $avg: "$marks" } } },  { $sort: { averageMarks: -1 } } ])
+
+cdacDB> db.students.aggregate([  { $match: { marks: { $gte: 80 } } },  { $pr$project: { _id: 0, name: 1, course: 1, marks: 1 } },  { $sort: { marks: -1 } } ])
+
+cdacDB> db.students.countDocuments({ course: "PGDAC" })
+0
+cdacDB> db.students.aggregate([  { $unwind: "$skills" },  { $group: { _id: "$skills", count: { $sum: 1 } } },  { $sort: { count: -1 } } ])
+
+cdacDB> db.courses.insertMany([  { course_id: "PGDAC", title: "Post Graduate Diploma in Advanced Computing" },  { course_id: "PGDBDA", title: "Post Graduate Diploma in Big Data Analytics" } ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6ace00bd062f291bc1f13ada'),
+    '1': ObjectId('6ace00bd062f291bc1f13adb')
+  }
+}
+cdacDB> db.students.aggregate([  {    $lookup: {      from: "courses",      localField: "course",      foreignField: "course_id",      as: "course_info"    }  } ])
+
+cdacDB> db.createCollection("validatedStudents", {  validator: {    $jsonSch$jsonSchema: {      bsonType: "object",      required: ["name", "marks"],      properties: {        name:  { bsonType: "string" },        marks: { bsonTbsonType: ["int", "double", "decimal"], minimum: 0, maximum: 100 }      }    }  } })
+{ ok: 1 }
+cdacDB> db.students.countDocuments({})
+0
+cdacDB> db.students.estimatedDocumentCount()
+0
+cdacDB> db.students.findOne()
+null
+cdacDB> db.students.distinct("city")
+[]
+cdacDB> db.students.renameCollection("studentArchive")
+{ ok: 1 }
+cdacDB> db.stats()
+{
+  db: 'cdacDB',
+  collections: Long('3'),
+  views: Long('0'),
+  objects: Long('2'),
+  avgObjSize: 98.5,
+  dataSize: 197,
+  storageSize: 36864,
+  indexes: Long('5'),
+  indexSize: 45056,
+  totalSize: 81920,
+  scaleFactor: Long('1'),
+  fsUsedSize: 637876133888,
+  fsTotalSize: 997688602624,
+  ok: 1
+}
+cdacDB> db.students.stats()
+MongoServerError[NamespaceNotFound]: Executor error during aggregate command on namespace: cdacDB.students :: caused by :: Unable to retrieve storageStats in $collStats stage :: caused by :: Collection [cdacDB.students] not found.
+cdacDB> show collections
+courses
+studentArchive
+validatedStudents
+cdacDB> db.students.deleteMany({})
+{ acknowledged: true, deletedCount: 0 }
+cdacDB> db.students.drop()
+true
+cdacDB> db.dropDatabase()
+{ ok: 1, dropped: 'cdacDB' }
+cdacDB>
