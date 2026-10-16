@@ -1,7 +1,5 @@
 package innerClsConcept.annonymous;
 
-public class Outer {
-
 //   class Parent{
 //       void show(){
 //           System.err.println("Hello Parent display");
@@ -17,7 +15,11 @@ public class Outer {
    }
    public class OuterCls {
    Parent p=new Parent (){
-       
+        public void show(){
+            System.out.println("Hello Parent display");
+        }
+        public void display(){
+            System.out.println("Hello Parent display");
+        }
+   };
    }
-   }
-}

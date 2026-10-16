@@ -1,0 +1,369 @@
+================================================================================
+          C++ CONCEPTS USED IN BANK MANAGEMENT SYSTEM (SIMPLIFIED)
+================================================================================
+Project: Bank Management System
+Language: C++ (Standard C++11)
+File: banking_system.cpp
+Audience: C-DAC / Non-CS Engineers switching to IT (Civil/Mechanical)
+
+This cheat sheet explains all C++ concepts in everyday words with real-world 
+analogies. Read this before your viva to answer examiners with full confidence!
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+1. Header Files & Preprocessor Directives (#include)
+2. Namespaces (using namespace std)
+3. Classes and Objects (Blueprint vs Building)
+4. Encapsulation & Access Specifiers (Security Gate & Fencing)
+5. Constructors (Setting Up Initial State)
+6. Inheritance (Base & Derived Classes)
+7. Function Overriding (Special Site Rules)
+8. Functions & Pass-by-Reference (&)
+9. STL Vector (Expandable Scaffolding)
+10. File Handling (Saving to Register on Disk)
+11. String Stream (Splitting Delimited Text)
+12. Control Flow (Switch-Case, While Loop)
+13. Input Validation (Preventing Crashes)
+14. Table Formatting (iomanip)
+15. Top CDAC Viva Questions & Answers
+
+================================================================================
+1. HEADER FILES (#include)
+================================================================================
+Lines in Code:
+  #include <iostream>  // For taking input (cin) and printing output (cout)
+  #include <string>    // For handling customer names and text
+  #include <vector>    // For expandable list of accounts
+  #include <fstream>   // For saving and reading accounts.txt on disk
+  #include <sstream>   // For splitting text lines separated by '|'
+  #include <iomanip>   // For neat table formatting (fixed, setprecision)
+
+Explanation:
+- '#include' tells C++: "Bring tools from the toolbox before running my code."
+- Without <iostream>, 'cout' and 'cin' will not work.
+- Without <fstream>, we cannot save accounts to hard disk.
+
+================================================================================
+2. NAMESPACES
+================================================================================
+Line in Code:
+  using namespace std;
+
+Explanation:
+- All standard C++ tools live inside a box called 'std'.
+- Writing 'using namespace std;' lets us write 'cout' instead of 'std::cout',
+  keeping our code clean and easy to read.
+
+================================================================================
+3. CLASSES AND OBJECTS
+================================================================================
+Real-World Analogy:
+- Class  = Architectural Blueprint / AutoCAD Plan.
+  (It's just a drawing on paper. It takes 0 sq ft of land / 0 bytes of RAM).
+- Object = The Actual Constructed Building / Flat.
+  (Built on real ground / occupies memory in RAM).
+
+In Our Project:
+- 'Account' and 'BankAccount' are the Classes (Blueprints).
+- 'acc' is the Object (The real customer account with money).
+
+Example:
+  BankAccount acc(1001, "Rahul Sharma", "Savings", 5000.0);
+  // BankAccount = Blueprint (Class)
+  // acc         = Actual Customer Account (Object)
+
+================================================================================
+4. ENCAPSULATION & ACCESS SPECIFIERS
+================================================================================
+Real-World Analogy:
+- Gated compound with security: You don't let anyone enter the site and mess
+  with foundation pillars or electrical lines. Visitors must enter through the
+  guarded gate.
+
+In C++:
+- We protect sensitive variables (like 'balance') so outsiders cannot corrupt them.
+
+Access Specifiers:
+1. private:
+   - Accessible ONLY within that specific class.
+   - Example: 'accountType' in BankAccount.
+
+2. protected:
+   - Accessible within the class AND by derived (child) classes.
+   - Example: 'balance', 'accountNumber' in Account.
+   - BankAccount can use 'balance' because it inherits from Account.
+
+3. public:
+   - Accessible from anywhere in the program.
+   - Example: deposit(), withdraw(), getBalance().
+   - Customers must go through deposit() to increase balance safely!
+
+4. Getters (Accessor Methods):
+   - Functions like getAccountNumber(), getAccountHolder(), getBalance() allow 
+     safe, read-only inspection of private/protected variables.
+
+================================================================================
+5. CONSTRUCTORS
+================================================================================
+Concept:
+- A Constructor is a special member function having the same name as the class.
+- It is automatically invoked when an object is created to initialize data.
+- It has NO return type (not even void).
+
+Types used in our code:
+
+1. Default Constructor (No parameters):
+   Account() {
+       accountNumber = 0;
+       accountHolder = "";
+       balance = 0.0;
+   }
+   - Sets safe default values if an object is created without inputs.
+
+2. Parameterized Constructor:
+   Account(int accNo, string name, double initialBalance) {
+       accountNumber = accNo;
+       accountHolder = name;
+       balance = initialBalance;
+   }
+   - Initializes the object with specific user-provided values.
+
+3. Calling Base Constructor from Derived Class:
+   BankAccount(int accNo, string name, string type, double initialBalance)
+       : Account(accNo, name, initialBalance) {
+       accountType = type;
+   }
+   - Passes common fields to the parent constructor using an initialization list.
+
+================================================================================
+6. INHERITANCE
+================================================================================
+Concept:
+- Inheritance allows a new class (derived class) to acquire properties and 
+  methods from an existing class (base class).
+- Promotes Code Reusability and eliminates duplication.
+
+Syntax in Code:
+  class BankAccount : public Account { ... };
+
+How it works:
+- 'Account' is the Base Class (Parent). It contains:
+  - accountNumber, accountHolder, balance
+  - deposit() method
+  - basic withdraw() method
+- 'BankAccount' is the Derived Class (Child).
+  - It automatically inherits all members from 'Account'.
+  - It adds its own unique variable: 'accountType' ("Savings" or "Current").
+  - It customizes the withdraw behavior according to account rules.
+
+Type of Inheritance used:
+- Single Inheritance (One derived class inheriting from one base class).
+
+================================================================================
+7. FUNCTION OVERRIDING & POLYMORPHISM (virtual keyword)
+================================================================================
+Concept:
+- Function Overriding occurs when a derived class provides its own specific 
+  implementation for a function already defined in the base class.
+
+Code in Base Class (Account):
+  virtual bool withdraw(double amount) { ... }
+
+Code in Derived Class (BankAccount):
+  bool withdraw(double amount) override {
+      if (accountType == "Savings" && (balance - amount < 500.0)) {
+          // Reject if balance drops below $500
+          return false;
+      }
+      ...
+  }
+
+Why we used it:
+- The base class has a basic withdraw method.
+- The derived class overrides it to enforce the rule: 
+  "Savings accounts must maintain at least $500 minimum balance!"
+
+================================================================================
+8. FUNCTIONS & PASS-BY-REFERENCE
+================================================================================
+Concept:
+- In C++, passing large objects by value creates an expensive copy.
+- Passing by reference ('&') allows functions to directly modify the original object.
+- Passing by const reference ('const &') prevents accidental modification 
+  while avoiding copying.
+
+Examples in Code:
+1. Pass by Reference (Modifying the vector):
+   void depositMoney(vector<BankAccount>& accounts)
+   - Here '&' is used so deposits update the actual accounts list in memory.
+
+2. Pass by Const Reference (Read-only):
+   void displayAllAccounts(const vector<BankAccount>& accounts)
+   - Here 'const' guarantees that this function cannot accidentally alter accounts.
+
+================================================================================
+9. STL VECTOR (DYNAMIC ARRAY)
+================================================================================
+Concept:
+- A vector is a sequence container from the Standard Template Library (STL).
+- Unlike traditional fixed-size arrays (int arr[100]), a vector resizes 
+  dynamically at runtime as accounts are added or removed.
+
+Code in our Project:
+  vector<BankAccount> accounts;
+
+Key Vector Operations used:
+- accounts.push_back(acc);  // Appends a new account at the end of the vector
+- accounts.size();          // Returns total number of registered accounts
+- accounts.clear();         // Clears all elements before reloading from file
+- accounts[i];              // Accesses account at index 'i'
+
+Why vector is better than standard arrays:
+- No fixed limit (prevents array overflow).
+- Manages memory automatically without manual delete/free calls.
+
+================================================================================
+10. FILE HANDLING (PERSISTENCE)
+================================================================================
+Concept:
+- When a program closes, RAM memory is wiped. File handling allows data 
+  to persist on disk inside 'accounts.txt'.
+
+1. Writing to File (ofstream - Output File Stream):
+   ofstream outFile("accounts.txt");
+   outFile << acc.getAccountNumber() << "|"
+           << acc.getAccountHolder() << "|"
+           << acc.getAccountType() << "|"
+           << acc.getBalance() << "\n";
+   outFile.close();
+
+2. Reading from File (ifstream - Input File Stream):
+   ifstream inFile("accounts.txt");
+   while (getline(inFile, line)) {
+       // read each account record
+   }
+   inFile.close();
+
+File Format used:
+  1001|Aarav Sharma|Savings|5000.00
+  1002|Priya Patel|Savings|3200.00
+  1003|TechNova Solutions|Current|15000.00
+
+Pipe '|' delimiter is chosen because names can have spaces (e.g., "Aarav Sharma").
+
+================================================================================
+11. STRINGSTREAM (DATA PARSING)
+================================================================================
+Concept:
+- A stringstream associates a string object with a stream, allowing you 
+  to extract tokens using getline() with a custom delimiter.
+
+Code in our Project:
+  stringstream ss(line);
+  getline(ss, accNoStr, '|');
+  getline(ss, name, '|');
+  getline(ss, type, '|');
+  getline(ss, balStr, '|');
+
+Conversions:
+- stoi(accNoStr) -> converts string to integer
+- stod(balStr)   -> converts string to double (floating point number)
+
+================================================================================
+12. CONTROL STRUCTURES & DECISION MAKING
+================================================================================
+1. While Loop (Menu-Driven Program):
+   while (true) { ... }
+   - Keeps the bank menu running continuously until the user explicitly selects 
+     Option 7 (Save & Exit).
+
+2. Switch-Case Statement:
+   switch (choice) {
+       case 1: createNewAccount(accounts); break;
+       case 2: depositMoney(accounts); break;
+       ...
+       default: cout << "Invalid choice"; break;
+   }
+   - Dispatches user menu selections cleanly and efficiently.
+
+3. If-Else Conditions:
+   - Used to check:
+     - Does the account exist?
+     - Is the deposit amount positive?
+     - Does the account have sufficient balance to withdraw?
+     - Are sender and receiver accounts distinct during transfer?
+
+================================================================================
+13. INPUT/OUTPUT & STREAM VALIDATION
+================================================================================
+Handling User Input Errors:
+- If a user enters text when a number is expected, cin enters a "fail state".
+- In our code, we protect against infinite loops with helper functions:
+    if (cin >> value) {
+        cin.ignore(1000, '\n'); // clear remaining newline character
+        return value;
+    } else {
+        cin.clear();            // clear the error flag
+        cin.ignore(1000, '\n'); // discard invalid characters from buffer
+        cout << "Invalid input! Try again." << endl;
+    }
+
+Why this is important:
+- Prevents program crashes and endless loops during live viva demos!
+
+================================================================================
+14. FORMATTING OUTPUT (IOMANIP)
+================================================================================
+Used for clean, tabular printing in displayAllAccounts():
+- setw(width): Sets column width for alignment (e.g., setw(12)).
+- left / right: Aligns text to left or numbers to right.
+- fixed << setprecision(2): Forces money amounts to always display 2 decimals 
+  (e.g., $5000.00 instead of $5000).
+
+================================================================================
+15. QUICK VIVA VOCE Q&A CHEAT SHEET (TOP EXAMINER QUESTIONS)
+================================================================================
+
+Q1: What are the main OOP concepts you used in this project?
+A1: "I used Classes and Objects, Encapsulation with access specifiers, Single 
+    Inheritance with the Account and BankAccount classes, and Function 
+    Overriding for specialized withdrawal rules."
+
+Q2: What is the base class and what is the derived class?
+A2: "'Account' is the base class holding common details like account number, 
+    holder name, and balance. 'BankAccount' is the derived class that inherits 
+    from 'Account' and adds the account type ('Savings' or 'Current')."
+
+Q3: Why did you use 'protected' instead of 'private' in the Account class?
+A3: "'protected' allows derived classes like BankAccount to access variables 
+    like 'balance' and 'accountNumber' directly, while still hiding them from 
+    external functions outside the class hierarchy."
+
+Q4: What is the difference between Savings and Current accounts in your code?
+A4: "Savings accounts enforce a minimum balance rule of $500.00 upon opening 
+    and during withdrawals. Current accounts do not have this restriction."
+
+Q5: How does file handling work in your project?
+A5: "When the program starts, 'loadAccountsFromFile' uses 'ifstream' to read 
+    stored records from 'accounts.txt' into memory. Whenever an account is 
+    created or money is deposited/withdrawn, 'saveAccountsToFile' uses 'ofstream' 
+    to write the updated records back to 'accounts.txt'."
+
+Q6: Why did you use std::vector instead of a basic C++ array?
+A6: "std::vector is a dynamic array from the C++ STL. It automatically grows 
+    as new accounts are created, avoiding fixed size limits and memory overflow."
+
+Q7: How do you prevent invalid input from crashing your program?
+A7: "I created helper functions that check 'cin.fail()'. If invalid input is 
+    entered, 'cin.clear()' resets the stream state and 'cin.ignore()' flushes 
+    the input buffer."
+
+Q8: What is a Constructor, and where is it used here?
+A8: "A constructor initializes an object when it is instantiated. We used both 
+    default constructors and parameterized constructors in 'Account' and 
+    'BankAccount' to set initial values."
+
+================================================================================
+END OF DOCUMENT
+================================================================================

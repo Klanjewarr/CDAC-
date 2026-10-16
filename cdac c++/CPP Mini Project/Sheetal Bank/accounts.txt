@@ -1,0 +1,6 @@
+1001|Aarav Sharma|Savings|5000.00
+1002|Priya Patel|Savings|3200.00
+1003|TechNova Solutions|Current|15000.00
+1004|Rahul Verma|Savings|6500.00
+454545454|ninaad|Savings|99999999.00
+100|Kanchan|Savings|2002.00
