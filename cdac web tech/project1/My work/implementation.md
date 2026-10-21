@@ -9,3 +9,7 @@ I have to build to  a expense tracker it should have ui like a this and very sim
  2. can implement basic functionality through the js 
 
  now the main concern is that i have to build the 
+
+ BluePrint of making this project
+
+ 
