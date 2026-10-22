@@ -1,10 +1,13 @@
 import { useLocation } from "react-router-dom"
-export default function IncidentsList() {
+import { mockIncidents } from "../data/incidents"
+import { ListAccordian } from "../components/ListAccordian"
+
+export function IncidentsList()
+{
     const formValues=useLocation()
-  return (
-    // console.log(formValues)
-    <div>
-      <h1>List</h1>
-    </div>
-  )
+    console.log(formValues)
+    return(<>
+    <h1>List</h1>
+  <ListAccordian mockIncidents={mockIncidents}/>
+    </>)
 }
