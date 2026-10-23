@@ -1,20 +1,33 @@
 export function ListAccordian(props) {
-    const {mockincidents}=props
+
+    const {mockIncidents}=props
+   
     return (
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Accordion Item #1
+        <div className="accordion w-50 mx-auto" id="accordionExample">
+            {
+                mockIncidents.map(function(incidents,i){
+
+         return (  <div className="accordion-item">
+                <h2 className="accordion-header">
+                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${i}`} aria-expanded="true" aria-controls="collapseOne me-2">
+                      <span className="badge text-bg-primary me-2">{incidents._id}</span> 
+                      <span className="badge text-bg-primary me-2">{incidents.title}</span> 
+                      <span className="badge text-bg-primary me-2">{incidents.user}</span> 
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>This is the first item’s accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
+                <div id={`collapse-${i}`} className="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+                        <li class="list-group-item"><strong>{incidents.category}</strong></li>
+                        <li class="list-group-item"><strong>{incidents.status}</strong></li>
+                        <li class="list-group-item"><strong>{incidents.severity}</strong></li>
+                        <li class="list-group-item"><strong>{incidents.createdAt}</strong></li>
+                        <li class="list-group-item"><strong>{incidents.updatedAt}</strong></li>
+                        </div>
                 </div>
             </div>
-
+          )
+})
+}
         </div>
     )
 }

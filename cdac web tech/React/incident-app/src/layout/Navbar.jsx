@@ -45,6 +45,8 @@ return(<>
        
     
           <Link class="nav-link" to="/register">Register</Link>
+
+          <Link class="nav-link" to="/calculator">Calculator</Link>
         
        
       </ul>
