@@ -1,5 +1,12 @@
-// Login
+import { useEffect } from "react"
+import { useContext } from "react"
+import { TitleContext } from "../App"
 export function Login() {
+const {setTitle,title}=useContext(TitleContext)
+ useEffect(function()
+    {
+    setTitle("Login")
+    },[])
   return (
     <main className="container py-5">
       <div className="row justify-content-center">

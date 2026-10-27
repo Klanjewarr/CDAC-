@@ -22,34 +22,21 @@ return(<>
         <Link to="/login" className="menu-item">Login</Link>
         <Link to="/register" className="menu-item">Register</Link>
         <Link to="/add" className="menu-item">Add Incident</Link> */}
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <Link class="navbar-brand" to="/">Home</Link>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-   
-          <Link class="nav-link active" aria-current="page" to="/about">About</Link>
-        
-   
-          <Link class="nav-link" to="/contact">Contact</Link>
-        
- 
-          <Link class="nav-link" to="/add">Add Incident</Link>
-        
-       
-          <Link class="nav-link" to="/login">Login</Link>
-        
-       
-    
-          <Link class="nav-link" to="/register">Register</Link>
 
-          <Link class="nav-link" to="/calculator">Calculator</Link>
-        
-       
-      </ul>
+        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+  <div className="container-fluid">
+    <Link className="navbar-brand" to="/">Home</Link>
+    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span className="navbar-toggler-icon"></span>
+    </button>
+    <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div className="navbar-nav">
+        <Link className="nav-link active" aria-current="page" to="/about">About</Link>
+        <Link className="nav-link" to="/contact">Contact</Link>
+        <Link className="nav-link" to="/add">Add Incident</Link>
+        <Link className="nav-link" to="/calculator">Calculator</Link>
+        <Link className="nav-link" to="/user-forms">Login/Register</Link>
+      </div>
     </div>
   </div>
 </nav>
