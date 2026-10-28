@@ -38,7 +38,7 @@ export function UserAuthForms()
  
 </ul>
 <div className="tab-content" id="pills-tabContent">
-  <div className="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+  <div className="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex="0">
     {
         isLogin?<Loign />:<Register/>
     }

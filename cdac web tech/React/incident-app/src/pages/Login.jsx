@@ -2,7 +2,8 @@ import { authStore } from "./redux/AuthStore"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { authProcess } from "./redux/AuthSlicer"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export  function Loign() {
   const dispatch=useDispatch()
@@ -11,6 +12,18 @@ export  function Loign() {
   const msg=useSelector((state)=>state.AuthReducer.msg)
   const isLogin=useSelector((state)=>state.AuthReducer.isLogin)
 
+  const navigate=useNavigate()
+
+  useEffect(function(){
+    if(isLogin){
+      alert(msg)
+      navigate('/list')
+    }
+    else{
+   
+      alert('Wrong credentials ' )
+    }
+  },[isLogin])
     
   return (
     <div>
