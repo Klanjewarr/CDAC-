@@ -1,54 +1,26 @@
-import { useEffect } from "react"
-import { useContext } from "react"
-import { TitleContext } from "../App"
-export function Login() {
-const {setTitle,title}=useContext(TitleContext)
- useEffect(function()
-    {
-    setTitle("Login")
-    },[])
+import { authStore } from "./redux/AuthStore"
+import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import { authProcess } from "./redux/AuthSlicer"
+import { useState } from "react"
+
+export  function Loign() {
+  const dispatch=useDispatch()
+  const [email,setEmail]=useState('')
+  const[password,setPassword]=useState('')
+  const msg=useSelector((state)=>state.AuthReducer.msg)
+  const isLogin=useSelector((state)=>state.AuthReducer.isLogin)
+
+    
   return (
-    <main className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-12 col-sm-10 col-md-6 col-lg-4">
-          <div className="card shadow-sm">
-            <div className="card-body p-4">
-              <h1 className="h3 text-center mb-4">Login</h1>
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="username" className="form-label">
-                    Username
-                  </label>
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter username"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    className="form-control"
-                    placeholder="Enter password"
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary w-100">
-                  Login
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+    <div>
+      <h1>Msg {msg}</h1>
+      <h1>isLogin {isLogin?"login":"failed"}</h1>
+      <input placeholder="Enter email-id" value={email} onChange={(e)=>setEmail(e.target.value)}/>
+      <input placeholder="Enter password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+
+
+      <button onClick={()=>dispatch(authProcess({email,password}))}>Login</button>
+    </div>
   )
 }
