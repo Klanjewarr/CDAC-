@@ -1,9 +1,9 @@
 import { About } from "./pages/About";
 import {BrowserRouter,Routes,Route} from "react-router-dom"
-import {Login} from "./pages/LoginView.jsx"
+import {Login} from "./pages/Login.jsx"
 import { Navbar } from './layout/Navbar.jsx'
 import { Contact } from './pages/Contact.jsx'
-import {Register} from "./pages/RegisterView.jsx"
+import {Register} from "./pages/Register.jsx"
 import {AddIncident} from "./pages/AddIncident.jsx"
 import { IncidentsList } from './pages/IncidentsList.jsx'
 import { IncidentDetails } from './pages/IncidentDetails.jsx'
@@ -12,11 +12,9 @@ import {Calculator} from "./pages/Calculator.jsx"
 import { Home } from "./pages/Home.jsx";
 import { useState } from "react";
 import { createContext } from "react";
-import CalculatorReducer from "./pages/reducer/CalculatorReducer.jsx"; //named import
-import { authStore } from "./pages/redux/AuthStore.jsx";
-import { Provider } from "react-redux";
-
-
+import { CalculatorReducer } from "./pages/reducer/CalculatorReducer.jsx";
+import {Provider} from "react-redux"
+import { store } from "./pages/redux/Store.jsx";
 
 export const TitleContext=createContext()
 export function App()
@@ -24,7 +22,7 @@ export function App()
   const [title,setTitle]=useState("Home")
   return(<>
   <TitleContext.Provider value={{setTitle,title}}>
-    <Provider store={authStore}>
+    <Provider store={store}>
     <BrowserRouter>
   <title>{title}</title>
     <Navbar/>
@@ -49,7 +47,7 @@ export function App()
 
           <Route path="/calculator" element={<Calculator/>}/>
 
-          <Route path="/reducer-calc" element={<CalculatorReducer/>}/>
+          <Route path="/reducerCal" element={<CalculatorReducer/>} />
       </Routes>
     </BrowserRouter>
     </Provider>

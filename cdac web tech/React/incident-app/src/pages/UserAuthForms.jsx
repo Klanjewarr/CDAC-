@@ -1,8 +1,7 @@
 import { useState } from "react"
-// import { Login } from "./LoginView"
-// import { Register } from "./RegisterView"
+//import { Login } from "./Login"
 import { Register } from "./Register"
-import { Loign } from "./Login"
+import { LoginView } from "./LoginView"
 
 export function UserAuthForms()
 {
@@ -38,9 +37,9 @@ export function UserAuthForms()
  
 </ul>
 <div className="tab-content" id="pills-tabContent">
-  <div className="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex="0">
+  <div className="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
     {
-        isLogin?<Loign />:<Register/>
+        isLogin?<LoginView />:<Register/>
     }
     </div>
  
