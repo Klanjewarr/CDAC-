@@ -1,0 +1,1 @@
+// create database model for incidents and the incidents should be update, put, get, delete
