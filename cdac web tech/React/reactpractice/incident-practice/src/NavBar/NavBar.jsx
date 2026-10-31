@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 
-export default function NavBar() {
+export  function NavBar() {
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -11,7 +12,12 @@ export default function NavBar() {
       <span className="navbar-toggler-icon"></span>
     </button>
     <div className="collapse navbar-collapse" id="navbarNavDropdown">
-      <Link className="nav-" to="/">Home</Link>
+      <div className="navbar-nav ms-auto">
+      <Link className="nav-link" to="/">Home</Link>
+      <Link className="nav-link" to="/contact">Contact</Link>
+      <Link className="nav-link" to="/login">Login</Link>
+      <Link className="nav-link" to="/register">Register</Link>
+       </div>   
     </div>
   </div>
 </nav>
