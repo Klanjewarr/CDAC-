@@ -1,0 +1,431 @@
+==================================================
+             LIBRARY MANAGEMENT SYSTEM            
+==================================================
+Enter Librarian Username: admin
+Enter Librarian Password: admin123
+Login successful! Welcome, admin.
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 1
+Enter Book Title: Khushi the Khudkhusi
+Enter Author: Khushi Panchal
+Enter Category: Self Help
+Enter Total Copies: 6
+Book added successfully!
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 2
+Enter Book ID to update: 18
+Enter New Title (leave blank to keep 'Java'): 
+Enter New Author (leave blank to keep 'Thomas'): James Thomas
+Enter New Category (leave blank to keep 'Proraming'): 
+Enter New Total Copies (or -1 to keep 1): -1
+Book updated successfully!
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 4
+Enter search keyword (title/author/category): java
+
+Search Results (4 found):
+Book [ID=1, Title='Effective Java', Author='Joshua Bloch', Category='Programming', Available=5/5]
+Book [ID=3, Title='Head First Java', Author='Kathy Sierra', Category='Programming', Available=6/6]
+Book [ID=14, Title='Data Structures and Algorithms in Java', Author='Robert Lafore', Category='Algorithms', Available=4/4]
+Book [ID=18, Title='Java', Author='James Thomas', Category='Proraming', Available=1/1]
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 5
+
+--- All Books in Library ---
+Book [ID=1, Title='Effective Java', Author='Joshua Bloch', Category='Programming', Available=5/5]
+Book [ID=2, Title='Clean Code', Author='Robert C. Martin', Category='Programming', Available=3/4]
+Book [ID=3, Title='Head First Java', Author='Kathy Sierra', Category='Programming', Available=6/6]
+Book [ID=4, Title='Introduction to Algorithms', Author='Thomas H. Cormen', Category='Algorithms', Available=3/3]
+Book [ID=5, Title='Design Patterns', Author='Erich Gamma', Category='Software Engineering', Available=4/4]
+Book [ID=6, Title='Database System Concepts', Author='Abraham Silberschatz', Category='Databases', Available=5/5]
+Book [ID=7, Title='SQL Antipatterns', Author='Bill Karwin', Category='Databases', Available=3/3]
+Book [ID=8, Title='Operating System Concepts', Author='Peter B. Galvin', Category='Operating Systems', Available=4/4]
+Book [ID=9, Title='Computer Networks', Author='Andrew S. Tanenbaum', Category='Networking', Available=4/4]
+Book [ID=10, Title='Let Us C', Author='Yashavant Kanetkar', Category='Programming', Available=7/7]
+Book [ID=11, Title='Modern Operating Systems', Author='Andrew S. Tanenbaum', Category='Operating Systems', Available=3/3]
+Book [ID=12, Title='Cracking the Coding Interview', Author='Gayle Laakmann McDowell', Category='Career', Available=5/5]
+Book [ID=13, Title='The Pragmatic Programmer', Author='David Thomas', Category='Software Engineering', Available=3/3]
+Book [ID=14, Title='Data Structures and Algorithms in Java', Author='Robert Lafore', Category='Algorithms', Available=4/4]
+Book [ID=15, Title='Artificial Intelligence: A Modern Approach', Author='Stuart Russell', Category='AI', Available=2/2]
+Book [ID=16, Title='Meow the Dragon slayer', Author='meow', Category='adventure', Available=2/2]
+Book [ID=17, Title='Atomic Habbits', Author='charels', Category='Self Help', Available=4/5]
+Book [ID=18, Title='Java', Author='James Thomas', Category='Proraming', Available=1/1]
+Book [ID=19, Title='Khushi the Khudkhusi', Author='Khushi Panchal', Category='Self Help', Available=6/6]
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 6
+Enter Member Name: Khushi Panchal
+Enter Member Email: khushi@gmail.com
+Enter Member Type (1 for STUDENT, 2 for FACULTY): 1
+Member registered successfully!
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 7
+
+--- Registered Members ---
+Student -> ID: 1, Name: Rahul Sharma, Email: rahul.sharma@acts.cdac.in (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+Student -> ID: 2, Name: Priya Patel, Email: priya.patel@acts.cdac.in (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+Student -> ID: 3, Name: Amit Verma, Email: amit.verma@acts.cdac.in (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+Faculty -> ID: 4, Name: Dr. Sunita Rao, Email: sunita.rao@acts.cdac.in (Max Books: 5, Period: 30 days, Fine: Rs 1/day)
+Faculty -> ID: 5, Name: Prof. Rajesh Nair, Email: rajesh.nair@acts.cdac.in (Max Books: 5, Period: 30 days, Fine: Rs 1/day)
+Student -> ID: 6, Name: Zoya, Email: zoya@gmail.com (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+Student -> ID: 7, Name: Kanchan Lanjewar, Email: kanchan@gmail.com (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+Student -> ID: 8, Name: Khushi Panchal, Email: khushi@gmail.com (Max Books: 3, Period: 14 days, Fine: Rs 2/day)
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 8
+Enter Member ID: 17
+Enter Book ID: 19
+Input Error: Member not found with ID: 17
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 8
+Enter Member ID: 6
+Enter Book ID: 19
+Book issued successfully with transaction committed!
+>>> Generated Issue ID: 6 (Please note this ID for returning) <<<
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 9
+
+--- Currently Borrowed Books (Pending Return) ---
+Issue ID: 4 | Member ID: 1 | Book ID: 2 | Due Date: 2026-11-12
+Issue ID: 5 | Member ID: 1 | Book ID: 17 | Due Date: 2026-11-12
+Issue ID: 6 | Member ID: 6 | Book ID: 19 | Due Date: 2026-11-12
+-------------------------------------------------
+Enter Issue ID to return: 6
+Book returned successfully!
+Returned on time. No fine levied.
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 10
+Choose sorting method:
+1. Sort by Author (using Anonymous Class Comparator)
+2. Sort by Title  (using Lambda Expression Comparator)
+Select option: 1
+
+--- Books Sorted by Author (Anonymous Class) ---
+Book [ID=6, Title='Database System Concepts', Author='Abraham Silberschatz', Category='Databases', Available=5/5]
+Book [ID=9, Title='Computer Networks', Author='Andrew S. Tanenbaum', Category='Networking', Available=4/4]
+Book [ID=11, Title='Modern Operating Systems', Author='Andrew S. Tanenbaum', Category='Operating Systems', Available=3/3]
+Book [ID=7, Title='SQL Antipatterns', Author='Bill Karwin', Category='Databases', Available=3/3]
+Book [ID=17, Title='Atomic Habbits', Author='charels', Category='Self Help', Available=4/5]
+Book [ID=13, Title='The Pragmatic Programmer', Author='David Thomas', Category='Software Engineering', Available=3/3]
+Book [ID=5, Title='Design Patterns', Author='Erich Gamma', Category='Software Engineering', Available=4/4]
+Book [ID=12, Title='Cracking the Coding Interview', Author='Gayle Laakmann McDowell', Category='Career', Available=5/5]
+Book [ID=18, Title='Java', Author='James Thomas', Category='Proraming', Available=1/1]
+Book [ID=1, Title='Effective Java', Author='Joshua Bloch', Category='Programming', Available=5/5]
+Book [ID=3, Title='Head First Java', Author='Kathy Sierra', Category='Programming', Available=6/6]
+Book [ID=19, Title='Khushi the Khudkhusi', Author='Khushi Panchal', Category='Self Help', Available=6/6]
+Book [ID=16, Title='Meow the Dragon slayer', Author='meow', Category='adventure', Available=2/2]
+Book [ID=8, Title='Operating System Concepts', Author='Peter B. Galvin', Category='Operating Systems', Available=4/4]
+Book [ID=2, Title='Clean Code', Author='Robert C. Martin', Category='Programming', Available=3/4]
+Book [ID=14, Title='Data Structures and Algorithms in Java', Author='Robert Lafore', Category='Algorithms', Available=4/4]
+Book [ID=15, Title='Artificial Intelligence: A Modern Approach', Author='Stuart Russell', Category='AI', Available=2/2]
+Book [ID=4, Title='Introduction to Algorithms', Author='Thomas H. Cormen', Category='Algorithms', Available=3/3]
+Book [ID=10, Title='Let Us C', Author='Yashavant Kanetkar', Category='Programming', Available=7/7]
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 10
+Choose sorting method:
+1. Sort by Author (using Anonymous Class Comparator)
+2. Sort by Title  (using Lambda Expression Comparator)
+Select option: 2
+
+--- Books Sorted by Title (Lambda Expression) ---
+Book [ID=15, Title='Artificial Intelligence: A Modern Approach', Author='Stuart Russell', Category='AI', Available=2/2]
+Book [ID=17, Title='Atomic Habbits', Author='charels', Category='Self Help', Available=4/5]
+Book [ID=2, Title='Clean Code', Author='Robert C. Martin', Category='Programming', Available=3/4]
+Book [ID=9, Title='Computer Networks', Author='Andrew S. Tanenbaum', Category='Networking', Available=4/4]
+Book [ID=12, Title='Cracking the Coding Interview', Author='Gayle Laakmann McDowell', Category='Career', Available=5/5]
+Book [ID=14, Title='Data Structures and Algorithms in Java', Author='Robert Lafore', Category='Algorithms', Available=4/4]
+Book [ID=6, Title='Database System Concepts', Author='Abraham Silberschatz', Category='Databases', Available=5/5]
+Book [ID=5, Title='Design Patterns', Author='Erich Gamma', Category='Software Engineering', Available=4/4]
+Book [ID=1, Title='Effective Java', Author='Joshua Bloch', Category='Programming', Available=5/5]
+Book [ID=3, Title='Head First Java', Author='Kathy Sierra', Category='Programming', Available=6/6]
+Book [ID=4, Title='Introduction to Algorithms', Author='Thomas H. Cormen', Category='Algorithms', Available=3/3]
+Book [ID=18, Title='Java', Author='James Thomas', Category='Proraming', Available=1/1]
+Book [ID=19, Title='Khushi the Khudkhusi', Author='Khushi Panchal', Category='Self Help', Available=6/6]
+Book [ID=10, Title='Let Us C', Author='Yashavant Kanetkar', Category='Programming', Available=7/7]
+Book [ID=16, Title='Meow the Dragon slayer', Author='meow', Category='adventure', Available=2/2]
+Book [ID=11, Title='Modern Operating Systems', Author='Andrew S. Tanenbaum', Category='Operating Systems', Available=3/3]
+Book [ID=8, Title='Operating System Concepts', Author='Peter B. Galvin', Category='Operating Systems', Available=4/4]
+Book [ID=7, Title='SQL Antipatterns', Author='Bill Karwin', Category='Databases', Available=3/3]
+Book [ID=13, Title='The Pragmatic Programmer', Author='David Thomas', Category='Software Engineering', Available=3/3]
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 10
+Choose sorting method:
+1. Sort by Author (using Anonymous Class Comparator)
+2. Sort by Title  (using Lambda Expression Comparator)
+Select option: 2
+
+--- Books Sorted by Title (Lambda Expression) ---
+Book [ID=15, Title='Artificial Intelligence: A Modern Approach', Author='Stuart Russell', Category='AI', Available=2/2]
+Book [ID=17, Title='Atomic Habbits', Author='charels', Category='Self Help', Available=4/5]
+Book [ID=2, Title='Clean Code', Author='Robert C. Martin', Category='Programming', Available=3/4]
+Book [ID=9, Title='Computer Networks', Author='Andrew S. Tanenbaum', Category='Networking', Available=4/4]
+Book [ID=12, Title='Cracking the Coding Interview', Author='Gayle Laakmann McDowell', Category='Career', Available=5/5]
+Book [ID=14, Title='Data Structures and Algorithms in Java', Author='Robert Lafore', Category='Algorithms', Available=4/4]
+Book [ID=6, Title='Database System Concepts', Author='Abraham Silberschatz', Category='Databases', Available=5/5]
+Book [ID=5, Title='Design Patterns', Author='Erich Gamma', Category='Software Engineering', Available=4/4]
+Book [ID=1, Title='Effective Java', Author='Joshua Bloch', Category='Programming', Available=5/5]
+Book [ID=3, Title='Head First Java', Author='Kathy Sierra', Category='Programming', Available=6/6]
+Book [ID=4, Title='Introduction to Algorithms', Author='Thomas H. Cormen', Category='Algorithms', Available=3/3]
+Book [ID=18, Title='Java', Author='James Thomas', Category='Proraming', Available=1/1]
+Book [ID=19, Title='Khushi the Khudkhusi', Author='Khushi Panchal', Category='Self Help', Available=6/6]
+Book [ID=10, Title='Let Us C', Author='Yashavant Kanetkar', Category='Programming', Available=7/7]
+Book [ID=16, Title='Meow the Dragon slayer', Author='meow', Category='adventure', Available=2/2]
+Book [ID=11, Title='Modern Operating Systems', Author='Andrew S. Tanenbaum', Category='Operating Systems', Available=3/3]
+Book [ID=8, Title='Operating System Concepts', Author='Peter B. Galvin', Category='Operating Systems', Available=4/4]
+Book [ID=7, Title='SQL Antipatterns', Author='Bill Karwin', Category='Databases', Available=3/3]
+Book [ID=13, Title='The Pragmatic Programmer', Author='David Thomas', Category='Software Engineering', Available=3/3]
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 11
+
+================ STREAM REPORTS ================
+
+[Report 1] Overdue Active Issues (0 overdue):
+No books are currently overdue.
+
+[Report 2] Books Count per Category:
+ - adventure: 1 titles
+ - Databases: 2 titles
+ - Algorithms: 2 titles
+ - Networking: 1 titles
+ - Software Engineering: 2 titles
+ - AI: 1 titles
+ - Programming: 4 titles
+ - Self Help: 2 titles
+ - Career: 1 titles
+ - Proraming: 1 titles
+ - Operating Systems: 2 titles
+
+[Report 3] Available vs Unavailable Breakdown:
+Available Titles Count   : 19
+Out of Stock Titles Count: 0
+================================================
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 12
+Report successfully exported to: library_report.txt
+
+----------------- MAIN MENU -----------------
+1.  Add New Book
+2.  Update Book
+3.  Delete Book
+4.  Search Books (Title/Author/Category)
+5.  List All Books
+6.  Register Member
+7.  List All Members
+8.  Issue Book
+9.  Return Book & Calculate Fine
+10. Sort Books (Anonymous Class & Lambda Demo)
+11. Stream Reports (Overdue, Categories, Availability)
+12. Export Report to File (.txt)
+13. Exit
+---------------------------------------------
+Enter your choice: 13
+Thank you for using Library Management System. Goodbye!
+BUILD SUCCESSFUL (total time: 8 minutes 17 seconds)

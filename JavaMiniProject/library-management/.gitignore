@@ -1,0 +1,9 @@
+bin/
+*.class
+.vscode/
+.idea/
+*.iml
+*.log
+/JavaMIniProject/nbproject/private/
+/nbproject/private/
+/build/
