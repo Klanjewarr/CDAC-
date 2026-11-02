@@ -15,7 +15,8 @@ export function Login() {
 
     return (
         <div>
-            <div className="container w-50">
+            <div className="container w-25 ">
+                <h1>Login</h1>
                     <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
                     <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" value={email}

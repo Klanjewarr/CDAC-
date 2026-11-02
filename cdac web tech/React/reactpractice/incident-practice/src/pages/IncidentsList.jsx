@@ -7,7 +7,16 @@ function IncidentsList() {
     ]
     return (
         <div>
+           <h1>Incident Reports </h1> 
 
+           {mockIncidents.map((incident)=>{
+            return(
+                <div key={incident.id} className="card mb-3 p-3 shadow-sm">
+                    <h4>{incident.title}</h4>
+                    <p>Status:{incident.status}| Severity:{incident.severity}</p>
+                </div>
+            )
+           })}
         </div>
     )
 }

@@ -17,6 +17,8 @@ export  function NavBar() {
       <Link className="nav-link" to="/contact">Contact</Link>
       <Link className="nav-link" to="/login">Login</Link>
       <Link className="nav-link" to="/register">Register</Link>
+      <Link className="nav-link" to="/incident-list">Incidents List</Link>
+      
        </div>   
     </div>
   </div>
