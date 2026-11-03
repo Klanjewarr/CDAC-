@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser")
 
 
 const app=express()
-
+//middleware
 app.use(cors({
     origin:"http://localhost:5173"
 }))

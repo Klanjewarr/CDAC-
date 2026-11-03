@@ -6,8 +6,8 @@ const  jwt = require("jsonwebtoken")
 
 const JWTsecretKey="this-is-a-secret-jwtkey-for-tokens"
 
-const authVerifyMiddleware=(req,res,next)=>{
-    const token = req.cookie.token
+const authVerifyMiddleware=(req,res,next)=>{ //next means it is a middleware
+    const token = req.cookies.token
     if(!token){
         return res.json({msg:"token not found"})
     }
@@ -15,7 +15,7 @@ const authVerifyMiddleware=(req,res,next)=>{
 
     const user =decoded
     req.user=user
-    next()
+    next() //ends middleware excution  and run the res
 }
 
 router.get("/",authVerifyMiddleware, async (req, res) => {
@@ -65,7 +65,7 @@ router.post("/auth",async(req,res)=>{
 })
 
 
-router.post("/",authVerifyMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
     console.log(req.body)
     const savedUser = await userModel.create(req.body)
     if (!savedUser) {
@@ -79,7 +79,7 @@ router.put('/:id',authVerifyMiddleware, async(req,res)=>{// params
     const id=req.params.id
     const user=req.body
 
-    const updatedUser = await userModel.findByIdAndUpdate(new mongoose.Types.ObjectId(id,user))
+    const updatedUser = await userModel.findByIdAndUpdate(new mongoose.Types.ObjectId(id),{ $set: user },{new:true})
     if(!updatedUser){
         return res.json({msg:"User not Updated"})
     }
