@@ -15,6 +15,8 @@ import { createContext } from "react";
 import { CalculatorReducer } from "./pages/reducer/CalculatorReducer.jsx";
 import {Provider} from "react-redux"
 import { store } from "./pages/redux/Store.jsx";
+import { LoginView } from "./pages/LoginView.jsx";
+import { Profile } from "./pages/Profile.jsx";
 
 export const TitleContext=createContext()
 export function App()
@@ -34,6 +36,7 @@ export function App()
           <Route path="/contact" element={<Contact/>}/>
           
           <Route path="/login" element={<Login />}/>
+          <Route path="/loginView" element={<LoginView />}/>
 
           <Route path="/register" element={<Register />}/>
 
@@ -44,6 +47,7 @@ export function App()
           <Route path="/details" element={<IncidentDetails/>}/>
 
           <Route path="/user-forms" element={<UserAuthForms />}/>
+          <Route path="/user-profile" element={<Profile />}/>
 
           <Route path="/calculator" element={<Calculator/>}/>
 

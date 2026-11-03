@@ -1,22 +1,11 @@
 const express = require("express")
+const jwt = require("jsonwebtoken")
+const {authVerifyMiddleware, JWTsecretKey }= require("../config/jwtVerifcation")
 const router = express.Router()
 const userModel = require("../models/userModel")
 const { default: mongoose } = require("mongoose")
-const  jwt = require("jsonwebtoken")
 
-const JWTsecretKey="this-is-a-secret-jwtkey-for-tokens"
 
-const authVerifyMiddleware=(req,res,next)=>{ //next means it is a middleware
-    const token = req.cookies.token
-    if(!token){
-        return res.json({msg:"token not found"})
-    }
-    const decoded=jwt.verify(token,JWTsecretKey)
-
-    const user =decoded
-    req.user=user
-    next() //ends middleware excution  and run the res
-}
 
 router.get("/",authVerifyMiddleware, async (req, res) => {
     const users = await userModel.find()
@@ -26,6 +15,15 @@ router.get("/",authVerifyMiddleware, async (req, res) => {
     res.json({msg:"user found", users})
 })
 
+router.get("/profile",authVerifyMiddleware,async(req,res)=>{
+    const userID =req.user.id
+    const userProfile = await userModel.findById(new mongoose.Types.ObjectId(userID)).select('-password -__v')
+    if(!userProfile){
+        return res.json({msg:"User Not Found"})
+    }
+    res.json({userProfile})
+})
+
 router.get('/:id',authVerifyMiddleware, async(req,res)=>{// params
     const id=req.params.id
     const user=await userModel.findById(new mongoose.Types.ObjectId(id)) 
@@ -33,6 +31,15 @@ router.get('/:id',authVerifyMiddleware, async(req,res)=>{// params
         return res.json({msg:"user not found", user: null})
     }
     res.json({msg:"user found", user})
+})
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    })
+    res.json({msg: "logged out"})
 })
 
 router.post("/auth",async(req,res)=>{
@@ -47,7 +54,7 @@ router.post("/auth",async(req,res)=>{
 
     if(password===user.password){
     //    success==login json web token assign
-        const singData={id:user._id,email,name:user.name}
+        const singData={id:user._id, email:user.email, name:user.name}
 
         const token = jwt.sign(singData,JWTsecretKey)
 
@@ -102,7 +109,6 @@ router.delete('/:id', authVerifyMiddleware,async(req,res)=>{// params
     res.json({msg:"User Deleted", user})
 })
 
-
-
 module.exports = router
+
 

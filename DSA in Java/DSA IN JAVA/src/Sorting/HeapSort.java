@@ -1,5 +1,7 @@
 package Sorting;
 
+import DummyData.Data;
+
 import java.util.Scanner;
 
 public class HeapSort {
@@ -48,30 +50,41 @@ public class HeapSort {
     }
     
      public static void main(String[] args) {
-        int n;
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the size of the Array: ");
-        n = sc.nextInt();
-        int arr[] = new int[n]; //arr as a object and taking user defined size of arr
-        System.out.println("Enter the array");
-        for (int i = 0; i < n; i++) {
-            arr[i] = sc.nextInt();
-        }
-        
-        sc.close();
+//        int n;
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println("Enter the size of the Array: ");
+//        n = sc.nextInt();
+//        int arr[] = new int[n]; //arr as a object and taking user defined size of arr
+//        System.out.println("Enter the array");
+//        for (int i = 0; i < n; i++) {
+//            arr[i] = sc.nextInt();
+//        }
+//        
+//        sc.close();
+//
+//        System.out.println("Unsorted Array: ");
+//        for (int i = 0; i < arr.length; i++) {
+//            System.out.print(arr[i] + "\t");
+//        }
+//        System.out.println();
+//
+//        System.out.println("Sorted Array: ");
+//        
+//        HeapSort(arr, n-1);
+//
+//        for (int i = 0; i < arr.length; i++) {
+//            System.out.print(arr[i] + "\t");
+//        }
 
-        System.out.println("Unsorted Array: ");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + "\t");
+     int a[]=Data.arrDataUnsorted();
+    long start = System.nanoTime();
+     HeapSort(a, 100000-1);
+    long end = System.nanoTime();
+    for(int i=0;i<10;i++){
+            System.out.print(a[i]+"\t");
         }
         System.out.println();
-
-        System.out.println("Sorted Array: ");
-        
-        HeapSort(arr, n-1);
-
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + "\t");
-        }
+    
+    System.out.println("Completion time    : " + (end - start) / 1_000_000.0 + " ms");
     }
 }

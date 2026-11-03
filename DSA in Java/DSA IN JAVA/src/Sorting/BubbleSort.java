@@ -1,4 +1,5 @@
 package Sorting;
+import DummyData.Data;
 
 public class BubbleSort {
     //compare first position to all
@@ -22,11 +23,22 @@ public class BubbleSort {
     }
     
     public static void main(String[] args) {
-        int[]arr={10,23,33,2,3,5,8,3,5,6,8};
-        bubbleSort(arr);
-        for(int i=0;i<arr.length;i++){
-            System.out.print(arr[i]+"\t");
+//        int[]arr={10,23,33,2,3,5,8,3,5,6,8};
+//        bubbleSort(arr);
+//        for(int i=0;i<arr.length;i++){
+//            System.out.print(arr[i]+"\t");
+//        }
+    int a[]=Data.arrDataUnsorted();
+    long start = System.nanoTime();
+     bubbleSort(a);
+      for(int i=0;i<10;i++){
+            System.out.print(a[i]+"\t");
         }
+        System.out.println();
+    long end = System.nanoTime();
+    
+    System.out.println("Completion time    : " + (end - start) / 1_000_000.0 + " ms");
+
     }
 
 }

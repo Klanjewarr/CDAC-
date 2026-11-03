@@ -1,5 +1,7 @@
 package Sorting;
 
+import DummyData.Data;
+
 public class MergeSort {
 
     // Step 1: Divide the array into smaller parts
@@ -66,17 +68,28 @@ public class MergeSort {
     // Step 3: Main method
     public static void main(String[] args) {
 
-        int numbers[] = {89, 87, 40, 83, 65, 10, 12, 56};
-
-        MergeSort ms = new MergeSort();
-
-        ms.mergeSort(numbers, 0, numbers.length - 1);
-
-        System.out.println("Sorted array:");
-
-        for (int num : numbers) {
-            System.out.print(num + " ");
+//        int numbers[] = {89, 87, 40, 83, 65, 10, 12, 56};
+//
+//        MergeSort ms = new MergeSort();
+//
+//        ms.mergeSort(numbers, 0, numbers.length - 1);
+//
+//        System.out.println("Sorted array:");
+//
+//        for (int num : numbers) {
+//            System.out.print(num + " ");
+//        }
+    int a[]=Data.arrDataUnsorted();
+     MergeSort ms = new MergeSort();
+    long start = System.nanoTime();
+     ms.mergeSort(a, 0, 99999);
+    long end = System.nanoTime();
+    for(int i=0;i<10;i++){
+            System.out.print(a[i]+"\t");
         }
+        System.out.println();
+    
+    System.out.println("Completion time    : " + (end - start) / 1_000_000.0 + " ms");
     }
 }
 
