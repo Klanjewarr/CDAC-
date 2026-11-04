@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const {connectToMongoDB,  disconnectFromMongoDB} = require('./config/db.js')
 const cookieParser = require("cookie-parser")
-
+require("dotenv").config()
 
 const app=express()
 //middleware
@@ -110,7 +110,7 @@ app.get("/",(req,res)=>{
 //user product service(crud)
 // get, post, put, patch(partial updat), delete use this method to create a operation on user, product, service 
 
-app.listen(5000, ()=>{
+app.listen(process.env.PORT|5000, ()=>{
    connectToMongoDB().then(function(){
     console.log("Database connected 🎉🎉🚀🫡 😁😂")
    }).catch(function(err){

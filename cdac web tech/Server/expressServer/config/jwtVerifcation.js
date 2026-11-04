@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
-const JWTsecretKey="this-is-a-secret-jwtkey-for-tokens"
+require("dotenv").config()
+const JWTsecretKey=process.env.JWT_SECRET_KEY
 
 const authVerifyMiddleware=(req,res,next)=>{ //next means it is a middleware
     const token = req.cookies.token

@@ -655,7 +655,7 @@
         <div class="header-actions">
           <button class="icon-btn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="notification-dot"></span></button>
           <button class="icon-btn" aria-label="Messages"><i class="bi bi-chat"></i></button>
-          <a href="login.html" class="btn btn-primary" onclick="logout(event)"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
+          <a href="/logout" class="btn btn-primary" onclick="logout(event)"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
         </div>
       </div>
     </header>
@@ -848,7 +848,7 @@
         document.getElementById('welcome-name').textContent = firstName;
       }
 
-      window.logout = function(e) { e.preventDefault(); localStorage.clear(); };
+      window.logout = function(e) { localStorage.clear(); window.location.href = '/logout'; };
       window.editUser = function(id) { alert('Edit user: ' + id); };
       window.deleteUser = function(id) { if (confirm('Delete this user?')) alert('Delete user: ' + id); };
     })();

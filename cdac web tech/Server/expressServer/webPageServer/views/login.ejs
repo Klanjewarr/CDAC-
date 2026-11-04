@@ -472,7 +472,7 @@
       <div class="card-body">
         <div id="alert-container"></div>
 
-        <form id="login-form" novalidate>
+        <form id="login-form" action="/login" method="POST" novalidate>
           <div class="form-group" style="--i: 0;">
             <label for="email" class="form-label">Email Address</label>
             <div class="input-wrapper">
@@ -558,9 +558,12 @@
         setLoading(true);
 
         try {
-          const response = await fetch('/api/auth/login', {
+          const response = await fetch('/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
             body: JSON.stringify({
               email: document.getElementById('email').value.trim(),
               password: passwordInput.value
@@ -572,10 +575,10 @@
           if (!response.ok) throw new Error(data.message || 'Login failed');
 
           showAlert('success', 'Welcome back! Redirecting...');
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
+          if (data.token) localStorage.setItem('token', data.token);
+          if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
 
-          setTimeout(() => window.location.href = 'dashboard.html', 1000);
+          setTimeout(() => window.location.href = '/dash', 800);
         } catch (error) {
           showAlert('danger', error.message);
         } finally {

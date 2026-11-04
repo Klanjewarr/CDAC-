@@ -6,7 +6,7 @@ const router = express.Router()
 const userModel = require("../models/userModel")
 const { default: mongoose } = require("mongoose")
 
-
+require.env.config()
 
 router.get("/",authVerifyMiddleware, async (req, res) => {
     const users = await userModel.find()
@@ -61,7 +61,7 @@ router.post("/auth",async(req,res)=>{
         const token = jwt.sign(singData,JWTsecretKey)
 
         res.cookie("token",token,{
-            maxAge:60*60*1000, //1hr
+            maxAge:process.env.TOKEN_EXPRIY, 
             httpOnly:true, //only of https/http 
             secure:false , //for https only 
             sameSite:"lax", 
