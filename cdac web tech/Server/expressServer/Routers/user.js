@@ -1,5 +1,6 @@
 const express = require("express")
 const jwt = require("jsonwebtoken")
+const bcrypt= require("bcrypt")
 const {authVerifyMiddleware, JWTsecretKey }= require("../config/jwtVerifcation")
 const router = express.Router()
 const userModel = require("../models/userModel")
@@ -51,8 +52,9 @@ router.post("/auth",async(req,res)=>{
     if(!user){
         return res.json({msg:"email-id not matched ",auth:false})
     }
-
-    if(password===user.password){
+    //we are 
+    const isMatch= await bcrypt.compare(password,user.password)
+    if(isMatch){
     //    success==login json web token assign
         const singData={id:user._id, email:user.email, name:user.name}
 
@@ -73,7 +75,9 @@ router.post("/auth",async(req,res)=>{
 
 
 router.post("/", async (req, res) => {
-    console.log(req.body)
+    const user = req.body
+     user.password =await bcrypt.hash(user.password,10) //passing pass as in user and using hashing bcrpt to encode the password
+    
     const savedUser = await userModel.create(req.body)
     if (!savedUser) {
         return res.send("User not saved")

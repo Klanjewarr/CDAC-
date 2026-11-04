@@ -81,6 +81,7 @@ public class HeapSort {
      HeapSort(a, 100000-1);
     long end = System.nanoTime();
     for(int i=0;i<10;i++){
+        
             System.out.print(a[i]+"\t");
         }
         System.out.println();
