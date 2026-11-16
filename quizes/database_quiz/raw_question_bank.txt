@@ -1,0 +1,1036 @@
+DATABASE TECHNOLOGIES – QUESTION BANK
+Section A – Database Fundamentals, ER Model and SQL Basics
+1. An ________ is a set of entities of the same type that share the same properties or attributes.
+A) Entity set
+B) Attribute set
+C) Entity model
+D) Relation set
+Correct Answer: A) Entity set
+Explanation: An entity set is a collection of entities of the same entity type. Its members share the same attributes, such as all Student entities having student_id, name, and date_of_birth.
+2. An attribute consisting of first name, middle initial, and last name is an example of which attribute type?
+A) Derived attribute
+B) Simple attribute
+C) Multivalued attribute
+D) Composite attribute
+Correct Answer: D) Composite attribute
+Explanation: A composite attribute can be divided into smaller meaningful components. For example, Name can be decomposed into first name, middle initial, and last name; a simple attribute cannot be meaningfully split further.
+3. Which symbol represents an entity set in a standard ER diagram?
+A) Diamond
+B) Rectangle
+C) Oval
+D) Line
+Correct Answer: B) Rectangle
+Explanation: In the standard ER notation, an entity set is drawn as a rectangle. Ovals represent attributes, diamonds represent relationships, and lines connect the components.
+4. Which symbol represents a relationship set in a standard ER diagram?
+A) Rectangle
+B) Diamond
+C) Oval
+D) Double line
+Correct Answer: B) Diamond
+Explanation: A relationship set is represented by a diamond in the standard ER model. It describes an association among entity sets, such as Student ENROLLS_IN Course.
+5. In an ER diagram, a double rectangle is commonly used to represent which concept?
+A) Strong entity
+B) Weak entity
+C) Derived attribute
+D) Relationship attribute
+Correct Answer: B) Weak entity
+Explanation: A weak entity is represented by a double rectangle. It cannot be uniquely identified by its own attributes alone and depends on an identifying relationship with an owner entity.
+6. Which SQL command is used to retrieve records from a table?
+A) RETRIEVE
+B) SELECT
+C) CREATE
+D) ALTER
+Correct Answer: B) SELECT
+Explanation: SELECT retrieves data from one or more tables. CREATE defines database objects, while ALTER changes their structure.
+7. DDL stands for:
+A) Data Description Language
+B) Data Definition Language
+C) Data Derivation Language
+D) Data Distinct Language
+Correct Answer: B) Data Definition Language
+Explanation: DDL means Data Definition Language. It defines or changes database structures, for example with CREATE, ALTER, and DROP.
+8. DML stands for:
+A) Data Mapping Language
+B) Data Manipulation Language
+C) Data Management Logic
+D) Data Modify Language
+Correct Answer: B) Data Manipulation Language
+Explanation: DML means Data Manipulation Language. It changes data stored in tables, commonly through INSERT, UPDATE, and DELETE.
+9. Which group contains only DDL commands in MySQL?
+A) INSERT, UPDATE, DELETE
+B) CREATE, ALTER, DROP
+C) SELECT, INSERT, UPDATE
+D) GRANT, REVOKE, COMMIT
+Correct Answer: B) CREATE, ALTER, DROP
+Explanation: CREATE, ALTER, and DROP define, modify, and remove database objects respectively, so all three are DDL commands. INSERT and UPDATE manipulate table data instead.
+10. Which command removes all rows while retaining the table structure?
+A) DROP TABLE
+B) TRUNCATE TABLE
+C) ALTER TABLE
+D) RENAME TABLE
+Correct Answer: B) TRUNCATE TABLE
+Explanation: TRUNCATE TABLE removes every row while keeping the table definition. DROP TABLE removes the table itself, including its definition.
+Section B – SQL Queries, Constraints, Joins and Normalization
+11. Which command removes both a table's data and its definition?
+A) DELETE
+B) TRUNCATE
+C) DROP TABLE
+D) UPDATE
+Correct Answer: C) DROP TABLE
+Explanation: DROP TABLE removes the table object, so both its stored rows and its schema definition are removed. DELETE removes rows but leaves the table structure in place.
+12. Which clause is used to filter individual rows before grouping?
+A) HAVING
+B) ORDER BY
+C) WHERE
+D) GROUP BY
+Correct Answer: C) WHERE
+Explanation: WHERE filters individual rows before grouping and aggregation. It is evaluated before GROUP BY forms groups.
+13. Which clause filters groups after GROUP BY has been applied?
+A) WHERE
+B) HAVING
+C) DISTINCT
+D) LIMIT
+Correct Answer: B) HAVING
+Explanation: HAVING filters groups after GROUP BY, commonly using aggregate conditions such as HAVING COUNT(*) > 2. WHERE filters rows before grouping.
+14. Which aggregate function counts all rows, including rows containing NULL in other columns?
+A) COUNT(column)
+B) COUNT(*)
+C) SUM(*)
+D) TOTAL(*)
+Correct Answer: B) COUNT(*)
+Explanation: COUNT(*) counts rows regardless of whether other columns in those rows contain NULL. COUNT(column_name), by contrast, counts only non-NULL values in that column.
+15. Which of the following is an aggregate function?
+A) GROUP BY
+B) MAX()
+C) ORDER BY
+D) LIKE
+Correct Answer: B) MAX()
+Explanation: MAX() is an aggregate function: it returns the largest non-NULL value in the selected group or result set. GROUP BY and ORDER BY are clauses, not aggregate functions.
+16. What is the default sort direction of ORDER BY in MySQL when ASC or DESC is omitted?
+A) Descending
+B) Ascending
+C) Random
+D) No sorting
+Correct Answer: B) Ascending
+Explanation: ORDER BY sorts in ascending order by default in MySQL. Use DESC explicitly for descending order.
+17. Which operator tests whether a column contains a NULL value?
+A) = NULL
+B) IS NULL
+C) EQUAL NULL
+D) LIKE NULL
+Correct Answer: B) IS NULL
+Explanation: Use IS NULL to test for NULL. Ordinary equality comparisons with NULL do not work as a normal value comparison because NULL represents an unknown or missing value.
+18. Which statement about NULL is correct?
+A) NULL is always equal to zero
+B) NULL is always equal to an empty string
+C) NULL represents missing, unknown, or not-applicable information
+D) NULL values can be compared using = NULL
+Correct Answer: C) NULL represents missing, unknown, or not-applicable information
+Explanation: NULL represents missing, unknown, or not-applicable information; it is not the same as numeric zero or an empty string. Test it with IS NULL or IS NOT NULL.
+19. Which key uniquely identifies each row and does not allow NULL values?
+A) Foreign key
+B) Primary key
+C) Candidate attribute
+D) Non-unique index
+Correct Answer: B) Primary key
+Explanation: A primary key uniquely identifies each row and cannot contain NULL. A table has one primary-key constraint, although that key may consist of multiple columns.
+20. How many primary keys can a table have?
+A) Zero or one
+B) Exactly two
+C) Any number
+D) One per column
+Correct Answer: A) Zero or one
+Explanation: A table can define only one PRIMARY KEY constraint. That primary key can be composite, meaning it can include two or more columns.
+21. How many UNIQUE constraints can a table have?
+A) Only one
+B) At most two
+C) Multiple
+D) None
+Correct Answer: C) Multiple
+Explanation: A table may have multiple UNIQUE constraints, each enforcing uniqueness on its own column or combination of columns. This differs from the single primary-key constraint.
+22. Can a foreign-key column contain NULL when the column definition permits it?
+A) Yes
+B) No
+C) Only in parent tables
+D) Only when it is also a primary key
+Correct Answer: A) Yes
+Explanation: A foreign-key column may contain NULL if its definition allows NULL and no NOT NULL constraint is applied. A non-NULL foreign-key value must satisfy the referenced-key relationship.
+23. Which constraint enforces a relationship between rows in two tables?
+A) CHECK
+B) DEFAULT
+C) FOREIGN KEY
+D) NOT NULL
+Correct Answer: C) FOREIGN KEY
+Explanation: A FOREIGN KEY constraint enforces referential integrity by requiring non-NULL child-key values to match an eligible key in the referenced table.
+24. Which MySQL command is used to add a new column to an existing table?
+A) UPDATE TABLE
+B) ALTER TABLE ... ADD COLUMN
+C) INSERT COLUMN
+D) MODIFY TABLE ... INSERT
+Correct Answer: B) ALTER TABLE ... ADD COLUMN
+Explanation: ALTER TABLE ... ADD COLUMN adds a column to an existing table. UPDATE changes values in existing rows; it does not change the table's column structure.
+25. Which command adds a new row to a table?
+A) ADD
+B) INSERT
+C) UPDATE
+D) ALTER
+Correct Answer: B) INSERT
+Explanation: INSERT adds new rows to a table. UPDATE changes existing rows, while ALTER changes the table definition.
+26. Which SQL statement modifies existing rows?
+A) UPDATE
+B) ALTER
+C) CREATE
+D) GRANT
+Correct Answer: A) UPDATE
+Explanation: UPDATE modifies values in existing rows, usually selecting which rows to change with a WHERE clause. Without WHERE, all rows may be updated.
+27. Which SQL statement removes selected rows from a table?
+A) DROP
+B) DELETE
+C) REMOVE
+D) TRUNCATE COLUMN
+Correct Answer: B) DELETE
+Explanation: DELETE removes rows from a table and can target selected rows with WHERE. It does not remove the table definition.
+28. Which SQL pattern matches any sequence of zero or more characters using LIKE?
+A) ?
+B) _
+C) %
+D) *
+Correct Answer: C) %
+Explanation: The percent sign (%) in a LIKE pattern matches any sequence of zero or more characters, including an empty sequence. For example, 'A%' matches strings beginning with A.
+29. In a LIKE pattern, which wildcard matches exactly one character?
+A) %
+B) _
+C) *
+D) ?
+Correct Answer: B) _
+Explanation: The underscore (_) wildcard in LIKE matches exactly one character. For example, 'A_' matches two-character strings beginning with A.
+30. Which join returns only rows having matching values in both joined tables?
+A) LEFT JOIN
+B) RIGHT JOIN
+C) INNER JOIN
+D) CROSS JOIN
+Correct Answer: C) INNER JOIN
+Explanation: INNER JOIN returns only rows for which the join condition finds a match in both tables. Nonmatching rows from either side are excluded.
+31. Which join returns all rows from the left table and matching rows from the right table?
+A) LEFT OUTER JOIN
+B) INNER JOIN
+C) CROSS JOIN
+D) SELF JOIN
+Correct Answer: A) LEFT OUTER JOIN
+Explanation: LEFT OUTER JOIN returns every row from the left table and matching rows from the right table. Where no right-side match exists, right-side columns are returned as NULL.
+32. Which join produces a Cartesian product of the two input tables?
+A) NATURAL JOIN
+B) CROSS JOIN
+C) INNER JOIN
+D) LEFT JOIN
+Correct Answer: B) CROSS JOIN
+Explanation: CROSS JOIN returns the Cartesian product: every row from the first table is paired with every row from the second table. The result contains m × n rows for inputs of m and n rows.
+33. Which join type is not directly supported as a native join keyword in MySQL?
+A) INNER JOIN
+B) LEFT JOIN
+C) RIGHT JOIN
+D) FULL OUTER JOIN
+Correct Answer: D) FULL OUTER JOIN
+Explanation: MySQL does not provide a native FULL OUTER JOIN keyword. The usual workaround combines LEFT JOIN and RIGHT JOIN results with UNION, taking care to handle duplicates.
+34. A table can be joined to itself. What is this called?
+A) Natural join
+B) Self join
+C) Cross union
+D) Recursive key
+Correct Answer: B) Self join
+Explanation: A self join joins a table to itself, usually by assigning aliases to represent two roles or rows. It is useful for relationships such as employees and their managers.
+35. Which set operator combines result sets and removes duplicate rows by default?
+A) UNION
+B) UNION ALL
+C) CROSS JOIN
+D) INTERSECT ALL
+Correct Answer: A) UNION
+Explanation: UNION combines compatible SELECT results and removes duplicate rows by default. UNION ALL retains duplicates and is generally less costly because it does not perform duplicate elimination.
+36. Which clause sorts the final result set?
+A) GROUP BY
+B) ORDER BY
+C) HAVING
+D) WHERE
+Correct Answer: B) ORDER BY
+Explanation: ORDER BY sorts the final query result. GROUP BY forms groups, WHERE filters rows, and HAVING filters groups.
+37. Which keyword removes duplicate rows from a SELECT result?
+A) UNIQUE ROWS
+B) DISTINCT
+C) DIFFERENT
+D) SINGLE
+Correct Answer: B) DISTINCT
+Explanation: DISTINCT removes duplicate result rows from a SELECT result. It applies to the selected column combination, not just one arbitrary column.
+38. Which normal form requires each attribute value to be atomic and each row-column intersection to contain a single value?
+A) 1NF
+B) 2NF
+C) 3NF
+D) BCNF
+Correct Answer: A) 1NF
+Explanation: First Normal Form requires each field to contain a single atomic value and disallows repeating groups or arrays of values in one relational cell. It establishes the basic tabular structure.
+39. Second Normal Form primarily eliminates:
+A) Transitive dependencies
+B) Partial dependencies on a candidate key
+C) All foreign keys
+D) Multivalued dependencies
+Correct Answer: B) Partial dependencies on a candidate key
+Explanation: Second Normal Form requires 1NF and removes partial dependencies of non-prime attributes on a proper subset of a candidate key. This matters especially when a candidate key is composite.
+40. Third Normal Form primarily addresses:
+A) Repeating groups
+B) Partial dependency only
+C) Transitive dependency of non-key attributes
+D) Join dependency
+Correct Answer: C) Transitive dependency of non-key attributes
+Explanation: Third Normal Form requires 2NF and addresses transitive dependencies of non-key attributes on candidate keys. A non-key attribute should not depend on another non-key attribute.
+41. Fourth Normal Form is concerned primarily with:
+A) Functional dependency
+B) Multivalued dependency
+C) Transitive dependency
+D) Partial dependency
+Correct Answer: B) Multivalued dependency
+Explanation: Fourth Normal Form addresses non-trivial multivalued dependencies. It decomposes relations when independent multi-valued facts about the same key create unnecessary combinations.
+42. Referential integrity is commonly enforced using:
+A) CHECK constraint
+B) FOREIGN KEY constraint
+C) DEFAULT constraint
+D) NOT NULL constraint
+Correct Answer: B) FOREIGN KEY constraint
+Explanation: Referential integrity is commonly enforced by a FOREIGN KEY constraint. It prevents a child row from referring to a nonexistent parent key, subject to the configured actions.
+43. Which statement makes the changes of the current transaction permanent?
+A) ROLLBACK
+B) SAVEPOINT
+C) COMMIT
+D) RELEASE
+Correct Answer: C) COMMIT
+Explanation: COMMIT makes the current transaction's changes permanent. After a successful commit, those changes are no longer undone by a normal ROLLBACK of that transaction.
+44. Which statement undoes uncommitted changes in the current transaction?
+A) COMMIT
+B) ROLLBACK
+C) GRANT
+D) ALTER
+Correct Answer: B) ROLLBACK
+Explanation: ROLLBACK undoes changes made in the current uncommitted transaction, returning the database to the transaction's earlier state or last savepoint.
+45. A transaction is best described as:
+A) A database user
+B) A sequence of operations treated as one logical unit of work
+C) A table index
+D) A stored view
+Correct Answer: B) A sequence of operations treated as one logical unit of work
+Explanation: A transaction is a sequence of database operations treated as one logical unit of work. It is committed as a whole or rolled back according to transaction rules.
+46. Which ACID property ensures that a transaction is completed entirely or not at all?
+A) Consistency
+B) Isolation
+C) Atomicity
+D) Durability
+Correct Answer: C) Atomicity
+Explanation: Atomicity means all operations in a transaction succeed together or none of them take effect. It is often summarized as 'all or nothing.'
+47. Which ACID property ensures committed changes survive system failure?
+A) Atomicity
+B) Durability
+C) Isolation
+D) Consistency
+Correct Answer: B) Durability
+Explanation: Durability means that once a transaction commits, its changes persist even if a system failure occurs afterward.
+48. Which SQL command creates a database?
+A) MAKE DATABASE
+B) CREATE DATABASE
+C) NEW DATABASE
+D) BUILD SCHEMA
+Correct Answer: B) CREATE DATABASE
+Explanation: CREATE DATABASE creates a new database schema. In MySQL, IF NOT EXISTS can be added to avoid an error if the database already exists.
+49. Which command selects the database to be used in a MySQL session?
+A) OPEN
+B) USE
+C) SELECT DATABASE TABLE
+D) CONNECT TO
+Correct Answer: B) USE
+Explanation: USE database_name selects the database that subsequent unqualified statements operate on in the current MySQL session.
+50. Which MySQL statement is used to create a view?
+A) CREATE VIEW
+B) MAKE VIEW
+C) ALTER QUERY
+D) INSERT VIEW
+Correct Answer: A) CREATE VIEW
+Explanation: CREATE VIEW defines a named query that can be used like a virtual table. The view generally stores the query definition rather than a separate copy of all source rows.
+Section C – MySQL, SQL Programming and Advanced Querying
+51. Which SQL command category includes GRANT and REVOKE?
+A) DDL
+B) DML
+C) DCL
+D) TCL
+Correct Answer: C) DCL
+Explanation: GRANT and REVOKE manage privileges and access rights. They belong to Data Control Language (DCL).
+52. Which command category includes COMMIT and ROLLBACK?
+A) DCL
+B) TCL/DTL
+C) DDL
+D) DQL
+Correct Answer: B) TCL/DTL
+Explanation: COMMIT and ROLLBACK control transaction boundaries, so they belong to Transaction Control Language (TCL), sometimes called Transaction Management Language.
+53. Which statement about DELETE and TRUNCATE is generally correct in MySQL?
+A) DELETE cannot use WHERE
+B) TRUNCATE removes all rows and resets AUTO_INCREMENT in common MySQL use
+C) TRUNCATE is a row-by-row DML operation
+D) DELETE always removes table structure
+Correct Answer: B) TRUNCATE removes all rows and resets AUTO_INCREMENT in common MySQL use
+Explanation: TRUNCATE removes all rows without a WHERE filter and, in normal MySQL use, resets the table's AUTO_INCREMENT counter. DELETE can selectively remove rows and is a DML operation.
+54. What does AUTO_INCREMENT do in MySQL?
+A) Automatically generates a sequential value when a value is not supplied
+B) Creates a foreign key automatically
+C) Sorts the table by primary key
+D) Prevents duplicate rows in every column
+Correct Answer: A) Automatically generates a sequential value when a value is not supplied
+Explanation: AUTO_INCREMENT generates the next sequence value for a column when an INSERT does not explicitly provide one. It is commonly used for surrogate identifier columns.
+55. Which data type is generally suitable for storing a calendar date without time?
+A) TIME
+B) DATE
+C) DATETIME
+D) YEAR-MONTH
+Correct Answer: B) DATE
+Explanation: DATE stores a calendar date without a time-of-day component. TIME stores a time value, while DATETIME stores both date and time.
+56. Which MySQL type stores both date and time values?
+A) DATE
+B) TIME
+C) DATETIME
+D) CHAR
+Correct Answer: C) DATETIME
+Explanation: DATETIME stores both calendar date and time-of-day information. DATE has no time component and TIME has no date component.
+57. Which constraint supplies a value when an INSERT statement omits that column?
+A) CHECK
+B) DEFAULT
+C) UNIQUE
+D) FOREIGN KEY
+Correct Answer: B) DEFAULT
+Explanation: DEFAULT supplies a column value when an INSERT omits that column or explicitly requests DEFAULT. It does not override a value that is explicitly supplied.
+58. What is the purpose of a CHECK constraint?
+A) To sort records
+B) To enforce a Boolean condition on inserted or updated values
+C) To create an index
+D) To join two tables
+Correct Answer: B) To enforce a Boolean condition on inserted or updated values
+Explanation: CHECK enforces a Boolean condition on values being inserted or updated. Rows that violate an enforced check condition are rejected.
+59. Which index structure is commonly used by MySQL InnoDB for primary and secondary indexes?
+A) B-tree family
+B) Stack
+C) Hash map only
+D) Binary search tree in memory only
+Correct Answer: A) B-tree family
+Explanation: InnoDB uses B-tree-family structures (implemented as B+ trees) for its common primary and secondary indexes. These structures support efficient key lookups and ordered range scans.
+60. What is a likely trade-off of adding indexes to a table?
+A) Reads may become faster, but writes and storage can become more expensive
+B) All queries become constant time
+C) Indexes eliminate the need for constraints
+D) Indexes always reduce storage
+Correct Answer: A) Reads may become faster, but writes and storage can become more expensive
+Explanation: Indexes can speed up suitable reads by reducing the amount of data scanned, but they consume storage and must be maintained when rows are inserted, updated, or deleted. Too many indexes can slow writes.
+61. What is a candidate key?
+A) Any column that contains NULL
+B) A minimal set of attributes that uniquely identifies a row
+C) A key used only for sorting
+D) A foreign key without a parent
+Correct Answer: B) A minimal set of attributes that uniquely identifies a row
+Explanation: A candidate key is a minimal set of attributes that uniquely identifies a row. Minimal means no proper subset of that attribute set can still uniquely identify rows.
+62. A composite key is:
+A) A key consisting of two or more attributes
+B) A key that allows duplicate values
+C) A key that references multiple databases only
+D) A key created automatically by a view
+Correct Answer: A) A key consisting of two or more attributes
+Explanation: A composite key contains two or more attributes whose combination identifies a row. Individual columns may not be unique, while the combined values are.
+63. A functional dependency X → Y means:
+A) Y determines X in every possible relation
+B) Each value of X is associated with exactly one value of Y
+C) X and Y must be primary keys
+D) X and Y must contain identical values
+Correct Answer: B) Each value of X is associated with exactly one value of Y
+Explanation: X → Y means that each value of X determines exactly one associated value of Y in the relation. Different X values may still determine the same Y value.
+64. A relation is in BCNF if, for every non-trivial functional dependency X → Y:
+A) Y is a foreign key
+B) X is a superkey
+C) Y is a candidate key
+D) X contains one attribute only
+Correct Answer: B) X is a superkey
+Explanation: In BCNF, the determinant X of every non-trivial functional dependency X → Y must be a superkey. This is stricter than 3NF.
+65. Which anomaly can occur when the same fact is unnecessarily repeated in multiple rows?
+A) Insertion anomaly
+B) Update anomaly
+C) Deletion anomaly
+D) All of the above
+Correct Answer: D) All of the above
+Explanation: Repeated facts can cause insertion, update, and deletion anomalies. Therefore, all three anomaly types may arise from poorly structured redundant data.
+66. Which relational algebra operation selects rows satisfying a predicate?
+A) Projection
+B) Selection
+C) Union
+D) Rename
+Correct Answer: B) Selection
+Explanation: Relational algebra selection (σ) filters rows that satisfy a predicate. It is analogous to the WHERE clause in SQL.
+67. Which relational algebra operation selects specified columns?
+A) Selection
+B) Projection
+C) Difference
+D) Join
+Correct Answer: B) Projection
+Explanation: Projection (π) selects specified columns from a relation. It is analogous to choosing the column list in SELECT.
+68. Which condition is required for two relations to be union-compatible?
+A) Same number of attributes with compatible corresponding domains
+B) Same table name
+C) Same primary-key values
+D) Same number of rows
+Correct Answer: A) Same number of attributes with compatible corresponding domains
+Explanation: UNION-compatible relations must have the same number of attributes, and corresponding attributes must have compatible domains or data types. Their names and row counts need not be identical.
+69. What does UNION ALL do compared with UNION?
+A) It removes duplicates more aggressively
+B) It retains duplicate rows
+C) It sorts only numeric columns
+D) It returns only common rows
+Correct Answer: B) It retains duplicate rows
+Explanation: UNION ALL combines result sets while retaining duplicate rows. UNION performs duplicate elimination.
+70. Which clause is used to combine rows having the same values in specified columns?
+A) ORDER BY
+B) GROUP BY
+C) WHERE
+D) LIMIT
+Correct Answer: B) GROUP BY
+Explanation: GROUP BY groups rows that share values in one or more columns, allowing aggregate functions to calculate a result per group.
+71. Which query condition correctly checks for rows where commission is not NULL?
+A) commission <> NULL
+B) commission = NOT NULL
+C) commission IS NOT NULL
+D) commission != 'NULL'
+Correct Answer: C) commission IS NOT NULL
+Explanation: IS NOT NULL correctly tests for a value that is not NULL. Expressions such as column <> NULL evaluate to UNKNOWN rather than performing the intended test.
+72. Which aggregate function returns the average of non-NULL values in a numeric column?
+A) SUM()
+B) AVG()
+C) COUNT()
+D) MAX()
+Correct Answer: B) AVG()
+Explanation: AVG() calculates the arithmetic average of non-NULL values in a numeric expression. NULL values are excluded from the average.
+73. What is the result of COUNT(column_name) with respect to NULL values?
+A) It counts all rows
+B) It ignores NULL values in that column
+C) It counts only NULL values
+D) It returns an error
+Correct Answer: B) It ignores NULL values in that column
+Explanation: COUNT(column_name) counts only rows where that column is non-NULL. Use COUNT(*) when the intention is to count rows regardless of column NULL values.
+74. Which subquery operator tests whether at least one row is returned by a subquery?
+A) EXISTS
+B) ALL
+C) BETWEEN
+D) LIKE
+Correct Answer: A) EXISTS
+Explanation: EXISTS tests whether a subquery returns at least one row. It is true when a matching row exists and false when the subquery returns no rows.
+75. Which operator can test whether a value matches any value returned by a subquery?
+A) IN
+B) IS NULL
+C) LIKE
+D) AS
+Correct Answer: A) IN
+Explanation: IN tests whether a value equals any value in a list or the result of a subquery. It is commonly used for membership checks.
+76. A correlated subquery:
+A) Runs independently without referring to outer query
+B) References a column from the outer query
+C) Cannot appear in WHERE
+D) Must return exactly one row
+Correct Answer: B) References a column from the outer query
+Explanation: A correlated subquery refers to a column from the outer query. It is logically evaluated in relation to each candidate outer row, although the optimizer may transform its execution.
+77. What is a Common Table Expression (CTE) introduced by?
+A) DEFINE
+B) WITH
+C) TEMP
+D) DECLARE TABLE
+Correct Answer: B) WITH
+Explanation: A Common Table Expression is introduced with WITH. It names a temporary result set that can be referenced by the statement that follows.
+78. What is a recursive CTE commonly used for?
+A) Encrypting columns
+B) Traversing hierarchical or tree-like data
+C) Creating indexes automatically
+D) Replacing all joins
+Correct Answer: B) Traversing hierarchical or tree-like data
+Explanation: A recursive CTE repeatedly refers to its own result and is useful for traversing hierarchical data such as employee reporting structures or tree-like categories.
+79. Which window function assigns a unique sequential number to each row within a partition?
+A) RANK()
+B) DENSE_RANK()
+C) ROW_NUMBER()
+D) NTILE()
+Correct Answer: C) ROW_NUMBER()
+Explanation: ROW_NUMBER() assigns a distinct sequential number to each row within a window partition, following the window's ORDER BY. Tied ordering values still receive different row numbers.
+80. If two rows tie, which function assigns the same rank and leaves a gap in the next rank?
+A) ROW_NUMBER()
+B) RANK()
+C) DENSE_RANK()
+D) NTILE()
+Correct Answer: B) RANK()
+Explanation: RANK() assigns equal ranks to tied rows and leaves a gap after the tie. For example, ranks may be 1, 1, 3; DENSE_RANK() would produce 1, 1, 2.
+81. Which window clause divides rows into groups for independent window calculations?
+A) GROUP BY
+B) PARTITION BY
+C) HAVING
+D) WITH
+Correct Answer: B) PARTITION BY
+Explanation: PARTITION BY divides the rows into independent groups for a window function. The function is calculated separately within each partition without collapsing rows.
+82. Which clause is used inside OVER() to define the ordering for a window function?
+A) ORDER BY
+B) WHERE
+C) LIMIT
+D) DISTINCT
+Correct Answer: A) ORDER BY
+Explanation: ORDER BY inside OVER() defines the order used by the window function within its partition. This ordering is separate from the final query's ORDER BY.
+83. Which statement about a window function is correct?
+A) It collapses each group into one row like GROUP BY
+B) It calculates across related rows while retaining individual result rows
+C) It can only be used with DELETE
+D) It always returns one row
+Correct Answer: B) It calculates across related rows while retaining individual result rows
+Explanation: Window functions calculate values across related rows while keeping each input row in the result. GROUP BY generally collapses each group into one output row.
+84. Which MySQL command displays the structure of a table?
+A) DESCRIBE table_name
+B) SHOW ROWS table_name
+C) STRUCTURE table_name
+D) VIEW TABLE table_name
+Correct Answer: A) DESCRIBE table_name
+Explanation: DESCRIBE table_name (also written DESC table_name) displays a table's columns and structural details, such as types, nullability, keys, and defaults.
+85. Which MySQL client provides a graphical interface for database development and administration?
+A) MySQL Workbench
+B) MySQL Router only
+C) mysqldump
+D) mysqladmin only
+Correct Answer: A) MySQL Workbench
+Explanation: MySQL Workbench is a graphical tool for database design, SQL development, and administration. The other listed tools are command-line or utility tools rather than the general GUI described.
+86. Which MySQL client is a command-line interface for executing SQL statements?
+A) MySQL Workbench
+B) mysql monitor/client
+C) Mongo Shell
+D) Compass
+Correct Answer: B) mysql monitor/client
+Explanation: The mysql client (also called the MySQL monitor) is a command-line program for connecting to MySQL and executing SQL statements. MySQL Workbench is the graphical alternative.
+87. Which statement about a view is correct?
+A) A view is always a physically stored copy of all source rows
+B) A view is a named query that can present data from one or more tables
+C) A view cannot contain joins
+D) A view always has its own independent data
+Correct Answer: B) A view is a named query that can present data from one or more tables
+Explanation: A view is a named query that presents data from one or more underlying tables or views. It is not necessarily a physically stored copy of the source data.
+88. What is the purpose of WITH CHECK OPTION in an updatable view?
+A) It prevents all SELECT statements
+B) It ensures rows modified through the view satisfy the view's defining condition
+C) It automatically creates a primary key
+D) It disables all constraints
+Correct Answer: B) It ensures rows modified through the view satisfy the view's defining condition
+Explanation: WITH CHECK OPTION requires rows inserted or updated through an updatable view to continue satisfying the view's defining WHERE condition. It prevents changes that would make the row disappear from that view.
+89. Which statement about a MySQL temporary table is correct?
+A) It is visible to every database user
+B) It is generally visible only within the creating session
+C) It survives server restart permanently
+D) It cannot share a name with a permanent table
+Correct Answer: B) It is generally visible only within the creating session
+Explanation: A MySQL TEMPORARY TABLE is visible only to the session that created it and is automatically dropped when that session ends. Other sessions cannot use that temporary table.
+90. Which command is used to rename a table in MySQL?
+A) ALTER TABLE old_name RENAME TO new_name
+B) UPDATE TABLE old_name TO new_name
+C) CHANGE TABLE old_name new_name
+D) MODIFY TABLE old_name
+Correct Answer: A) ALTER TABLE old_name RENAME TO new_name
+Explanation: ALTER TABLE old_name RENAME TO new_name renames a table in MySQL. RENAME TABLE old_name TO new_name is another supported form.
+Section D – PL/SQL and Stored Programming
+91. In PL/SQL, which section contains executable statements?
+A) DECLARE
+B) BEGIN ... END
+C) EXCEPTION only
+D) PACKAGE
+Correct Answer: B) BEGIN ... END
+Explanation: In a PL/SQL block, executable statements are placed between BEGIN and END. DECLARE is used for optional declarations, while EXCEPTION handles runtime errors.
+92. Which section of a PL/SQL block is optional?
+A) BEGIN
+B) END
+C) DECLARE
+D) Executable section
+Correct Answer: C) DECLARE
+Explanation: The DECLARE section is optional in a PL/SQL block. BEGIN and END are required to delimit the executable section, although the executable section itself may contain no statements only with NULL;.
+93. Which PL/SQL construct is used to handle runtime errors?
+A) CASE
+B) EXCEPTION section
+C) DECLARE section
+D) PACKAGE specification
+Correct Answer: B) EXCEPTION section
+Explanation: The EXCEPTION section handles runtime exceptions raised while the executable section runs. It can contain handlers for predefined or user-defined exceptions.
+94. Which parameter mode passes a value into a PL/SQL subprogram?
+A) OUT
+B) IN
+C) RETURN
+D) INOUT only
+Correct Answer: B) IN
+Explanation: IN is the default parameter mode and passes a value into a PL/SQL subprogram. The subprogram cannot assign a new value back to the caller through an IN parameter.
+95. Which parameter mode allows a subprogram to return a value through a parameter?
+A) IN
+B) OUT
+C) CONSTANT
+D) STATIC
+Correct Answer: B) OUT
+Explanation: OUT parameters return a value from a PL/SQL subprogram to the caller. They are intended for output rather than supplying an initial input value.
+96. Which subprogram is designed to return a value using RETURN?
+A) Procedure
+B) Function
+C) Trigger
+D) Cursor
+Correct Answer: B) Function
+Explanation: A function is designed to return a value using RETURN and declares a return data type. A procedure performs an action and does not return a function value.
+97. Which PL/SQL cursor is created automatically for SQL statements?
+A) Explicit cursor
+B) Implicit cursor
+C) Parameterized cursor
+D) Ref cursor only
+Correct Answer: B) Implicit cursor
+Explanation: An implicit cursor is created and managed automatically by Oracle for SQL statements. Programmers explicitly declare, open, fetch, and close explicit cursors.
+98. Which cursor attribute returns the number of rows affected by the most recent SQL statement?
+A) %FOUND
+B) %NOTFOUND
+C) %ROWCOUNT
+D) %ISOPEN
+Correct Answer: C) %ROWCOUNT
+Explanation: %ROWCOUNT reports how many rows have been affected or fetched by the most recent cursor/SQL operation, depending on the cursor reference. It is not a count of columns.
+99. What does SQL%FOUND indicate after a DML statement?
+A) Whether at least one row was affected
+B) Whether the cursor is closed
+C) The number of columns updated
+D) Whether a transaction was committed
+Correct Answer: A) Whether at least one row was affected
+Explanation: SQL%FOUND is TRUE after a DML statement if at least one row was affected; it is FALSE if no rows were affected. It is an attribute of Oracle's implicit SQL cursor.
+100. Which sequence of operations is typical for an explicit cursor?
+A) FETCH, OPEN, DECLARE, CLOSE
+B) DECLARE, OPEN, FETCH, CLOSE
+C) OPEN, DECLARE, CLOSE, FETCH
+D) DECLARE, FETCH, CLOSE, OPEN
+Correct Answer: B) DECLARE, OPEN, FETCH, CLOSE
+Explanation: The standard explicit cursor lifecycle is DECLARE, OPEN, FETCH, and CLOSE. Declaration defines the cursor query, OPEN executes it, FETCH retrieves rows, and CLOSE releases it.
+101. Which command is used to remove a standalone stored procedure in Oracle?
+A) DELETE PROCEDURE
+B) DROP PROCEDURE
+C) REMOVE PROCEDURE
+D) TRUNCATE PROCEDURE
+Correct Answer: B) DROP PROCEDURE
+Explanation: DROP PROCEDURE removes a standalone stored procedure in Oracle. DELETE is used for table rows, not stored program objects.
+102. Which component of a package contains public declarations visible to callers?
+A) Package body only
+B) Package specification
+C) Trigger body
+D) Cursor declaration
+Correct Answer: B) Package specification
+Explanation: The package specification is the public interface of a PL/SQL package. It declares procedures, functions, variables, types, and exceptions that callers may access.
+103. A subprogram defined in a package body but omitted from its specification is generally:
+A) Public
+B) Private
+C) A table-level trigger
+D) An implicit cursor
+Correct Answer: B) Private
+Explanation: A subprogram implemented in the package body but not declared in the package specification is private to the package body. External callers cannot invoke it directly.
+104. Which trigger timing runs the trigger before the triggering DML operation?
+A) AFTER
+B) BEFORE
+C) INSTEAD OF only
+D) ON COMMIT only
+Correct Answer: B) BEFORE
+Explanation: A BEFORE trigger fires before the triggering DML operation is completed. AFTER triggers run after the operation, while INSTEAD OF triggers are used in contexts such as views.
+105. In row-level triggers, which symbol refers to the new column value in Oracle PL/SQL?
+A) :OLD
+B) :NEW
+C) NEW()
+D) OLD()
+Correct Answer: B) :NEW
+Explanation: In an Oracle row-level trigger, :NEW refers to the new column value and :OLD refers to the old value. Availability depends on the triggering operation; for example, INSERT has no meaningful :OLD row.
+106. Which MySQL statement raises a user-defined exception condition in a stored program?
+A) SIGNAL
+B) RAISE ERROR
+C) THROW SQL
+D) EXCEPTION
+Correct Answer: A) SIGNAL
+Explanation: MySQL SIGNAL raises a condition, commonly a user-defined SQLSTATE error, from a stored program. It can be used to report validation failures to the caller.
+107. Which MySQL construct is used to declare a handler for conditions in a stored program?
+A) DECLARE ... HANDLER
+B) CREATE ... EXCEPTION
+C) SIGNAL ... HANDLER
+D) CATCH ... END
+Correct Answer: A) DECLARE ... HANDLER
+Explanation: DECLARE ... HANDLER declares how a MySQL stored program responds to a specified condition, such as NOT FOUND, SQLEXCEPTION, or a particular SQLSTATE.
+108. Which statement about MySQL stored procedures is correct?
+A) They cannot accept parameters
+B) They can contain SQL statements and control-flow logic
+C) They must return exactly one scalar value
+D) They are identical to views
+Correct Answer: B) They can contain SQL statements and control-flow logic
+Explanation: MySQL stored procedures can accept parameters and contain SQL statements, variables, conditions, loops, and other control-flow logic. They are not views and need not return exactly one scalar value.
+109. Which MySQL stored-program construct repeats a block while a condition is true?
+A) WHILE loop
+B) CASE expression only
+C) VIEW
+D) INDEX
+Correct Answer: A) WHILE loop
+Explanation: WHILE repeats its statement block as long as its condition evaluates to true. The condition is checked before each iteration, so the loop may execute zero times.
+110. Which MySQL stored-program construct is used to branch among multiple conditions?
+A) IF ... ELSEIF ... ELSE
+B) CREATE INDEX
+C) ORDER BY
+D) COMMIT
+Correct Answer: A) IF ... ELSEIF ... ELSE
+Explanation: IF ... ELSEIF ... ELSE selects a branch based on one or more conditions. It is control-flow logic, unlike ORDER BY or COMMIT.
+Section E – NoSQL and MongoDB
+111. MongoDB is primarily classified as which type of database?
+A) Relational database
+B) Document-oriented NoSQL database
+C) Graph database
+D) Wide-column database
+Correct Answer: B) Document-oriented NoSQL database
+Explanation: MongoDB is a document-oriented NoSQL database. It stores flexible, JSON-like documents rather than requiring all records to fit relational rows and columns.
+112. MongoDB stores records primarily as:
+A) Rows in fixed relational tables
+B) BSON documents in collections
+C) Plain CSV files only
+D) Keyless binary blocks
+Correct Answer: B) BSON documents in collections
+Explanation: MongoDB stores records as BSON documents inside collections. BSON is a binary-encoded serialization format that extends JSON-like data with additional types.
+113. BSON is best described as:
+A) Binary representation/serialization of JSON-like documents
+B) A SQL query language
+C) A relational normalization form
+D) A MongoDB storage engine only
+Correct Answer: A) Binary representation/serialization of JSON-like documents
+Explanation: BSON is a binary representation/serialization format for JSON-like documents, with additional data types such as dates and binary data. It is the format MongoDB uses for document storage and communication.
+114. In MongoDB, a group of documents is stored in a:
+A) Schema
+B) Collection
+C) Trigger
+D) Cursor table
+Correct Answer: B) Collection
+Explanation: A collection is a grouping of MongoDB documents and is broadly analogous to a table in a relational database, though documents can have flexible structures.
+115. Which field is commonly used as the unique identifier of a MongoDB document?
+A) _id
+B) _key
+C) primary
+D) docid
+Correct Answer: A) _id
+Explanation: The _id field is the default unique identifier for documents in a MongoDB collection. MongoDB creates an ObjectId by default if an inserted document does not provide _id.
+116. Which MongoDB method inserts one document into a collection?
+A) insertOne()
+B) addRow()
+C) putRecord()
+D) createRow()
+Correct Answer: A) insertOne()
+Explanation: insertOne() inserts one document into a collection. For multiple documents, MongoDB provides insertMany().
+117. Which MongoDB method retrieves documents matching a filter?
+A) find()
+B) select()
+C) fetchRows()
+D) queryAll()
+Correct Answer: A) find()
+Explanation: find() retrieves documents matching a filter. An empty filter, find({}), matches all documents in the collection.
+118. Which MongoDB method updates a single matching document?
+A) updateOne()
+B) modifyRow()
+C) alterOne()
+D) replaceTable()
+Correct Answer: A) updateOne()
+Explanation: updateOne() updates the first document that matches the filter. The update document commonly uses operators such as $set or $inc.
+119. Which MongoDB method deletes a single matching document?
+A) removeAll()
+B) deleteOne()
+C) dropOne()
+D) truncateOne()
+Correct Answer: B) deleteOne()
+Explanation: deleteOne() removes the first document matching the filter. deleteMany() is used when all matching documents should be removed.
+120. Which MongoDB operator is used to specify equality in a query filter?
+A) $eq
+B) $set
+C) $inc
+D) $push
+Correct Answer: A) $eq
+Explanation: $eq specifies equality in a MongoDB query predicate. For example, { age: { $eq: 25 } } matches documents whose age equals 25.
+121. Which MongoDB operator selects documents where a field is greater than a specified value?
+A) $lt
+B) $gt
+C) $ne
+D) $in
+Correct Answer: B) $gt
+Explanation: $gt matches values greater than the specified value. Related comparison operators include $lt (less than), $gte (greater than or equal), and $lte (less than or equal).
+122. Which MongoDB update operator changes the value of a specified field?
+A) $set
+B) $match
+C) $project
+D) $group
+Correct Answer: A) $set
+Explanation: $set changes the value of a specified field, creating the field if it does not exist. It is an update operator, not an aggregation stage.
+123. Which MongoDB update operator increments a numeric field by a specified amount?
+A) $push
+B) $inc
+C) $unset
+D) $rename
+Correct Answer: B) $inc
+Explanation: $inc increments a numeric field by the specified amount. It is useful for counters and numeric totals without manually reading and replacing the old value.
+124. Which MongoDB operator adds an element to an array field?
+A) $push
+B) $setOnInsert
+C) $pullAll only
+D) $eq
+Correct Answer: A) $push
+Explanation: $push appends an element to an array field. If the field does not exist, MongoDB creates an array; if it is not an array, the update fails.
+125. Which MongoDB aggregation stage filters documents?
+A) $project
+B) $match
+C) $sort
+D) $group
+Correct Answer: B) $match
+Explanation: $match filters documents in an aggregation pipeline using a query predicate. Placing it early can reduce the number of documents processed by later stages.
+126. Which MongoDB aggregation stage groups documents by a specified expression?
+A) $group
+B) $limit
+C) $unwind
+D) $skip
+Correct Answer: A) $group
+Explanation: $group groups documents by a specified _id expression and can calculate aggregate values using accumulators such as $sum, $avg, $min, and $max.
+127. Which MongoDB aggregation stage sorts documents?
+A) $match
+B) $sort
+C) $count
+D) $lookup
+Correct Answer: B) $sort
+Explanation: $sort orders documents in an aggregation pipeline. Use 1 for ascending order and -1 for descending order.
+128. What does the $unwind aggregation stage do?
+A) Combines two collections
+B) Deconstructs an array field into separate documents
+C) Deletes an entire collection
+D) Creates a unique index
+Correct Answer: B) Deconstructs an array field into separate documents
+Explanation: $unwind deconstructs an array field, outputting a separate pipeline document for each array element. This makes individual array elements available to later stages.
+129. Which MongoDB feature helps improve query performance by avoiding full collection scans for suitable queries?
+A) Index
+B) View only
+C) Transaction log deletion
+D) BSON compression only
+Correct Answer: A) Index
+Explanation: An index stores data structures that help MongoDB locate matching documents without scanning every document for suitable queries. Indexes improve reads in many cases but require storage and add write-maintenance cost.
+130. Which command removes an entire collection in MongoDB?
+A) deleteOne()
+B) drop()
+C) removeField()
+D) truncate()
+Correct Answer: B) drop()
+Explanation: drop() removes an entire collection, including its documents and indexes. deleteOne() removes only one matching document.
+131. Which NoSQL category stores data as key-value pairs?
+A) Document store
+B) Key-value store
+C) Graph store
+D) Relational store
+Correct Answer: B) Key-value store
+Explanation: A key-value store organizes data as key-value pairs, where a key is used to retrieve its associated value. It is one of the common NoSQL database categories.
+132. Which NoSQL database category represents data using nodes and edges?
+A) Wide-column
+B) Graph database
+C) Key-value
+D) Document database
+Correct Answer: B) Graph database
+Explanation: A graph database represents entities as nodes and their relationships as edges. This model is useful when relationships and traversals are central to the data.
+133. Horizontal scaling means:
+A) Adding more CPU/RAM to one machine
+B) Adding more machines to distribute workload
+C) Reducing the number of databases
+D) Moving all data to one table
+Correct Answer: B) Adding more machines to distribute workload
+Explanation: Horizontal scaling adds more machines or nodes to distribute storage and workload. Adding CPU or RAM to one existing machine is vertical scaling.
+134. Which statement best describes a flexible schema in a document database?
+A) Every document must have exactly the same fields
+B) Documents in a collection can have different field structures
+C) No document can contain nested objects
+D) All fields must be numeric
+Correct Answer: B) Documents in a collection can have different field structures
+Explanation: A flexible document schema allows documents in the same collection to contain different fields or field structures. Applications can still enforce validation rules when consistency is needed.
+135. Which MongoDB method creates an index on a field?
+A) createIndex()
+B) makeKey()
+C) addConstraint()
+D) buildTableIndex()
+Correct Answer: A) createIndex()
+Explanation: createIndex() creates an index on one or more fields in a MongoDB collection. For example, db.users.createIndex({ email: 1 }) creates an ascending index on email.
+136. Which MongoDB command is commonly used to view databases?
+A) show dbs
+B) SHOW DATABASES()
+C) list schemas SQL
+D) db.listTables()
+Correct Answer: A) show dbs
+Explanation: show dbs (or show databases) displays databases known to the MongoDB deployment, subject to visibility and privileges. It is a mongosh helper command.
+137. Which MongoDB command switches to a database or creates a database context?
+A) use databaseName
+B) connect databaseName
+C) select databaseName
+D) open databaseName
+Correct Answer: A) use databaseName
+Explanation: use databaseName switches the current mongosh database context. If the database does not yet contain data, it may not appear in the database list until data is stored.
+138. What is the role of MongoDB Compass?
+A) A graphical user interface for working with MongoDB
+B) A SQL compiler
+C) A relational database engine
+D) A backup-only file format
+Correct Answer: A) A graphical user interface for working with MongoDB
+Explanation: MongoDB Compass is MongoDB's graphical user interface for exploring data, running queries and aggregations, and managing database objects. It is not a relational database engine.
+139. Which MongoDB feature supports multi-document ACID transactions on replica sets and sharded clusters?
+A) Aggregation pipeline
+B) Transactions
+C) Capped collections only
+D) Text index
+Correct Answer: B) Transactions
+Explanation: MongoDB supports multi-document ACID transactions on replica sets and sharded clusters. Transactions allow multiple operations to commit together or abort together.
+140. Which statement about embedding documents in MongoDB is generally correct?
+A) It can store related data together in one document
+B) It always requires a join at query time
+C) It is prohibited in MongoDB
+D) It converts collections into SQL tables
+Correct Answer: A) It can store related data together in one document
+Explanation: Embedding related documents stores associated data together inside one document. This can make common reads efficient and avoid a separate lookup, though document size and update patterns should guide the design.
+Section F – Previously Shared DBT Question Paper Questions
+141. Which statement about a MySQL cursor is incorrect?
+A) A MySQL cursor is read-only
+B) A MySQL cursor is non-scrollable
+C) A MySQL cursor is always insensitive by default
+D) A cursor is used to process rows returned by a query
+Correct Answer: C) A MySQL cursor is always insensitive by default
+Explanation: MySQL cursors are read-only and non-scrollable, and MySQL describes them as asensitive: the server may or may not make a copy of the result table. Therefore, saying they are always insensitive is incorrect.
+142. Which index maintenance operation discards and recreates an index?
+A) Refresh
+B) Remake
+C) Reorganize
+D) Rebuild
+Correct Answer: D) Rebuild
+Explanation: Rebuilding an index discards and recreates its index structure. It is distinct from reorganizing an index, which typically rearranges existing leaf-level pages without a full rebuild.
+143. Which statement about a MySQL temporary table is correct?
+A) It is visible to every session
+B) It is automatically removed when the creating session ends
+C) It cannot have the same name as a permanent table
+D) MySQL does not support temporary tables
+Correct Answer: B) It is automatically removed when the creating session ends
+Explanation: A MySQL temporary table is scoped to the session that created it and is automatically dropped when that session ends. It is not visible to every session.
+144. Which statement about WITH CHECK OPTION in a view is correct?
+A) It can be used with an updatable view to ensure modified rows satisfy the view condition
+B) It is used only to sort a view
+C) It disables all view updates
+D) It creates a temporary table
+Correct Answer: A) It can be used with an updatable view to ensure modified rows satisfy the view condition
+Explanation: WITH CHECK OPTION on an updatable view ensures that inserted or updated rows continue to satisfy the view's WHERE condition. It does not sort the view or disable updates.
+145. A complex view is generally a view created using:
+A) Only one base table without expressions
+B) Multiple tables, joins, or aggregate expressions
+C) Only a constant value
+D) A table without columns
+Correct Answer: B) Multiple tables, joins, or aggregate expressions
+Explanation: A complex view commonly uses multiple base tables, joins, expressions, or aggregate functions. A simple view is generally based on a single table and avoids such complexity.
+146. In MySQL stored programs, which statement can raise a user-defined condition?
+A) SIGNAL
+B) DECLARE
+C) END
+D) OPEN
+Correct Answer: A) SIGNAL
+Explanation: SIGNAL raises a condition in a MySQL stored program, commonly to return a deliberate error with a chosen SQLSTATE and message. DECLARE defines variables or handlers but does not itself raise the condition.
+147. Which statement best describes the difference between a PRIMARY KEY and a UNIQUE key?
+A) Both allow duplicate values
+B) A primary key does not allow NULL and only one primary-key constraint is defined per table; multiple UNIQUE constraints may be defined
+C) A unique key must always be the foreign key
+D) A primary key can contain NULL values
+Correct Answer: B) A primary key does not allow NULL and only one primary-key constraint is defined per table; multiple UNIQUE constraints may be defined
+Explanation: A table can have only one PRIMARY KEY constraint, and primary-key columns cannot contain NULL. A table may have multiple UNIQUE constraints; their NULL handling differs from primary-key rules and depends on the DBMS.

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Yield CDAC Exam Booster (80/20 Rule)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">High-Yield CDAC Exam Booster (80/20 Rule)</div>
+            <div class="quiz-subtitle">58 Must-Know Repeat Questions & Traps Across All Topics</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 1, "question": "Q1. MCQ (Coding): Which of the following code snippets demonstrates a shallow copy of an array? ```java // Option 1 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = sourceArray; // Option 2 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = new int[sourceArray.length]; System.arraycopy(sourceArray, 0, shallowCopy, 0, sourceArray.length); // Option 3 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = Arrays.copyOf(sourceArray, sourceArray.length); ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The question confuses reference assignment with copying. Option 1 makes both variables refer to the same array; Options 2 and 3 create separate arrays. Because this is an int[] of primitives, the copied elements are independent; shallow-vs-deep copying is not meaningfully different here.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The question confuses reference assignment with copying. Option 1 makes both variables refer to the same array; Options 2 and 3 create separate arrays. Because this is an int[] of primitives, the copied elements are independent; shallow-vs-deep copying is not meaningfully different here.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 2, "question": "Q2. MCQ (Coding): Which of the following code snippets demonstrates a deep copy of an array? ```java // Option 1 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = sourceArray.clone(); // Option 2 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = Arrays.copyOf(sourceArray, sourceArray.length); // Option 3 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = new int[sourceArray.length]; System.arraycopy(sourceArray, 0, deepCopy, 0, sourceArray.length); ```", "options": ["Option 1", "Option 2", "Option 3", "All options create shallow copies, not deep copies."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "All three operations copy the int[] elements into a new array. Since the elements are primitive ints, the result is independent; for arrays of objects, clone/copyOf/arraycopy copy references and are shallow copies, not deep copies.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "All three operations copy the int[] elements into a new array. Since the elements are primitive ints, the result is independent; for arrays of objects, clone/copyOf/arraycopy copy references and are shallow copies, not deep copies.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 6, "question": "Q6. MCQ (Coding): What is the output of the following Java code snippet? ```java Integer num1 = 100; Integer num2 = 100; System.out.println(num1 == num2); Integer num3 = 200; Integer num4 = 200; System.out.println(num3 == num4); ```", "options": ["true, true", "true, false", "false, true", "false, false"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Integer values from -128 through 127 are guaranteed to be cached, so the first comparison is true. Caching 200 is not guaranteed by the Java language specification, so the second comparison is implementation-dependent. The question has no universally guaranteed complete output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Integer values from -128 through 127 are guaranteed to be cached, so the first comparison is true. Caching 200 is not guaranteed by the Java language specification, so the second comparison is implementation-dependent. The question has no universally guaranteed complete output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 8, "question": "Q8. MCQ (Coding): What is the output of the following Java code snippet? ```java Integer num1 = 10; Integer num2 = 10; System.out.println(num1 == num2); ```", "options": ["true", "false", "Compilation error", "Runtime exception"], "correctIndex": 0, "hint": "", "correctExplanation": "Integer values from -128 to 127 are guaranteed to be cached, so both references point to the same cached Integer for 10.", "wrongExplanation": "Integer values from -128 to 127 are guaranteed to be cached, so both references point to the same cached Integer for 10."}, {"num": 14, "question": "Q14. MCQ (Coding): Which of the following statements correctly demonstrates boxing in Java? ```java // Option 1 int num = 42; Integer boxedNum = new Integer(num); // Option 2 int num = 42; Integer boxedNum = Integer.valueOf(num); // Option 3 Integer boxedNum = 42; ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "All three demonstrate boxing: the constructor explicitly wraps the int, valueOf returns an Integer, and assigning an int to Integer uses autoboxing. The Integer(int) constructor is deprecated, but it is still a boxing example.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "All three demonstrate boxing: the constructor explicitly wraps the int, valueOf returns an Integer, and assigning an int to Integer uses autoboxing. The Integer(int) constructor is deprecated, but it is still a boxing example.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 16, "question": "Q16. What happens if you try to assign a floating-point value to an integer variable in Java without explicit casting?", "options": ["The program will not compile.", "The decimal part of the value will be truncated.", "The variable will be automatically promoted to a floating-point type.", "The program will throw a runtime exception."], "correctIndex": 0, "hint": "", "correctExplanation": "Java does not allow an implicit narrowing conversion from double/float to int because fractional information could be lost.", "wrongExplanation": "Java does not allow an implicit narrowing conversion from double/float to int because fractional information could be lost."}, {"num": 17, "question": "Q17. What will be the value of `product` after the following loop is executed? ```java int product = 1; int i = 0; do { product *= i; i++; } while (i <= 5); ```", "options": ["0", "1", "120", "720"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A do-while loop executes at least once. On the first iteration product *= i means 1 * 0, so product becomes 0 and remains 0.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A do-while loop executes at least once. On the first iteration product *= i means 1 * 0, so product becomes 0 and remains 0.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 31, "question": "Q31. MCQ (Coding): What will be the output of the following Java code snippet? ```java public void methodA() { throw new ArithmeticException(\"Exception in methodA\"); } public void methodB() { methodA(); } public void methodC() { try { methodB(); } catch (RuntimeException e) { System.out.println(\"Caught: \" + e.getMessage()); } } public static void main(String[] args) { new ExceptionPropagationDemo().methodC(); } ```", "options": ["The program will terminate abruptly with an error message.", "The output will be \"Caught: Exception in methodA\".", "The output will be \"Caught: Exception in methodB\".", "The output will be \"Caught: Exception in methodC\"."], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "ArithmeticException is a RuntimeException. It propagates through methodB to methodC, where the catch handles it.", "wrongExplanation": "ArithmeticException is a RuntimeException. It propagates through methodB to methodC, where the catch handles it."}, {"num": 32, "question": "Q32. MCQ (Coding): Which of the following code snippets correctly defines a user-defined unchecked exception? ```java // Option 1 class MyUncheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyUncheckedException extends Exception { // Constructor and other methods } // Option 3 class MyUncheckedException extends Error { // Constructor and other methods } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "A user-defined unchecked exception extends RuntimeException (or a subclass of it).", "wrongExplanation": "A user-defined unchecked exception extends RuntimeException (or a subclass of it)."}, {"num": 33, "question": "Q33. MCQ (Coding): Which of the following code snippets correctly defines a user-defined checked exception? ```java // Option 1 class MyCheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyCheckedException extends Exception { // Constructor and other methods } // Option 3 class MyCheckedException extends Error { // Constructor and other methods } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "A user-defined checked exception normally extends Exception but not RuntimeException.", "wrongExplanation": "A user-defined checked exception normally extends Exception but not RuntimeException."}, {"num": 35, "question": "Q35. MCQ (Coding): Which of the following code snippets correctly makes an object eligible for garbage collection? ```java // Option 1 Object obj = new Object(); obj = null; // Option 2 Object obj = new Object(); Object obj2 = obj; obj = null; // Option 3 Object obj = new Object(); obj = new Object(); ```", "options": ["Option 1", "Option 2", "Option 3", "None of the above"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Option 1 removes the only reference by assigning null. In Option 2, obj2 still refers to the original object, so it is not eligible. In Option 3, the original object loses its last reference when obj is reassigned, so it becomes eligible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Option 1 removes the only reference by assigning null. In Option 2, obj2 still refers to the original object, so it is not eligible. In Option 3, the original object loses its last reference when obj is reassigned, so it becomes eligible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 36, "question": "Q36. MCQ (Coding): Given the following Java classes in different packages, what is the output of the demo application? ```java // File: Package1/Grandparent.java package Package1; public class Grandparent { protected void display() { System.out.println(\"This is the Grandparent class.\"); } } // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { protected void display() { System.out.println(\"This is the Parent class.\"); } } // File: Main.java import Package2.Parent; public class Main { public static void main(String[] args) { Parent obj = new Parent(); obj.display(); } } ```", "options": ["The code will not compile due to package-private access conflicts.", "The code will compile, but the output will be \"This is the Parent class.\"", "The code will compile, but the output will be \"This is the Grandparent class.\"", "The code will compile, but there will be a runtime exception."], "correctIndex": 1, "hint": "", "correctExplanation": "Parent overrides the protected display method, and dynamic dispatch invokes Parent.display() for a Parent object.", "wrongExplanation": "Parent overrides the protected display method, and dynamic dispatch invokes Parent.display() for a Parent object."}, {"num": 38, "question": "Q38. Consider the following code: ```java class Animal { void makeSound() { System.out.println(\"Animal makes a sound\"); } } class Dog extends Animal { void makeSound() { System.out.println(\"Dog barks\"); } } class Cat extends Animal { void makeSound() { System.out.println(\"Cat meows\"); } } ``` What will happen when you try to compile and run the following code snippet? ```java Animal animal = new Dog(); Cat cat = (Cat) animal; cat.makeSound(); ```", "options": ["It will print \"Animal makes a sound.\"", "It will print \"Dog barks.\"", "It will print \"Cat meows.\"", "It will result in a compilation error or a ClassCastException at runtime."], "correctIndex": 3, "hint": "", "correctExplanation": "The cast is permitted by the compiler because Cat and Dog share Animal, but the actual object is Dog; the cast throws ClassCastException.", "wrongExplanation": "The cast is permitted by the compiler because Cat and Dog share Animal, but the actual object is Dog; the cast throws ClassCastException."}, {"num": 41, "question": "Q41. MCQ (Coding): What is the output of the following Java code snippet? ```java public void divide(int num1, int num2) { try { int result = num1 / num2; System.out.println(\"Result: \" + result); } catch (ArithmeticException e) { System.out.println(\"Error: \" + e.getMessage()); } finally { System.out.println(\"Finally block executed.\"); } } public static void main(String[] args) { new ExceptionHandlingDemo().divide(10, 0); } ```", "options": ["Result: Infinity", "Error: / by zero", "Compilation error", "Runtime exception"], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Integer division by zero throws ArithmeticException, which is caught; the finally block also executes.", "wrongExplanation": "Integer division by zero throws ArithmeticException, which is caught; the finally block also executes."}, {"num": 42, "question": "Q42. MCQ (Coding): Given the following Java classes, what is the output of the demo application? ```java // File: Package1/MyClass.java package Package1; public class MyClass { protected void display() { System.out.println(\"This is a protected method.\"); } } // File: Main.java import Package1.MyClass; public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); obj.display (); } } ```", "options": ["The code will not compile because the `display()` method is not accessible.", "The code will compile, and \"This is a protected method.\" will be printed.", "The code will compile, but there will be a runtime exception.", "The code will compile, but the `display()` method will not be invoked."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A protected member in another package is not accessible through an ordinary superclass instance from an unrelated class. Main is not a subclass, so obj.display() is inaccessible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A protected member in another package is not accessible through an ordinary superclass instance from an unrelated class. Main is not a subclass, so obj.display() is inaccessible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 53, "question": "Q53. What is the result of the following code snippet? ```java class MyClass { static int count = 0; MyClass() { count++; } } public class Main { public static void main(String[] args) { MyClass obj1 = new MyClass(); MyClass obj2 = new MyClass(); System.out.println(MyClass.count); } } ```", "options": ["0", "1", "2", "The code will not compile"], "correctIndex": 2, "hint": "", "correctExplanation": "`count` is declared as a `static int` variable inside `MyClass`, meaning there is only one shared copy of `count` in memory across all instances of `MyClass`.\n1. Initially, `count = 0`.\n2. `new MyClass()` (first instance) executes the constructor `count++`, incrementing `count` to 1.\n3. `new MyClass()` (second instance) executes the constructor again, incrementing `count` to 2.\n4. `System.out.println(MyClass.count)` accesses the shared static member and prints 2.", "wrongExplanation": "`count` is declared as a `static int` variable inside `MyClass`, meaning there is only one shared copy of `count` in memory across all instances of `MyClass`.\n1. Initially, `count = 0`.\n2. `new MyClass()` (first instance) executes the constructor `count++`, incrementing `count` to 1.\n3. `new MyClass()` (second instance) executes the constructor again, incrementing `count` to 2.\n4. `System.out.println(MyClass.count)` accesses the shared static member and prints 2."}, {"num": 56, "question": "Q56. Consider the following code snippet: ```java class Parent { int x; Parent(int x) { this.x = x; } } class Child extends Parent { int y; Child(int x, int y) { super(x); this.y = y; } } ``` What is the purpose of the \"super(x)\" statement in the Child class constructor?", "options": ["It calls the default constructor of the Parent class.", "It sets the value of x in the Parent class to the value passed in the Child class constructor.", "It creates a new object of the Parent class.", "It is not a valid statement in Java."], "correctIndex": 1, "hint": "", "correctExplanation": "In subclass constructors, `super(...)` is used to explicitly invoke the parameterized constructor of the immediate superclass (`Parent(int x)`).\nHere, `super(x)` passes the argument `x` from `Child(int x, int y)` up to `Parent(int x)`, initializing the inherited instance variable `x` of the `Parent` class.", "wrongExplanation": "In subclass constructors, `super(...)` is used to explicitly invoke the parameterized constructor of the immediate superclass (`Parent(int x)`).\nHere, `super(x)` passes the argument `x` from `Child(int x, int y)` up to `Parent(int x)`, initializing the inherited instance variable `x` of the `Parent` class."}, {"num": 71, "question": "Q71. What happens if a class implements an interface but fails to implement all the abstract methods defined in that interface?", "options": ["The class will be considered an abstract class and cannot be instantiated.", "The class will automatically inherit the implementation of the missing methods from the Object", "The code will not compile, resulting in a compilation error.", "The abstract methods will be implemented using default values defined in the interface."], "correctIndex": 2, "hint": "", "correctExplanation": "In Java, when a concrete (non-abstract) class implements an interface, it contracts to provide complete method bodies (implementations) for all abstract methods declared in that interface.\nIf it fails to implement even one abstract method, the compiler flags an error unless the class itself is declared `abstract`.", "wrongExplanation": "In Java, when a concrete (non-abstract) class implements an interface, it contracts to provide complete method bodies (implementations) for all abstract methods declared in that interface.\nIf it fails to implement even one abstract method, the compiler flags an error unless the class itself is declared `abstract`."}, {"num": 74, "question": "Q74. Which access modifier is commonly used for the methods in a base class to allow subclasses to override them?", "options": ["private", "protected", "public", "default (package-private)"], "correctIndex": 1, "hint": "", "correctExplanation": "The `protected` access specifier allows members (methods and fields) to be accessible:\n1. Within all classes in the same package.\n2. Within subclasses (derived classes) even if they reside in different packages.\nThis makes `protected` the standard access modifier for base-class methods designed to be inherited and optionally overridden by subclasses.", "wrongExplanation": "The `protected` access specifier allows members (methods and fields) to be accessible:\n1. Within all classes in the same package.\n2. Within subclasses (derived classes) even if they reside in different packages.\nThis makes `protected` the standard access modifier for base-class methods designed to be inherited and optionally overridden by subclasses."}, {"num": 83, "question": "Q83. What happens if a subclass tries to override a method in its superclass that is marked as \"final\"?", "options": ["The subclass can override the final method without any issues.", "The compiler will generate an error, and the method cannot be overridden.", "The subclass can only override the method if it is also marked as \"final.\"", "The behavior is undefined, and it depends on the specific Java compiler."], "correctIndex": 1, "hint": "", "correctExplanation": "The `final` keyword in Java prevents modification:\n1. A `final` variable cannot be reassigned (constant).\n2. A `final` class cannot be subclassed/extended.\n3. A `final` method cannot be overridden by any subclass.\nAttempting to override a final method generates a compile-time error: 'cannot override ... overridden method is final'.", "wrongExplanation": "The `final` keyword in Java prevents modification:\n1. A `final` variable cannot be reassigned (constant).\n2. A `final` class cannot be subclassed/extended.\n3. A `final` method cannot be overridden by any subclass.\nAttempting to override a final method generates a compile-time error: 'cannot override ... overridden method is final'."}, {"num": 85, "question": "Q85. What is compile-time polymorphism also known as in Java?", "options": ["Method overloading", "Method overriding", "Method hiding", "Method wrapping"], "correctIndex": 0, "hint": "", "correctExplanation": "In Java:\n- **Compile-time (Static) Polymorphism** is achieved via **Method Overloading** (methods with the same name but different parameter signatures within the same class/hierarchy), because which method to call is bound at compile time based on reference types and arguments.\n- **Runtime (Dynamic) Polymorphism** is achieved via **Method Overriding** (invoking an overridden instance method via a superclass reference), where dispatch is determined at runtime based on the actual object instance.", "wrongExplanation": "In Java:\n- **Compile-time (Static) Polymorphism** is achieved via **Method Overloading** (methods with the same name but different parameter signatures within the same class/hierarchy), because which method to call is bound at compile time based on reference types and arguments.\n- **Runtime (Dynamic) Polymorphism** is achieved via **Method Overriding** (invoking an overridden instance method via a superclass reference), where dispatch is determined at runtime based on the actual object instance."}, {"num": 86, "question": "Q86. What is runtime polymorphism also known as in Java?", "options": ["Method overloading", "Method overriding", "Method hiding", "Method wrapping"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java:\n- **Runtime (Dynamic) Polymorphism** is also known as **Method Overriding** or **Dynamic Method Dispatch**. At runtime, Java inspects the actual object type on the heap to decide which overridden version of the instance method to execute.\n- **Method Overloading** represents compile-time (static) polymorphism.", "wrongExplanation": "In Java:\n- **Runtime (Dynamic) Polymorphism** is also known as **Method Overriding** or **Dynamic Method Dispatch**. At runtime, Java inspects the actual object type on the heap to decide which overridden version of the instance method to execute.\n- **Method Overloading** represents compile-time (static) polymorphism."}, {"num": 88, "question": "Q88. Which of the following statements is true about downcasting in Java?", "options": ["Downcasting requires explicit casting using the \"downcast\" keyword.", "Downcasting can result in a loss of data if the object is not of the expected subclass type.", "Downcasting can only be performed between unrelated classes.", "Downcasting is an automatic process and doesn't require any special handling."], "correctIndex": 1, "hint": "", "correctExplanation": "**Downcasting** is casting a superclass reference down to a subclass type (e.g., `(Dog) animal`).\n- In Java, downcasting requires an explicit cast `(Subclass) ref`.\n- If the actual object on the heap is NOT an instance of the target subclass (or its descendants), JVM throws a runtime `ClassCastException`.\n- (Choice B notes potential mismatch/failure if the object is not of the expected subclass type). To prevent this, always test with `instanceof` before downcasting.", "wrongExplanation": "**Downcasting** is casting a superclass reference down to a subclass type (e.g., `(Dog) animal`).\n- In Java, downcasting requires an explicit cast `(Subclass) ref`.\n- If the actual object on the heap is NOT an instance of the target subclass (or its descendants), JVM throws a runtime `ClassCastException`.\n- (Choice B notes potential mismatch/failure if the object is not of the expected subclass type). To prevent this, always test with `instanceof` before downcasting."}, {"num": 89, "question": "Q89. Which of the following statements is true about upcasting in Java?", "options": ["Upcasting is always allowed and does not require any explicit casting.", "Upcasting is only allowed if the superclass is abstract.", "Upcasting may result in a loss of subclass-specific features and methods.", "Upcasting is not supported in Java."], "correctIndex": 0, "hint": "", "correctExplanation": "**Upcasting** is casting a subclass reference up to a superclass type (e.g., `Animal a = new Dog();`).\n- Upcasting is always widening and type-safe in Java, so it is performed automatically (implicitly) without requiring an explicit cast operator.\n- Note that via the superclass reference, only methods/members declared in the superclass (or overridden) can be accessed directly; subclass-specific members become inaccessible through that superclass reference without downcasting.", "wrongExplanation": "**Upcasting** is casting a subclass reference up to a superclass type (e.g., `Animal a = new Dog();`).\n- Upcasting is always widening and type-safe in Java, so it is performed automatically (implicitly) without requiring an explicit cast operator.\n- Note that via the superclass reference, only methods/members declared in the superclass (or overridden) can be accessed directly; subclass-specific members become inaccessible through that superclass reference without downcasting."}, {"num": 101, "question": "Q101. To avoid the risk of ClassCastException when performing downcasting in Java, you should use which keyword?", "options": ["instanceof", "checkcast", "safecast", "convert"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "To safely perform downcasting and avoid a runtime `ClassCastException`, Java provides the `instanceof` operator.\nIt evaluates whether the runtime object belongs to or implements the specified type:\n```java\nif (animal instanceof Dog) {\n    Dog d = (Dog) animal; // completely safe from ClassCastException\n}\n```", "wrongExplanation": "To safely perform downcasting and avoid a runtime `ClassCastException`, Java provides the `instanceof` operator.\nIt evaluates whether the runtime object belongs to or implements the specified type:\n```java\nif (animal instanceof Dog) {\n    Dog d = (Dog) animal; // completely safe from ClassCastException\n}\n```"}, {"num": 114, "question": "Q114. Which access modifier allows a member to be accessed from classes in the same package and subclasses in other packages?", "options": ["private", "protected", "default", "final"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java's access control hierarchy:\n- `private`: Accessible only within the same class.\n- `default (package-private)`: Accessible only within the same package.\n- `protected`: Accessible within the same package AND by subclasses in different packages.\n- `public`: Accessible from anywhere across all packages.", "wrongExplanation": "In Java's access control hierarchy:\n- `private`: Accessible only within the same class.\n- `default (package-private)`: Accessible only within the same package.\n- `protected`: Accessible within the same package AND by subclasses in different packages.\n- `public`: Accessible from anywhere across all packages."}, {"num": 116, "question": "Q116. MCQ: Which of the following statements is true about the `Runnable` interface in Java?", "options": ["It is a class that represents a thread.", "It is an interface that allows a class to be executed as a thread.", "It is a method that starts a thread.", "It is a package that contains thread-related classes."], "correctIndex": 1, "hint": "", "correctExplanation": "`java.lang.Runnable` is a core functional interface in Java representing an executable task.\n- It contains a single abstract method: `public abstract void run();`\n- Any class implementing `Runnable` can have its `run()` method executed asynchronously by passing an instance to a `Thread` constructor (`new Thread(runnable).start()`) or an `ExecutorService`.", "wrongExplanation": "`java.lang.Runnable` is a core functional interface in Java representing an executable task.\n- It contains a single abstract method: `public abstract void run();`\n- Any class implementing `Runnable` can have its `run()` method executed asynchronously by passing an instance to a `Thread` constructor (`new Thread(runnable).start()`) or an `ExecutorService`."}, {"num": 119, "question": "Q119. MCQ: Which Java interface is used to represent a collection that maintains an ordered sequence of elements with no duplicates allowed?", "options": ["`List`", "`Queue`", "`Set`", "`Map`"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The `java.util.Set` interface represents an unordered collection that contains **no duplicate elements** (guaranteeing element uniqueness based on `equals()` and `hashCode()`).\n- In contrast, `List` permits duplicates and preserves indexed insertion order.\n- `Map` stores key-value pairs (keys are unique, values can duplicate).\n- `Queue` represents a collection designed for holding elements prior to processing (FIFO).", "wrongExplanation": "The `java.util.Set` interface represents an unordered collection that contains **no duplicate elements** (guaranteeing element uniqueness based on `equals()` and `hashCode()`).\n- In contrast, `List` permits duplicates and preserves indexed insertion order.\n- `Map` stores key-value pairs (keys are unique, values can duplicate).\n- `Queue` represents a collection designed for holding elements prior to processing (FIFO)."}, {"num": 122, "question": "Q122. MCQ: In Java, which interface is used to define custom sorting of objects based on different criteria?", "options": ["`Comparable`", "`Comparator`", "`Sorting`", "`Orderable`"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java, sorting can be handled via two interfaces:\n- `Comparable<T>`: Defines the natural ordering of objects internally via `compareTo(T o)`.\n- `Comparator<T>`: Defines custom, external sorting logic based on multiple or different criteria via `compare(T o1, T o2)`. Multiple `Comparator` implementations can be created for the same class (e.g. SortByName, SortByAge, SortByPrice).", "wrongExplanation": "In Java, sorting can be handled via two interfaces:\n- `Comparable<T>`: Defines the natural ordering of objects internally via `compareTo(T o)`.\n- `Comparator<T>`: Defines custom, external sorting logic based on multiple or different criteria via `compare(T o1, T o2)`. Multiple `Comparator` implementations can be created for the same class (e.g. SortByName, SortByAge, SortByPrice)."}, {"num": 123, "question": "Q123. MCQ: Which method is used to sort a collection of objects that implement the `Comparable` interface?", "options": ["`sort()`", "`Collections.sort()`", "`sorted()`", "`Collections.sorted()`"], "correctIndex": 1, "hint": "", "correctExplanation": "For collections containing elements that implement `Comparable<T>` (natural ordering), Java provides the utility method `Collections.sort(List<T> list)` from `java.util.Collections`.\nIt sorts the specified list into ascending order according to the natural ordering of its elements.", "wrongExplanation": "For collections containing elements that implement `Comparable<T>` (natural ordering), Java provides the utility method `Collections.sort(List<T> list)` from `java.util.Collections`.\nIt sorts the specified list into ascending order according to the natural ordering of its elements."}, {"num": 128, "question": "Q128. Which of the following is a property of interface variables?", "options": ["They are private and non-final", "They are public, static, and final by default", "They are protected and static", "They are local variables"], "correctIndex": 1, "hint": "", "correctExplanation": "All variables declared inside a Java interface are implicitly:\n`public static final`\n- `public`: Accessible anywhere the interface is accessible.\n- `static`: Associated with the interface itself, not with any implementing instance.\n- `final`: Constants that must be initialized with a value at declaration and cannot be reassigned.", "wrongExplanation": "All variables declared inside a Java interface are implicitly:\n`public static final`\n- `public`: Accessible anywhere the interface is accessible.\n- `static`: Associated with the interface itself, not with any implementing instance.\n- `final`: Constants that must be initialized with a value at declaration and cannot be reassigned."}, {"num": 132, "question": "Q132. MCQ: Which annotation is used to indicate that an interface is a functional interface?", "options": ["@Functional", "@FunctionalInterface", "@FunctionalOnly", "@SingleAbstractMethod"], "correctIndex": 1, "hint": "", "correctExplanation": "`@FunctionalInterface` is an informative annotation introduced in Java 8 used to indicate that an interface declaration is intended to be a **Functional Interface** (an interface with exactly one abstract method).\nWhile not strictly required for a functional interface, using `@FunctionalInterface` instructs the Java compiler to verify and issue an error if the interface does not satisfy SAM (Single Abstract Method) requirements.", "wrongExplanation": "`@FunctionalInterface` is an informative annotation introduced in Java 8 used to indicate that an interface declaration is intended to be a **Functional Interface** (an interface with exactly one abstract method).\nWhile not strictly required for a functional interface, using `@FunctionalInterface` instructs the Java compiler to verify and issue an error if the interface does not satisfy SAM (Single Abstract Method) requirements."}, {"num": 135, "question": "Q135. What is the purpose of declaring a method in an interface as \"default\" in Java?", "options": ["To specify that the method must be implemented in all classes that implement the interface.", "To provide a default implementation for the method in case a class does not override it.", "To prevent any class from implementing the interface.", "To make the method accessible only within the package."], "correctIndex": 1, "hint": "", "correctExplanation": "Introduced in Java 8, `default` methods allow interfaces to declare methods with a concrete body/implementation:\n```java\ndefault void log(String msg) {\n    System.out.println(msg);\n}\n```\n**Purpose:** They provide backward compatibility, allowing new methods to be added to existing interfaces without breaking legacy classes that already implement the interface.", "wrongExplanation": "Introduced in Java 8, `default` methods allow interfaces to declare methods with a concrete body/implementation:\n```java\ndefault void log(String msg) {\n    System.out.println(msg);\n}\n```\n**Purpose:** They provide backward compatibility, allowing new methods to be added to existing interfaces without breaking legacy classes that already implement the interface."}, {"num": 136, "question": "Q136. MCQ: How many abstract methods are allowed in a functional interface?", "options": ["None", "One", "Two", "As many as needed"], "correctIndex": 1, "hint": "", "correctExplanation": "By specification, a **Functional Interface** (Single Abstract Method or SAM interface) must contain **exactly one abstract method**.\nIt may contain any number of `default` methods, `static` methods, or declarations of public methods inherited from `java.lang.Object` (such as `equals`, `toString`), but exactly one abstract method of its own.", "wrongExplanation": "By specification, a **Functional Interface** (Single Abstract Method or SAM interface) must contain **exactly one abstract method**.\nIt may contain any number of `default` methods, `static` methods, or declarations of public methods inherited from `java.lang.Object` (such as `equals`, `toString`), but exactly one abstract method of its own."}, {"num": 145, "question": "Q145. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = \"Java\"; String str2 = \"Java\"; String str3 = new String(\"Java\"); System.out .println(str1 == str2); System.out.println(str1 == str3); ```", "options": ["true, true", "true, false", "false, true", "false, false"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "String literals with the same contents refer to the pooled literal. new String(\"Java\") creates a distinct String object, so == is false for that comparison.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "String literals with the same contents refer to the pooled literal. new String(\"Java\") creates a distinct String object, so == is false for that comparison.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 146, "question": "Q146. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = new String(\"Hello\").intern(); String str2 = new String(\"Hello\").intern(); System.out.println(str1 == str2); ```", "options": ["true", "false", "Compilation error", "Runtime exception"], "correctIndex": 0, "hint": "", "correctExplanation": "intern() returns the canonical pooled String for that content, so both references are identical.", "wrongExplanation": "intern() returns the canonical pooled String for that content, so both references are identical."}, {"num": 147, "question": "Q147. MCQ (Coding): What is the output of the following Java code snippet? ```java StringBuffer sb = new StringBuffer(\"Hello\"); sb.append(\" World\"); System.out.println(sb); ```", "options": ["\"Hello World\"", "\"World Hello\"", "\"Hello\"", "Compilation error"], "correctIndex": 0, "hint": "", "correctExplanation": "StringBuffer.append mutates the buffer by adding the supplied text at the end.", "wrongExplanation": "StringBuffer.append mutates the buffer by adding the supplied text at the end."}, {"num": 150, "question": "Q150. MCQ: Which of the following statements about the string pool is true?", "options": ["Strings created using the `new` keyword are stored in the string pool.", "Strings created using the `new` keyword are not stored in the string pool.", "The string pool is a separate memory area reserved for long strings.", "The string pool is a part of the heap memory."], "correctIndex": 1, "hint": "", "correctExplanation": "The string pool is part of heap storage; new String creates a distinct object, although its literal argument may itself be pooled.", "wrongExplanation": "The string pool is part of heap storage; new String creates a distinct object, although its literal argument may itself be pooled."}, {"num": 162, "question": "Q162. MCQ: What is the main difference between `StringBuffer` and `StringBuilder` in Java?", "options": ["`StringBuffer` is mutable, while `StringBuilder` is immutable.", "`StringBuffer` is faster than `StringBuilder`.", "`StringBuffer` is synchronized, while `StringBuilder` is not.", "`StringBuffer` is used for single-threaded applications, while `StringBuilder` is used for multi-"], "correctIndex": 2, "hint": "", "correctExplanation": "StringBuffer's methods are synchronized; StringBuilder's methods are not.", "wrongExplanation": "StringBuffer's methods are synchronized; StringBuilder's methods are not."}, {"num": 166, "question": "Q166. MCQ (Coding): Which of the following code snippets will cause a compilation error? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (Exception e1 | RuntimeException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (NullPointerException e) { // Exception handling } catch (IOException e) { // Exception handling } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A multi-catch cannot combine Exception with RuntimeException because RuntimeException is a subclass of Exception. Option 1's IOException and NullPointerException are unrelated types; Option 3 is valid if the try can throw IOException.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A multi-catch cannot combine Exception with RuntimeException because RuntimeException is a subclass of Exception. Option 1's IOException and NullPointerException are unrelated types; Option 3 is valid if the try can throw IOException.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 167, "question": "Q167. MCQ (Coding): Which of the following code snippets correctly uses a multi-catch block? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (IOException e1 | NullPointerException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (Exception e) { // Exception handling } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A multi-catch uses one exception parameter after the alternatives, for example catch (IOException | NullPointerException e). Option 2 is invalid because it declares two variables.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A multi-catch uses one exception parameter after the alternatives, for example catch (IOException | NullPointerException e). Option 2 is invalid because it declares two variables.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 172, "question": "Q172. MCQ (Coding): What will happen if an exception is thrown from a method, and the method does not have a try-catch block to handle it? ```java public void methodA() { throw new RuntimeException(\"Exception in methodA\"); } public void methodB() { methodA(); } ```", "options": ["The program will terminate abruptly with an error message.", "The exception will be caught and handled by the JVM.", "The exception will be caught and handled by methodB.", "The exception will propagate up the call stack until it is caught or the program terminates."], "correctIndex": 3, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "An unchecked RuntimeException propagates up the call stack until a matching catch handles it or the thread's uncaught-exception handler is invoked.", "wrongExplanation": "An unchecked RuntimeException propagates up the call stack until a matching catch handles it or the thread's uncaught-exception handler is invoked."}, {"num": 176, "question": "Q176. MCQ: What is the key difference between a checked and an unchecked user-defined exception?", "options": ["Checked exceptions must be explicitly caught or declared with `throws`, while unchecked", "Unchecked exceptions must be explicitly caught or declared with `throws`, while checked", "Checked exceptions are always related to syntax or compilation errors, while unchecked", "Checked exceptions are subclasses of `RuntimeException`, while unchecked exceptions are"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Checked exceptions are subclasses of Exception other than RuntimeException and must be caught or declared; unchecked exceptions derive from RuntimeException or Error.", "wrongExplanation": "Checked exceptions are subclasses of Exception other than RuntimeException and must be caught or declared; unchecked exceptions derive from RuntimeException or Error."}, {"num": 179, "question": "Q179. MCQ: What is the key difference between checked and unchecked exceptions in Java?", "options": ["Checked exceptions are explicitly handled by the programmer, while unchecked exceptions are", "Checked exceptions are always related to syntax or compilation errors, while unchecked", "Checked exceptions are subclasses of `Exception`, while unchecked exceptions are subclasses of", "Checked exceptions require explicit handling using try-catch or throws, while unchecked"], "correctIndex": 3, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Checked exceptions must be caught or declared; unchecked exceptions do not have that compile-time requirement.", "wrongExplanation": "Checked exceptions must be caught or declared; unchecked exceptions do not have that compile-time requirement."}, {"num": 186, "question": "Q186. MCQ: What is the main difference between `ArrayList` and `LinkedList` in Java?", "options": ["`ArrayList` is a resizable array-based implementation, while `LinkedList` is a doubly-linked list-", "`ArrayList` allows null elements, while `LinkedList` does not allow null elements.", "`ArrayList` is a thread-safe collection, while `LinkedList` is not thread-safe.", "`ArrayList` allows constant-time insertion and deletion, while `LinkedList` allows constant-time"], "correctIndex": 0, "hint": "", "correctExplanation": "ArrayList is backed by a resizable array; LinkedList is a doubly linked list. Their access and insertion costs differ.", "wrongExplanation": "ArrayList is backed by a resizable array; LinkedList is a doubly linked list. Their access and insertion costs differ."}, {"num": 192, "question": "Q192. MCQ: How does the lambda expression in Java relate to functional interfaces?", "options": ["Lambda expressions can only be used with functional interfaces.", "Lambda expressions are used to define abstract classes in Java.", "Lambda expressions are a replacement for constructors in functional interfaces.", "Lambda expressions can be used with any Java class or interface."], "correctIndex": 0, "hint": "", "correctExplanation": "Lambda expressions are target-typed and used to implement functional interfaces.", "wrongExplanation": "Lambda expressions are target-typed and used to implement functional interfaces."}, {"num": 201, "question": "Q201. MCQ: Which of the following interfaces in Java is used for creating a thread?", "options": ["`Runnable`", "`Thread`", "`Executor`", "`Timer`"], "correctIndex": 0, "hint": "", "correctExplanation": "Runnable is a functional interface representing a task with a run() method; Thread can execute it.", "wrongExplanation": "Runnable is a functional interface representing a task with a run() method; Thread can execute it."}, {"num": 202, "question": "Q202. MCQ: What happens when a thread calls the `wait()` method in Java?", "options": ["The thread releases the lock on the object's monitor and waits until another thread notifies it.", "The thread continues its execution without any delay.", "The thread enters a waiting state for a specified duration.", "The thread terminates its execution."], "correctIndex": 0, "hint": "", "correctExplanation": "wait() releases the object's monitor and places the calling thread in that object's wait set until notification/interruption/timeout.", "wrongExplanation": "wait() releases the object's monitor and places the calling thread in that object's wait set until notification/interruption/timeout."}, {"num": 204, "question": "Q204. MCQ: Which method is used to pause the execution of a thread for a specific amount of time in Java?", "options": ["`sleep()`", "`join()`", "`yield()`", "`pause()`"], "correctIndex": 0, "hint": "", "correctExplanation": "Thread.sleep(ms) pauses the current thread for at least the requested duration, subject to scheduling.", "wrongExplanation": "Thread.sleep(ms) pauses the current thread for at least the requested duration, subject to scheduling."}, {"num": 206, "question": "Q206. MCQ (Coding): When do you typically use the `wait()`, `notify()`, and `notifyAll()` methods?", "options": ["When you want to pause a thread for a specific duration.", "When you want to stop the execution of a thread.", "When you want to synchronize access to shared resources.", "When you want to wait for a specific condition to be met."], "correctIndex": 3, "hint": "", "correctExplanation": "wait/notify/notifyAll coordinate threads around a condition guarded by an object's monitor; wait must be called while owning that monitor.", "wrongExplanation": "wait/notify/notifyAll coordinate threads around a condition guarded by an object's monitor; wait must be called while owning that monitor."}, {"num": 209, "question": "Q209. MCQ: Which method is used to wait for a thread to finish its execution in Java?", "options": ["`sleep()`", "`join()`", "`yield()`", "`wait()`"], "correctIndex": 1, "hint": "", "correctExplanation": "join() makes the calling thread wait for the target thread to terminate.", "wrongExplanation": "join() makes the calling thread wait for the target thread to terminate."}, {"num": 212, "question": "Q212. MCQ: Which method is used to start the execution of a thread in Java?", "options": ["`start()`", "`run()`", "`execute()`", "`begin()`"], "correctIndex": 0, "hint": "", "correctExplanation": "start() schedules a new thread of execution and the JVM invokes run() on that new thread.", "wrongExplanation": "start() schedules a new thread of execution and the JVM invokes run() on that new thread."}, {"num": 215, "question": "Q215. MCQ: What is the purpose of concurrent collections in Java?", "options": ["Concurrent collections ensure that elements are stored in sorted order.", "Concurrent collections provide a way to perform mathematical operations on numeric data types", "Concurrent collections allow multiple threads to access and modify collections safely without", "Concurrent collections allow collections to be resized dynamically based on the number of"], "correctIndex": 2, "hint": "", "correctExplanation": "Concurrent collections provide thread-safe operations for concurrent access without requiring callers to externally synchronize every operation.", "wrongExplanation": "Concurrent collections provide thread-safe operations for concurrent access without requiring callers to externally synchronize every operation."}, {"num": 220, "question": "Q220. MCQ: What is the purpose of using the `BufferedReader` and `BufferedWriter` classes in Java?", "options": ["They are used for reading and writing character data from and to files.", "They are used for reading and writing binary data from and to files.", "They are used for reading and writing data over the network.", "They are used for creating new files in the file system."], "correctIndex": 0, "hint": "", "correctExplanation": "BufferedReader and BufferedWriter buffer character I/O, reducing underlying read/write operations; they can be used with files or other character streams.", "wrongExplanation": "BufferedReader and BufferedWriter buffer character I/O, reducing underlying read/write operations; they can be used with files or other character streams."}, {"num": 223, "question": "Q223. MCQ: What is the purpose of the `transient` keyword in Java serialization?", "options": ["The `transient` keyword indicates that a variable should not be serialized.", "The `transient` keyword indicates that a variable should be given higher priority during", "The `transient` keyword indicates that a variable should be serialized twice for redundancy.", "The `transient` keyword indicates that a variable should be serialized with a delay."], "correctIndex": 0, "hint": "", "correctExplanation": "transient marks an instance field to be skipped by default Java serialization.", "wrongExplanation": "transient marks an instance field to be skipped by default Java serialization."}, {"num": 226, "question": "Q226. MCQ: What is the purpose of de-serialization in Java?", "options": ["De-serialization is used to convert a Java object into a byte stream to store it in a file or send it", "De-serialization is used to convert a byte stream into a Java object for processing.", "De-serialization is used to convert a Java object into a character stream for reading.", "De-serialization is used to convert a character stream into a Java object for writing."], "correctIndex": 1, "hint": "", "correctExplanation": "Deserialization reconstructs an object from a serialized byte stream.", "wrongExplanation": "Deserialization reconstructs an object from a serialized byte stream."}, {"num": 230, "question": "Q230. MCQ: What is the purpose of serialization in Java?", "options": ["Serialization is used to convert a Java object into a byte stream to store it in a file or send it over", "Serialization is used to convert a byte stream into a Java object for processing.", "Serialization is used to convert a Java object into a character stream for reading.", "Serialization is used to convert a character stream into a Java object for writing."], "correctIndex": 0, "hint": "", "correctExplanation": "Serialization converts an object graph into a byte stream, typically via ObjectOutputStream.", "wrongExplanation": "Serialization converts an object graph into a byte stream, typically via ObjectOutputStream."}, {"num": 236, "question": "Q236. Which statement demonstrates dynamic method dispatch?", "options": ["Animal a = new Dog(); a.sound();", "Dog d = new Dog();", "int x = 10;", "Animal a = new Animal();"], "correctIndex": 0, "hint": "", "correctExplanation": "An Animal reference points to a Dog object; overridden instance method dispatch selects Dog.sound() at runtime.", "wrongExplanation": "An Animal reference points to a Dog object; overridden instance method dispatch selects Dog.sound() at runtime."}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

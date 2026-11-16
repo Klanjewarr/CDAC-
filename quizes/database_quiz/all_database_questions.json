@@ -1,0 +1,2354 @@
+[
+  {
+    "num": 1,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "An ________ is a set of entities of the same type that share the same properties or attributes.",
+    "options": {
+      "A": "Entity set",
+      "B": "Attribute set",
+      "C": "Entity model",
+      "D": "Relation set"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "An entity set is a collection of entities of the same entity type. Its members share the same attributes, such as all Student entities having student_id, name, and date_of_birth.",
+    "highYield": false,
+    "examTip": "In ER modeling: Entity set is a collection of similar entities. An Entity Type defines the schema/structure.",
+    "topic": "ER Modeling & Attributes"
+  },
+  {
+    "num": 2,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "An attribute consisting of first name, middle initial, and last name is an example of which attribute type?",
+    "options": {
+      "A": "Derived attribute",
+      "B": "Simple attribute",
+      "C": "Multivalued attribute",
+      "D": "Composite attribute"
+    },
+    "correctAnswer": "D",
+    "correctExplanation": "A composite attribute can be divided into smaller meaningful components. For example, Name can be decomposed into first name, middle initial, and last name; a simple attribute cannot be meaningfully split further.",
+    "highYield": true,
+    "examTip": "Composite vs Multivalued: Composite = can be divided into sub-parts (Name -> First, Last). Multivalued = multiple values (Phone numbers).",
+    "topic": "ER Modeling & Attributes"
+  },
+  {
+    "num": 3,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "Which symbol represents an entity set in a standard ER diagram?",
+    "options": {
+      "A": "Diamond",
+      "B": "Rectangle",
+      "C": "Oval",
+      "D": "Line"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "In the standard ER notation, an entity set is drawn as a rectangle. Ovals represent attributes, diamonds represent relationships, and lines connect the components.",
+    "highYield": true,
+    "examTip": "ER Diagram symbols: Entity = Rectangle, Attribute = Oval, Relationship = Diamond, Line = Link.",
+    "topic": "ER Modeling & Attributes"
+  },
+  {
+    "num": 4,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "Which symbol represents a relationship set in a standard ER diagram?",
+    "options": {
+      "A": "Rectangle",
+      "B": "Diamond",
+      "C": "Oval",
+      "D": "Double line"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A relationship set is represented by a diamond in the standard ER model. It describes an association among entity sets, such as Student ENROLLS_IN Course.",
+    "highYield": false,
+    "examTip": "Relationship is always a Diamond. Identifying relationship for weak entity = Double Diamond.",
+    "topic": "ER Modeling & Attributes"
+  },
+  {
+    "num": 5,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "In an ER diagram, a double rectangle is commonly used to represent which concept?",
+    "options": {
+      "A": "Strong entity",
+      "B": "Weak entity",
+      "C": "Derived attribute",
+      "D": "Relationship attribute"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A weak entity is represented by a double rectangle. It cannot be uniquely identified by its own attributes alone and depends on an identifying relationship with an owner entity.",
+    "highYield": true,
+    "examTip": "Weak entity = Double Rectangle. Identifying Relationship = Double Diamond. Partial key / discriminator = Dashed underline.",
+    "topic": "ER Modeling & Attributes"
+  },
+  {
+    "num": 6,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "Which SQL command is used to retrieve records from a table?",
+    "options": {
+      "A": "RETRIEVE",
+      "B": "SELECT",
+      "C": "CREATE",
+      "D": "ALTER"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "SELECT retrieves data from one or more tables. CREATE defines database objects, while ALTER changes their structure.",
+    "highYield": false,
+    "examTip": "SELECT is DQL (Data Query Language), though traditionally grouped under DML.",
+    "topic": "SQL Classification (DDL/DML)"
+  },
+  {
+    "num": 7,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "DDL stands for:",
+    "options": {
+      "A": "Data Description Language",
+      "B": "Data Definition Language",
+      "C": "Data Derivation Language",
+      "D": "Data Distinct Language"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DDL means Data Definition Language. It defines or changes database structures, for example with CREATE, ALTER, and DROP.",
+    "highYield": true,
+    "examTip": "DDL defines structure/schema (CREATE, ALTER, DROP, TRUNCATE, RENAME). DDL operations are auto-committed in MySQL!",
+    "topic": "SQL Classification (DDL/DML)"
+  },
+  {
+    "num": 8,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "DML stands for:",
+    "options": {
+      "A": "Data Mapping Language",
+      "B": "Data Manipulation Language",
+      "C": "Data Management Logic",
+      "D": "Data Modify Language"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DML means Data Manipulation Language. It changes data stored in tables, commonly through INSERT, UPDATE, and DELETE.",
+    "highYield": true,
+    "examTip": "DML manipulates rows (INSERT, UPDATE, DELETE). DML can be rolled back unless committed.",
+    "topic": "SQL Classification (DDL/DML)"
+  },
+  {
+    "num": 9,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "Which group contains only DDL commands in MySQL?",
+    "options": {
+      "A": "INSERT, UPDATE, DELETE",
+      "B": "CREATE, ALTER, DROP",
+      "C": "SELECT, INSERT, UPDATE",
+      "D": "GRANT, REVOKE, COMMIT"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "CREATE, ALTER, and DROP define, modify, and remove database objects respectively, so all three are DDL commands. INSERT and UPDATE manipulate table data instead.",
+    "highYield": true,
+    "examTip": "TRUNCATE is DDL, NOT DML! It resets high-water mark / AUTO_INCREMENT and cannot be rolled back in MySQL.",
+    "topic": "SQL Classification (DDL/DML)"
+  },
+  {
+    "num": 10,
+    "section": "Section A – Database Fundamentals, ER Model and SQL Basics",
+    "question": "Which command removes all rows while retaining the table structure?",
+    "options": {
+      "A": "DROP TABLE",
+      "B": "TRUNCATE TABLE",
+      "C": "ALTER TABLE",
+      "D": "RENAME TABLE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "TRUNCATE TABLE removes every row while keeping the table definition. DROP TABLE removes the table itself, including its definition.",
+    "highYield": true,
+    "examTip": "TRUNCATE TABLE vs DELETE: TRUNCATE is faster, deallocates data pages, resets auto-increment, and drops/recreates the table structure.",
+    "topic": "SQL Classification (DDL/DML)"
+  },
+  {
+    "num": 11,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which command removes both a table's data and its definition?",
+    "options": {
+      "A": "DELETE",
+      "B": "TRUNCATE",
+      "C": "DROP TABLE",
+      "D": "UPDATE"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "DROP TABLE removes the table object, so both its stored rows and its schema definition are removed. DELETE removes rows but leaves the table structure in place.",
+    "highYield": true,
+    "examTip": "DROP TABLE drops both data and metadata (definition). DELETE drops data rows only.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 12,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which clause is used to filter individual rows before grouping?",
+    "options": {
+      "A": "HAVING",
+      "B": "ORDER BY",
+      "C": "WHERE",
+      "D": "GROUP BY"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "WHERE filters individual rows before grouping and aggregation. It is evaluated before GROUP BY forms groups.",
+    "highYield": true,
+    "examTip": "Execution Order Trap: WHERE filters rows BEFORE GROUP BY; HAVING filters grouped summary rows AFTER aggregation.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 13,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which clause filters groups after GROUP BY has been applied?",
+    "options": {
+      "A": "WHERE",
+      "B": "HAVING",
+      "C": "DISTINCT",
+      "D": "LIMIT"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "HAVING filters groups after GROUP BY, commonly using aggregate conditions such as HAVING COUNT(*) > 2. WHERE filters rows before grouping.",
+    "highYield": true,
+    "examTip": "HAVING can use aggregate functions (e.g. HAVING COUNT(*) > 2); WHERE CANNOT use aggregate functions directly!",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 14,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which aggregate function counts all rows, including rows containing NULL in other columns?",
+    "options": {
+      "A": "COUNT(column)",
+      "B": "COUNT(*)",
+      "C": "SUM(*)",
+      "D": "TOTAL(*)"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "COUNT(*) counts rows regardless of whether other columns in those rows contain NULL. COUNT(column_name), by contrast, counts only non-NULL values in that column.",
+    "highYield": true,
+    "examTip": "COUNT(*) counts total rows including NULLs. COUNT(column) ignores NULL rows!",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 15,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which of the following is an aggregate function?",
+    "options": {
+      "A": "GROUP BY",
+      "B": "MAX()",
+      "C": "ORDER BY",
+      "D": "LIKE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "MAX() is an aggregate function: it returns the largest non-NULL value in the selected group or result set. GROUP BY and ORDER BY are clauses, not aggregate functions.",
+    "highYield": false,
+    "examTip": "Aggregate functions: MAX, MIN, AVG, SUM, COUNT. GROUP BY and ORDER BY are SQL clauses, not functions.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 16,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "What is the default sort direction of ORDER BY in MySQL when ASC or DESC is omitted?",
+    "options": {
+      "A": "Descending",
+      "B": "Ascending",
+      "C": "Random",
+      "D": "No sorting"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "ORDER BY sorts in ascending order by default in MySQL. Use DESC explicitly for descending order.",
+    "highYield": true,
+    "examTip": "Default ORDER BY is ASC (Ascending: 0-9, A-Z). Omission of ASC/DESC defaults to ASC.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 17,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which operator tests whether a column contains a NULL value?",
+    "options": {
+      "A": "= NULL",
+      "B": "IS NULL",
+      "C": "EQUAL NULL",
+      "D": "LIKE NULL"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Use IS NULL to test for NULL. Ordinary equality comparisons with NULL do not work as a normal value comparison because NULL represents an unknown or missing value.",
+    "highYield": true,
+    "examTip": "NULL Trap: Never use '= NULL' or '!= NULL'! Always use 'IS NULL' or 'IS NOT NULL'. Comparisons with NULL evaluate to UNKNOWN.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 18,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which statement about NULL is correct?",
+    "options": {
+      "A": "NULL is always equal to zero",
+      "B": "NULL is always equal to an empty string",
+      "C": "NULL represents missing, unknown, or not-applicable information",
+      "D": "NULL values can be compared using = NULL"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "NULL represents missing, unknown, or not-applicable information; it is not the same as numeric zero or an empty string. Test it with IS NULL or IS NOT NULL.",
+    "highYield": true,
+    "examTip": "NULL is NOT zero (0) and NOT an empty string (''). It represents missing, inapplicable, or unknown information.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 19,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which key uniquely identifies each row and does not allow NULL values?",
+    "options": {
+      "A": "Foreign key",
+      "B": "Primary key",
+      "C": "Candidate attribute",
+      "D": "Non-unique index"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A primary key uniquely identifies each row and cannot contain NULL. A table has one primary-key constraint, although that key may consist of multiple columns.",
+    "highYield": true,
+    "examTip": "PRIMARY KEY = UNIQUE + NOT NULL. Exactly one primary key allowed per table.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 20,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "How many primary keys can a table have?",
+    "options": {
+      "A": "Zero or one",
+      "B": "Exactly two",
+      "C": "Any number",
+      "D": "One per column"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "A table can define only one PRIMARY KEY constraint. That primary key can be composite, meaning it can include two or more columns.",
+    "highYield": true,
+    "examTip": "A table can have at most ONE Primary Key constraint, though that PK can be composite (multiple columns).",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 21,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "How many UNIQUE constraints can a table have?",
+    "options": {
+      "A": "Only one",
+      "B": "At most two",
+      "C": "Multiple",
+      "D": "None"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "A table may have multiple UNIQUE constraints, each enforcing uniqueness on its own column or combination of columns. This differs from the single primary-key constraint.",
+    "highYield": true,
+    "examTip": "A table can have MULTIPLE UNIQUE constraints, but only ONE PRIMARY KEY.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 22,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Can a foreign-key column contain NULL when the column definition permits it?",
+    "options": {
+      "A": "Yes",
+      "B": "No",
+      "C": "Only in parent tables",
+      "D": "Only when it is also a primary key"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "A foreign-key column may contain NULL if its definition allows NULL and no NOT NULL constraint is applied. A non-NULL foreign-key value must satisfy the referenced-key relationship.",
+    "highYield": true,
+    "examTip": "Foreign key column CAN contain NULL (e.g. employee without a manager), unless defined with NOT NULL.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 23,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which constraint enforces a relationship between rows in two tables?",
+    "options": {
+      "A": "CHECK",
+      "B": "DEFAULT",
+      "C": "FOREIGN KEY",
+      "D": "NOT NULL"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "A FOREIGN KEY constraint enforces referential integrity by requiring non-NULL child-key values to match an eligible key in the referenced table.",
+    "highYield": true,
+    "examTip": "FOREIGN KEY enforces Referential Integrity: child value must exist in parent table or be NULL.",
+    "topic": "Constraints & Filtering (WHERE/HAVING/NULL)"
+  },
+  {
+    "num": 24,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which MySQL command is used to add a new column to an existing table?",
+    "options": {
+      "A": "UPDATE TABLE",
+      "B": "ALTER TABLE ... ADD COLUMN",
+      "C": "INSERT COLUMN",
+      "D": "MODIFY TABLE ... INSERT"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "ALTER TABLE ... ADD COLUMN adds a column to an existing table. UPDATE changes values in existing rows; it does not change the table's column structure.",
+    "highYield": true,
+    "examTip": "Schema modification uses ALTER TABLE ... ADD [COLUMN] columnName dataType.",
+    "topic": "Table Modifications (ALTER/UPDATE/DELETE)"
+  },
+  {
+    "num": 25,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which command adds a new row to a table?",
+    "options": {
+      "A": "ADD",
+      "B": "INSERT",
+      "C": "UPDATE",
+      "D": "ALTER"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "INSERT adds new rows to a table. UPDATE changes existing rows, while ALTER changes the table definition.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Table Modifications (ALTER/UPDATE/DELETE)"
+  },
+  {
+    "num": 26,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which SQL statement modifies existing rows?",
+    "options": {
+      "A": "UPDATE",
+      "B": "ALTER",
+      "C": "CREATE",
+      "D": "GRANT"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "UPDATE modifies values in existing rows, usually selecting which rows to change with a WHERE clause. Without WHERE, all rows may be updated.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Table Modifications (ALTER/UPDATE/DELETE)"
+  },
+  {
+    "num": 27,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which SQL statement removes selected rows from a table?",
+    "options": {
+      "A": "DROP",
+      "B": "DELETE",
+      "C": "REMOVE",
+      "D": "TRUNCATE COLUMN"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DELETE removes rows from a table and can target selected rows with WHERE. It does not remove the table definition.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Table Modifications (ALTER/UPDATE/DELETE)"
+  },
+  {
+    "num": 28,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which SQL pattern matches any sequence of zero or more characters using LIKE?",
+    "options": {
+      "A": "?",
+      "B": "_",
+      "C": "%",
+      "D": "*"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "The percent sign (%) in a LIKE pattern matches any sequence of zero or more characters, including an empty sequence. For example, 'A%' matches strings beginning with A.",
+    "highYield": true,
+    "examTip": "LIKE Wildcards: '%' matches 0 or more characters; '_' matches exactly 1 character.",
+    "topic": "Pattern Matching & Wildcards (LIKE)"
+  },
+  {
+    "num": 29,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "In a LIKE pattern, which wildcard matches exactly one character?",
+    "options": {
+      "A": "%",
+      "B": "_",
+      "C": "*",
+      "D": "?"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "The underscore (_) wildcard in LIKE matches exactly one character. For example, 'A_' matches two-character strings beginning with A.",
+    "highYield": true,
+    "examTip": "Single character wildcard is underscore (_). E.g. '_a%' matches strings with 'a' as second letter.",
+    "topic": "Pattern Matching & Wildcards (LIKE)"
+  },
+  {
+    "num": 30,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which join returns only rows having matching values in both joined tables?",
+    "options": {
+      "A": "LEFT JOIN",
+      "B": "RIGHT JOIN",
+      "C": "INNER JOIN",
+      "D": "CROSS JOIN"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "INNER JOIN returns only rows for which the join condition finds a match in both tables. Nonmatching rows from either side are excluded.",
+    "highYield": true,
+    "examTip": "INNER JOIN returns only matching rows from both tables (intersection).",
+    "topic": "Joins & Cartesian Product"
+  },
+  {
+    "num": 31,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which join returns all rows from the left table and matching rows from the right table?",
+    "options": {
+      "A": "LEFT OUTER JOIN",
+      "B": "INNER JOIN",
+      "C": "CROSS JOIN",
+      "D": "SELF JOIN"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "LEFT OUTER JOIN returns every row from the left table and matching rows from the right table. Where no right-side match exists, right-side columns are returned as NULL.",
+    "highYield": true,
+    "examTip": "LEFT OUTER JOIN returns all rows from left table + matched right table rows (NULL if no match).",
+    "topic": "Joins & Cartesian Product"
+  },
+  {
+    "num": 32,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which join produces a Cartesian product of the two input tables?",
+    "options": {
+      "A": "NATURAL JOIN",
+      "B": "CROSS JOIN",
+      "C": "INNER JOIN",
+      "D": "LEFT JOIN"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "CROSS JOIN returns the Cartesian product: every row from the first table is paired with every row from the second table. The result contains m × n rows for inputs of m and n rows.",
+    "highYield": true,
+    "examTip": "CROSS JOIN = Cartesian product. Result rows = m * n.",
+    "topic": "Joins & Cartesian Product"
+  },
+  {
+    "num": 33,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which join type is not directly supported as a native join keyword in MySQL?",
+    "options": {
+      "A": "INNER JOIN",
+      "B": "LEFT JOIN",
+      "C": "RIGHT JOIN",
+      "D": "FULL OUTER JOIN"
+    },
+    "correctAnswer": "D",
+    "correctExplanation": "MySQL does not provide a native FULL OUTER JOIN keyword. The usual workaround combines LEFT JOIN and RIGHT JOIN results with UNION, taking care to handle duplicates.",
+    "highYield": true,
+    "examTip": "MySQL doesn't support FULL OUTER JOIN natively! Emulate it using: (LEFT JOIN) UNION (RIGHT JOIN).",
+    "topic": "Joins & Cartesian Product"
+  },
+  {
+    "num": 34,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "A table can be joined to itself. What is this called?",
+    "options": {
+      "A": "Natural join",
+      "B": "Self join",
+      "C": "Cross union",
+      "D": "Recursive key"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A self join joins a table to itself, usually by assigning aliases to represent two roles or rows. It is useful for relationships such as employees and their managers.",
+    "highYield": true,
+    "examTip": "Self join: Joining a table to itself using two distinct table aliases (e.g., Emp e JOIN Emp m ON e.mgr_id = m.emp_id).",
+    "topic": "Joins & Cartesian Product"
+  },
+  {
+    "num": 35,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which set operator combines result sets and removes duplicate rows by default?",
+    "options": {
+      "A": "UNION",
+      "B": "UNION ALL",
+      "C": "CROSS JOIN",
+      "D": "INTERSECT ALL"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "UNION combines compatible SELECT results and removes duplicate rows by default. UNION ALL retains duplicates and is generally less costly because it does not perform duplicate elimination.",
+    "highYield": true,
+    "examTip": "UNION eliminates duplicate rows (costly sort). UNION ALL retains duplicates (faster).",
+    "topic": "Set Operators & Sorting (UNION/DISTINCT)"
+  },
+  {
+    "num": 36,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which clause sorts the final result set?",
+    "options": {
+      "A": "GROUP BY",
+      "B": "ORDER BY",
+      "C": "HAVING",
+      "D": "WHERE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "ORDER BY sorts the final query result. GROUP BY forms groups, WHERE filters rows, and HAVING filters groups.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Set Operators & Sorting (UNION/DISTINCT)"
+  },
+  {
+    "num": 37,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which keyword removes duplicate rows from a SELECT result?",
+    "options": {
+      "A": "UNIQUE ROWS",
+      "B": "DISTINCT",
+      "C": "DIFFERENT",
+      "D": "SINGLE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DISTINCT removes duplicate result rows from a SELECT result. It applies to the selected column combination, not just one arbitrary column.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Set Operators & Sorting (UNION/DISTINCT)"
+  },
+  {
+    "num": 38,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which normal form requires each attribute value to be atomic and each row-column intersection to contain a single value?",
+    "options": {
+      "A": "1NF",
+      "B": "2NF",
+      "C": "3NF",
+      "D": "BCNF"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "First Normal Form requires each field to contain a single atomic value and disallows repeating groups or arrays of values in one relational cell. It establishes the basic tabular structure.",
+    "highYield": true,
+    "examTip": "1NF: Atomic values only (no multi-valued attributes, no arrays, no comma-separated values in a cell).",
+    "topic": "Database Normalization (1NF to 4NF)"
+  },
+  {
+    "num": 39,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Second Normal Form primarily eliminates:",
+    "options": {
+      "A": "Transitive dependencies",
+      "B": "Partial dependencies on a candidate key",
+      "C": "All foreign keys",
+      "D": "Multivalued dependencies"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Second Normal Form requires 1NF and removes partial dependencies of non-prime attributes on a proper subset of a candidate key. This matters especially when a candidate key is composite.",
+    "highYield": true,
+    "examTip": "2NF: Must be in 1NF + NO Partial Dependency (no non-prime attribute depends on a part of a composite candidate key).",
+    "topic": "Database Normalization (1NF to 4NF)"
+  },
+  {
+    "num": 40,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Third Normal Form primarily addresses:",
+    "options": {
+      "A": "Repeating groups",
+      "B": "Partial dependency only",
+      "C": "Transitive dependency of non-key attributes",
+      "D": "Join dependency"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "Third Normal Form requires 2NF and addresses transitive dependencies of non-key attributes on candidate keys. A non-key attribute should not depend on another non-key attribute.",
+    "highYield": true,
+    "examTip": "3NF: Must be in 2NF + NO Transitive Dependency (non-prime attribute must not depend on another non-prime attribute: X -> Y -> Z).",
+    "topic": "Database Normalization (1NF to 4NF)"
+  },
+  {
+    "num": 41,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Fourth Normal Form is concerned primarily with:",
+    "options": {
+      "A": "Functional dependency",
+      "B": "Multivalued dependency",
+      "C": "Transitive dependency",
+      "D": "Partial dependency"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Fourth Normal Form addresses non-trivial multivalued dependencies. It decomposes relations when independent multi-valued facts about the same key create unnecessary combinations.",
+    "highYield": true,
+    "examTip": "4NF: Eliminates Multivalued Dependencies (MVD: X ->-> Y).",
+    "topic": "Database Normalization (1NF to 4NF)"
+  },
+  {
+    "num": 42,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Referential integrity is commonly enforced using:",
+    "options": {
+      "A": "CHECK constraint",
+      "B": "FOREIGN KEY constraint",
+      "C": "DEFAULT constraint",
+      "D": "NOT NULL constraint"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Referential integrity is commonly enforced by a FOREIGN KEY constraint. It prevents a child row from referring to a nonexistent parent key, subject to the configured actions.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Referential Integrity"
+  },
+  {
+    "num": 43,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which statement makes the changes of the current transaction permanent?",
+    "options": {
+      "A": "ROLLBACK",
+      "B": "SAVEPOINT",
+      "C": "COMMIT",
+      "D": "RELEASE"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "COMMIT makes the current transaction's changes permanent. After a successful commit, those changes are no longer undone by a normal ROLLBACK of that transaction.",
+    "highYield": true,
+    "examTip": "COMMIT makes uncommitted transaction changes permanent and releases locks.",
+    "topic": "Transactions & ACID Properties"
+  },
+  {
+    "num": 44,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which statement undoes uncommitted changes in the current transaction?",
+    "options": {
+      "A": "COMMIT",
+      "B": "ROLLBACK",
+      "C": "GRANT",
+      "D": "ALTER"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "ROLLBACK undoes changes made in the current uncommitted transaction, returning the database to the transaction's earlier state or last savepoint.",
+    "highYield": true,
+    "examTip": "ROLLBACK undoes uncommitted modifications back to the beginning of the transaction or to a SAVEPOINT.",
+    "topic": "Transactions & ACID Properties"
+  },
+  {
+    "num": 45,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "A transaction is best described as:",
+    "options": {
+      "A": "A database user",
+      "B": "A sequence of operations treated as one logical unit of work",
+      "C": "A table index",
+      "D": "A stored view"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A transaction is a sequence of database operations treated as one logical unit of work. It is committed as a whole or rolled back according to transaction rules.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Transactions & ACID Properties"
+  },
+  {
+    "num": 46,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which ACID property ensures that a transaction is completed entirely or not at all?",
+    "options": {
+      "A": "Consistency",
+      "B": "Isolation",
+      "C": "Atomicity",
+      "D": "Durability"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "Atomicity means all operations in a transaction succeed together or none of them take effect. It is often summarized as 'all or nothing.'",
+    "highYield": true,
+    "examTip": "Atomicity: 'All or Nothing'. Managed by Transaction Manager / Recovery Manager via undo logs.",
+    "topic": "Transactions & ACID Properties"
+  },
+  {
+    "num": 47,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which ACID property ensures committed changes survive system failure?",
+    "options": {
+      "A": "Atomicity",
+      "B": "Durability",
+      "C": "Isolation",
+      "D": "Consistency"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Durability means that once a transaction commits, its changes persist even if a system failure occurs afterward.",
+    "highYield": true,
+    "examTip": "Durability: Once committed, data survives crashes, power loss, and restarts. Guaranteed by redo logs (WAL).",
+    "topic": "Transactions & ACID Properties"
+  },
+  {
+    "num": 48,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which SQL command creates a database?",
+    "options": {
+      "A": "MAKE DATABASE",
+      "B": "CREATE DATABASE",
+      "C": "NEW DATABASE",
+      "D": "BUILD SCHEMA"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "CREATE DATABASE creates a new database schema. In MySQL, IF NOT EXISTS can be added to avoid an error if the database already exists.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Database Objects & Views"
+  },
+  {
+    "num": 49,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which command selects the database to be used in a MySQL session?",
+    "options": {
+      "A": "OPEN",
+      "B": "USE",
+      "C": "SELECT DATABASE TABLE",
+      "D": "CONNECT TO"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "USE database_name selects the database that subsequent unqualified statements operate on in the current MySQL session.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Database Objects & Views"
+  },
+  {
+    "num": 50,
+    "section": "Section B – SQL Queries, Constraints, Joins and Normalization",
+    "question": "Which MySQL statement is used to create a view?",
+    "options": {
+      "A": "CREATE VIEW",
+      "B": "MAKE VIEW",
+      "C": "ALTER QUERY",
+      "D": "INSERT VIEW"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "CREATE VIEW defines a named query that can be used like a virtual table. The view generally stores the query definition rather than a separate copy of all source rows.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Database Objects & Views"
+  },
+  {
+    "num": 51,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which SQL command category includes GRANT and REVOKE?",
+    "options": {
+      "A": "DDL",
+      "B": "DML",
+      "C": "DCL",
+      "D": "TCL"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "GRANT and REVOKE manage privileges and access rights. They belong to Data Control Language (DCL).",
+    "highYield": true,
+    "examTip": "DCL (Data Control Language) manages security and permissions: GRANT and REVOKE.",
+    "topic": "Command Categories & Auto Increment"
+  },
+  {
+    "num": 52,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which command category includes COMMIT and ROLLBACK?",
+    "options": {
+      "A": "DCL",
+      "B": "TCL/DTL",
+      "C": "DDL",
+      "D": "DQL"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "COMMIT and ROLLBACK control transaction boundaries, so they belong to Transaction Control Language (TCL), sometimes called Transaction Management Language.",
+    "highYield": true,
+    "examTip": "TCL (Transaction Control Language): COMMIT, ROLLBACK, SAVEPOINT.",
+    "topic": "Command Categories & Auto Increment"
+  },
+  {
+    "num": 53,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which statement about DELETE and TRUNCATE is generally correct in MySQL?",
+    "options": {
+      "A": "DELETE cannot use WHERE",
+      "B": "TRUNCATE removes all rows and resets AUTO_INCREMENT in common MySQL use",
+      "C": "TRUNCATE is a row-by-row DML operation",
+      "D": "DELETE always removes table structure"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "TRUNCATE removes all rows without a WHERE filter and, in normal MySQL use, resets the table's AUTO_INCREMENT counter. DELETE can selectively remove rows and is a DML operation.",
+    "highYield": true,
+    "examTip": "CDAC Favorite: TRUNCATE vs DELETE. TRUNCATE is DDL, resets AUTO_INCREMENT, cannot be filtered with WHERE.",
+    "topic": "Command Categories & Auto Increment"
+  },
+  {
+    "num": 54,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What does AUTO_INCREMENT do in MySQL?",
+    "options": {
+      "A": "Automatically generates a sequential value when a value is not supplied",
+      "B": "Creates a foreign key automatically",
+      "C": "Sorts the table by primary key",
+      "D": "Prevents duplicate rows in every column"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "AUTO_INCREMENT generates the next sequence value for a column when an INSERT does not explicitly provide one. It is commonly used for surrogate identifier columns.",
+    "highYield": true,
+    "examTip": "AUTO_INCREMENT automatically assigns next integer sequence when null/omitted. Only 1 auto_increment column allowed per table, must be indexed.",
+    "topic": "Command Categories & Auto Increment"
+  },
+  {
+    "num": 55,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which data type is generally suitable for storing a calendar date without time?",
+    "options": {
+      "A": "TIME",
+      "B": "DATE",
+      "C": "DATETIME",
+      "D": "YEAR-MONTH"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DATE stores a calendar date without a time-of-day component. TIME stores a time value, while DATETIME stores both date and time.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Data Types & Temporal Values"
+  },
+  {
+    "num": 56,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which MySQL type stores both date and time values?",
+    "options": {
+      "A": "DATE",
+      "B": "TIME",
+      "C": "DATETIME",
+      "D": "CHAR"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "DATETIME stores both calendar date and time-of-day information. DATE has no time component and TIME has no date component.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Data Types & Temporal Values"
+  },
+  {
+    "num": 57,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which constraint supplies a value when an INSERT statement omits that column?",
+    "options": {
+      "A": "CHECK",
+      "B": "DEFAULT",
+      "C": "UNIQUE",
+      "D": "FOREIGN KEY"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DEFAULT supplies a column value when an INSERT omits that column or explicitly requests DEFAULT. It does not override a value that is explicitly supplied.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Constraints (DEFAULT & CHECK)"
+  },
+  {
+    "num": 58,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is the purpose of a CHECK constraint?",
+    "options": {
+      "A": "To sort records",
+      "B": "To enforce a Boolean condition on inserted or updated values",
+      "C": "To create an index",
+      "D": "To join two tables"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "CHECK enforces a Boolean condition on values being inserted or updated. Rows that violate an enforced check condition are rejected.",
+    "highYield": true,
+    "examTip": "CHECK constraint validates condition on INSERT/UPDATE. In MySQL 8.0+, CHECK is actively enforced.",
+    "topic": "Constraints (DEFAULT & CHECK)"
+  },
+  {
+    "num": 59,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which index structure is commonly used by MySQL InnoDB for primary and secondary indexes?",
+    "options": {
+      "A": "B-tree family",
+      "B": "Stack",
+      "C": "Hash map only",
+      "D": "Binary search tree in memory only"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "InnoDB uses B-tree-family structures (implemented as B+ trees) for its common primary and secondary indexes. These structures support efficient key lookups and ordered range scans.",
+    "highYield": true,
+    "examTip": "InnoDB uses B+ Trees for clustered and secondary indexes. Root to leaf depth is typically 3-4 levels for millions of rows.",
+    "topic": "Indexing & Storage Engines (B+ Trees)"
+  },
+  {
+    "num": 60,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is a likely trade-off of adding indexes to a table?",
+    "options": {
+      "A": "Reads may become faster, but writes and storage can become more expensive",
+      "B": "All queries become constant time",
+      "C": "Indexes eliminate the need for constraints",
+      "D": "Indexes always reduce storage"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "Indexes can speed up suitable reads by reducing the amount of data scanned, but they consume storage and must be maintained when rows are inserted, updated, or deleted. Too many indexes can slow writes.",
+    "highYield": true,
+    "examTip": "Index Trade-off: Speeds up SELECT queries; slows down INSERT, UPDATE, and DELETE (extra maintenance).",
+    "topic": "Indexing & Storage Engines (B+ Trees)"
+  },
+  {
+    "num": 61,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is a candidate key?",
+    "options": {
+      "A": "Any column that contains NULL",
+      "B": "A minimal set of attributes that uniquely identifies a row",
+      "C": "A key used only for sorting",
+      "D": "A foreign key without a parent"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A candidate key is a minimal set of attributes that uniquely identifies a row. Minimal means no proper subset of that attribute set can still uniquely identify rows.",
+    "highYield": true,
+    "examTip": "Candidate Key: Minimal Superkey (superkey with no redundant attributes).",
+    "topic": "Functional Dependencies, Keys & BCNF"
+  },
+  {
+    "num": 62,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "A composite key is:",
+    "options": {
+      "A": "A key consisting of two or more attributes",
+      "B": "A key that allows duplicate values",
+      "C": "A key that references multiple databases only",
+      "D": "A key created automatically by a view"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "A composite key contains two or more attributes whose combination identifies a row. Individual columns may not be unique, while the combined values are.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Functional Dependencies, Keys & BCNF"
+  },
+  {
+    "num": 63,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "A functional dependency X → Y means:",
+    "options": {
+      "A": "Y determines X in every possible relation",
+      "B": "Each value of X is associated with exactly one value of Y",
+      "C": "X and Y must be primary keys",
+      "D": "X and Y must contain identical values"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "X → Y means that each value of X determines exactly one associated value of Y in the relation. Different X values may still determine the same Y value.",
+    "highYield": true,
+    "examTip": "Functional Dependency X -> Y: If two rows agree on X, they MUST agree on Y.",
+    "topic": "Functional Dependencies, Keys & BCNF"
+  },
+  {
+    "num": 64,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "A relation is in BCNF if, for every non-trivial functional dependency X → Y:",
+    "options": {
+      "A": "Y is a foreign key",
+      "B": "X is a superkey",
+      "C": "Y is a candidate key",
+      "D": "X contains one attribute only"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "In BCNF, the determinant X of every non-trivial functional dependency X → Y must be a superkey. This is stricter than 3NF.",
+    "highYield": true,
+    "examTip": "BCNF (Boyce-Codd Normal Form): For EVERY non-trivial FD X -> Y, X MUST be a Superkey. Stricter than 3NF.",
+    "topic": "Functional Dependencies, Keys & BCNF"
+  },
+  {
+    "num": 65,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which anomaly can occur when the same fact is unnecessarily repeated in multiple rows?",
+    "options": {
+      "A": "Insertion anomaly",
+      "B": "Update anomaly",
+      "C": "Deletion anomaly",
+      "D": "All of the above"
+    },
+    "correctAnswer": "D",
+    "correctExplanation": "Repeated facts can cause insertion, update, and deletion anomalies. Therefore, all three anomaly types may arise from poorly structured redundant data.",
+    "highYield": true,
+    "examTip": "Redundancy causes 3 anomalies: Insertion Anomaly, Update/Modification Anomaly, Deletion Anomaly.",
+    "topic": "Functional Dependencies, Keys & BCNF"
+  },
+  {
+    "num": 66,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which relational algebra operation selects rows satisfying a predicate?",
+    "options": {
+      "A": "Projection",
+      "B": "Selection",
+      "C": "Union",
+      "D": "Rename"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Relational algebra selection (σ) filters rows that satisfy a predicate. It is analogous to the WHERE clause in SQL.",
+    "highYield": true,
+    "examTip": "Relational Algebra: Selection (sigma σ) = filters ROWS (WHERE clause).",
+    "topic": "Relational Algebra & Set Compatibility"
+  },
+  {
+    "num": 67,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which relational algebra operation selects specified columns?",
+    "options": {
+      "A": "Selection",
+      "B": "Projection",
+      "C": "Difference",
+      "D": "Join"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Projection (π) selects specified columns from a relation. It is analogous to choosing the column list in SELECT.",
+    "highYield": true,
+    "examTip": "Relational Algebra: Projection (pi π) = selects COLUMNS (SELECT column_list).",
+    "topic": "Relational Algebra & Set Compatibility"
+  },
+  {
+    "num": 68,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which condition is required for two relations to be union-compatible?",
+    "options": {
+      "A": "Same number of attributes with compatible corresponding domains",
+      "B": "Same table name",
+      "C": "Same primary-key values",
+      "D": "Same number of rows"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "UNION-compatible relations must have the same number of attributes, and corresponding attributes must have compatible domains or data types. Their names and row counts need not be identical.",
+    "highYield": true,
+    "examTip": "Union Compatibility: Same degree (number of attributes) and compatible corresponding domains (data types).",
+    "topic": "Relational Algebra & Set Compatibility"
+  },
+  {
+    "num": 69,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What does UNION ALL do compared with UNION?",
+    "options": {
+      "A": "It removes duplicates more aggressively",
+      "B": "It retains duplicate rows",
+      "C": "It sorts only numeric columns",
+      "D": "It returns only common rows"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "UNION ALL combines result sets while retaining duplicate rows. UNION performs duplicate elimination.",
+    "highYield": true,
+    "examTip": "UNION vs UNION ALL: UNION performs duplicate elimination; UNION ALL simply appends result sets.",
+    "topic": "Relational Algebra & Set Compatibility"
+  },
+  {
+    "num": 70,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which clause is used to combine rows having the same values in specified columns?",
+    "options": {
+      "A": "ORDER BY",
+      "B": "GROUP BY",
+      "C": "WHERE",
+      "D": "LIMIT"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "GROUP BY groups rows that share values in one or more columns, allowing aggregate functions to calculate a result per group.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Aggregates, Grouping & NULL Semantics"
+  },
+  {
+    "num": 71,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which query condition correctly checks for rows where commission is not NULL?",
+    "options": {
+      "A": "commission <> NULL",
+      "B": "commission = NOT NULL",
+      "C": "commission IS NOT NULL",
+      "D": "commission != 'NULL'"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "IS NOT NULL correctly tests for a value that is not NULL. Expressions such as column <> NULL evaluate to UNKNOWN rather than performing the intended test.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Aggregates, Grouping & NULL Semantics"
+  },
+  {
+    "num": 72,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which aggregate function returns the average of non-NULL values in a numeric column?",
+    "options": {
+      "A": "SUM()",
+      "B": "AVG()",
+      "C": "COUNT()",
+      "D": "MAX()"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "AVG() calculates the arithmetic average of non-NULL values in a numeric expression. NULL values are excluded from the average.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Aggregates, Grouping & NULL Semantics"
+  },
+  {
+    "num": 73,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is the result of COUNT(column_name) with respect to NULL values?",
+    "options": {
+      "A": "It counts all rows",
+      "B": "It ignores NULL values in that column",
+      "C": "It counts only NULL values",
+      "D": "It returns an error"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "COUNT(column_name) counts only rows where that column is non-NULL. Use COUNT(*) when the intention is to count rows regardless of column NULL values.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Aggregates, Grouping & NULL Semantics"
+  },
+  {
+    "num": 74,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which subquery operator tests whether at least one row is returned by a subquery?",
+    "options": {
+      "A": "EXISTS",
+      "B": "ALL",
+      "C": "BETWEEN",
+      "D": "LIKE"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "EXISTS tests whether a subquery returns at least one row. It is true when a matching row exists and false when the subquery returns no rows.",
+    "highYield": true,
+    "examTip": "EXISTS operator: Evaluates to TRUE as soon as subquery finds 1 matching row; stops scanning immediately (efficient).",
+    "topic": "Subqueries (EXISTS, IN, Correlated)"
+  },
+  {
+    "num": 75,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which operator can test whether a value matches any value returned by a subquery?",
+    "options": {
+      "A": "IN",
+      "B": "IS NULL",
+      "C": "LIKE",
+      "D": "AS"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "IN tests whether a value equals any value in a list or the result of a subquery. It is commonly used for membership checks.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Subqueries (EXISTS, IN, Correlated)"
+  },
+  {
+    "num": 76,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "A correlated subquery:",
+    "options": {
+      "A": "Runs independently without referring to outer query",
+      "B": "References a column from the outer query",
+      "C": "Cannot appear in WHERE",
+      "D": "Must return exactly one row"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A correlated subquery refers to a column from the outer query. It is logically evaluated in relation to each candidate outer row, although the optimizer may transform its execution.",
+    "highYield": true,
+    "examTip": "Correlated Subquery: References columns from outer query; re-evaluated for each candidate outer row.",
+    "topic": "Subqueries (EXISTS, IN, Correlated)"
+  },
+  {
+    "num": 77,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is a Common Table Expression (CTE) introduced by?",
+    "options": {
+      "A": "DEFINE",
+      "B": "WITH",
+      "C": "TEMP",
+      "D": "DECLARE TABLE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A Common Table Expression is introduced with WITH. It names a temporary result set that can be referenced by the statement that follows.",
+    "highYield": true,
+    "examTip": "CTE (Common Table Expression): Declared using WITH cte_name AS (SELECT ...). Improves readability over subqueries.",
+    "topic": "Common Table Expressions (CTEs)"
+  },
+  {
+    "num": 78,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is a recursive CTE commonly used for?",
+    "options": {
+      "A": "Encrypting columns",
+      "B": "Traversing hierarchical or tree-like data",
+      "C": "Creating indexes automatically",
+      "D": "Replacing all joins"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A recursive CTE repeatedly refers to its own result and is useful for traversing hierarchical data such as employee reporting structures or tree-like categories.",
+    "highYield": true,
+    "examTip": "Recursive CTE: Contains an anchor member and a recursive member joined with UNION ALL. Used for trees/hierarchies.",
+    "topic": "Common Table Expressions (CTEs)"
+  },
+  {
+    "num": 79,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which window function assigns a unique sequential number to each row within a partition?",
+    "options": {
+      "A": "RANK()",
+      "B": "DENSE_RANK()",
+      "C": "ROW_NUMBER()",
+      "D": "NTILE()"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "ROW_NUMBER() assigns a distinct sequential number to each row within a window partition, following the window's ORDER BY. Tied ordering values still receive different row numbers.",
+    "highYield": true,
+    "examTip": "ROW_NUMBER(): Assigns sequential integers (1, 2, 3, 4) with NO ties and NO gaps.",
+    "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"
+  },
+  {
+    "num": 80,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "If two rows tie, which function assigns the same rank and leaves a gap in the next rank?",
+    "options": {
+      "A": "ROW_NUMBER()",
+      "B": "RANK()",
+      "C": "DENSE_RANK()",
+      "D": "NTILE()"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "RANK() assigns equal ranks to tied rows and leaves a gap after the tie. For example, ranks may be 1, 1, 3; DENSE_RANK() would produce 1, 1, 2.",
+    "highYield": true,
+    "examTip": "RANK() vs DENSE_RANK(): Ties get same rank. RANK() leaves gaps (1, 1, 3); DENSE_RANK() has NO gaps (1, 1, 2).",
+    "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"
+  },
+  {
+    "num": 81,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which window clause divides rows into groups for independent window calculations?",
+    "options": {
+      "A": "GROUP BY",
+      "B": "PARTITION BY",
+      "C": "HAVING",
+      "D": "WITH"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "PARTITION BY divides the rows into independent groups for a window function. The function is calculated separately within each partition without collapsing rows.",
+    "highYield": true,
+    "examTip": "PARTITION BY in OVER() clause: Divides rows into groups without collapsing them into a single row like GROUP BY.",
+    "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"
+  },
+  {
+    "num": 82,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which clause is used inside OVER() to define the ordering for a window function?",
+    "options": {
+      "A": "ORDER BY",
+      "B": "WHERE",
+      "C": "LIMIT",
+      "D": "DISTINCT"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "ORDER BY inside OVER() defines the order used by the window function within its partition. This ordering is separate from the final query's ORDER BY.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"
+  },
+  {
+    "num": 83,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which statement about a window function is correct?",
+    "options": {
+      "A": "It collapses each group into one row like GROUP BY",
+      "B": "It calculates across related rows while retaining individual result rows",
+      "C": "It can only be used with DELETE",
+      "D": "It always returns one row"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Window functions calculate values across related rows while keeping each input row in the result. GROUP BY generally collapses each group into one output row.",
+    "highYield": true,
+    "examTip": "Window Functions calculate aggregates while retaining original row identities and individual row counts.",
+    "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"
+  },
+  {
+    "num": 84,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which MySQL command displays the structure of a table?",
+    "options": {
+      "A": "DESCRIBE table_name",
+      "B": "SHOW ROWS table_name",
+      "C": "STRUCTURE table_name",
+      "D": "VIEW TABLE table_name"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "DESCRIBE table_name (also written DESC table_name) displays a table's columns and structural details, such as types, nullability, keys, and defaults.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 85,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which MySQL client provides a graphical interface for database development and administration?",
+    "options": {
+      "A": "MySQL Workbench",
+      "B": "MySQL Router only",
+      "C": "mysqldump",
+      "D": "mysqladmin only"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "MySQL Workbench is a graphical tool for database design, SQL development, and administration. The other listed tools are command-line or utility tools rather than the general GUI described.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 86,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which MySQL client is a command-line interface for executing SQL statements?",
+    "options": {
+      "A": "MySQL Workbench",
+      "B": "mysql monitor/client",
+      "C": "Mongo Shell",
+      "D": "Compass"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "The mysql client (also called the MySQL monitor) is a command-line program for connecting to MySQL and executing SQL statements. MySQL Workbench is the graphical alternative.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 87,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which statement about a view is correct?",
+    "options": {
+      "A": "A view is always a physically stored copy of all source rows",
+      "B": "A view is a named query that can present data from one or more tables",
+      "C": "A view cannot contain joins",
+      "D": "A view always has its own independent data"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A view is a named query that presents data from one or more underlying tables or views. It is not necessarily a physically stored copy of the source data.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 88,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "What is the purpose of WITH CHECK OPTION in an updatable view?",
+    "options": {
+      "A": "It prevents all SELECT statements",
+      "B": "It ensures rows modified through the view satisfy the view's defining condition",
+      "C": "It automatically creates a primary key",
+      "D": "It disables all constraints"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "WITH CHECK OPTION requires rows inserted or updated through an updatable view to continue satisfying the view's defining WHERE condition. It prevents changes that would make the row disappear from that view.",
+    "highYield": true,
+    "examTip": "WITH CHECK OPTION: Prevents INSERT/UPDATE through a view that would violate the view's WHERE condition.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 89,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which statement about a MySQL temporary table is correct?",
+    "options": {
+      "A": "It is visible to every database user",
+      "B": "It is generally visible only within the creating session",
+      "C": "It survives server restart permanently",
+      "D": "It cannot share a name with a permanent table"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A MySQL TEMPORARY TABLE is visible only to the session that created it and is automatically dropped when that session ends. Other sessions cannot use that temporary table.",
+    "highYield": true,
+    "examTip": "TEMPORARY TABLE in MySQL: Exists only for duration of current user session; automatically dropped when session ends.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 90,
+    "section": "Section C – MySQL, SQL Programming and Advanced Querying",
+    "question": "Which command is used to rename a table in MySQL?",
+    "options": {
+      "A": "ALTER TABLE old_name RENAME TO new_name",
+      "B": "UPDATE TABLE old_name TO new_name",
+      "C": "CHANGE TABLE old_name new_name",
+      "D": "MODIFY TABLE old_name"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "ALTER TABLE old_name RENAME TO new_name renames a table in MySQL. RENAME TABLE old_name TO new_name is another supported form.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL CLI, Views & Session Temp Tables"
+  },
+  {
+    "num": 91,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "In PL/SQL, which section contains executable statements?",
+    "options": {
+      "A": "DECLARE",
+      "B": "BEGIN ... END",
+      "C": "EXCEPTION only",
+      "D": "PACKAGE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "In a PL/SQL block, executable statements are placed between BEGIN and END. DECLARE is used for optional declarations, while EXCEPTION handles runtime errors.",
+    "highYield": true,
+    "examTip": "PL/SQL Block Structure: DECLARE (optional), BEGIN (mandatory), EXCEPTION (optional), END; (mandatory).",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 92,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which section of a PL/SQL block is optional?",
+    "options": {
+      "A": "BEGIN",
+      "B": "END",
+      "C": "DECLARE",
+      "D": "Executable section"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "The DECLARE section is optional in a PL/SQL block. BEGIN and END are required to delimit the executable section, although the executable section itself may contain no statements only with NULL;.",
+    "highYield": true,
+    "examTip": "DECLARE section in PL/SQL is OPTIONAL. BEGIN and END are mandatory.",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 93,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which PL/SQL construct is used to handle runtime errors?",
+    "options": {
+      "A": "CASE",
+      "B": "EXCEPTION section",
+      "C": "DECLARE section",
+      "D": "PACKAGE specification"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "The EXCEPTION section handles runtime exceptions raised while the executable section runs. It can contain handlers for predefined or user-defined exceptions.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 94,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which parameter mode passes a value into a PL/SQL subprogram?",
+    "options": {
+      "A": "OUT",
+      "B": "IN",
+      "C": "RETURN",
+      "D": "INOUT only"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "IN is the default parameter mode and passes a value into a PL/SQL subprogram. The subprogram cannot assign a new value back to the caller through an IN parameter.",
+    "highYield": true,
+    "examTip": "PL/SQL Parameter modes: IN (pass-by-reference/value, read-only default), OUT (return value), IN OUT (both).",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 95,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which parameter mode allows a subprogram to return a value through a parameter?",
+    "options": {
+      "A": "IN",
+      "B": "OUT",
+      "C": "CONSTANT",
+      "D": "STATIC"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "OUT parameters return a value from a PL/SQL subprogram to the caller. They are intended for output rather than supplying an initial input value.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 96,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which subprogram is designed to return a value using RETURN?",
+    "options": {
+      "A": "Procedure",
+      "B": "Function",
+      "C": "Trigger",
+      "D": "Cursor"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A function is designed to return a value using RETURN and declares a return data type. A procedure performs an action and does not return a function value.",
+    "highYield": true,
+    "examTip": "Function MUST return a value using RETURN statement; Procedure does NOT require a RETURN value.",
+    "topic": "PL/SQL Block Structure & Parameters"
+  },
+  {
+    "num": 97,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which PL/SQL cursor is created automatically for SQL statements?",
+    "options": {
+      "A": "Explicit cursor",
+      "B": "Implicit cursor",
+      "C": "Parameterized cursor",
+      "D": "Ref cursor only"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "An implicit cursor is created and managed automatically by Oracle for SQL statements. Programmers explicitly declare, open, fetch, and close explicit cursors.",
+    "highYield": true,
+    "examTip": "Implicit Cursor: Opened automatically by Oracle for every SQL DML/SELECT statement (SQL%FOUND, SQL%ROWCOUNT).",
+    "topic": "Cursors & Attributes (%ROWCOUNT, %FOUND)"
+  },
+  {
+    "num": 98,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which cursor attribute returns the number of rows affected by the most recent SQL statement?",
+    "options": {
+      "A": "%FOUND",
+      "B": "%NOTFOUND",
+      "C": "%ROWCOUNT",
+      "D": "%ISOPEN"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "%ROWCOUNT reports how many rows have been affected or fetched by the most recent cursor/SQL operation, depending on the cursor reference. It is not a count of columns.",
+    "highYield": true,
+    "examTip": "%ROWCOUNT: Number of rows fetched so far (explicit) or affected by DML (implicit cursor).",
+    "topic": "Cursors & Attributes (%ROWCOUNT, %FOUND)"
+  },
+  {
+    "num": 99,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "What does SQL%FOUND indicate after a DML statement?",
+    "options": {
+      "A": "Whether at least one row was affected",
+      "B": "Whether the cursor is closed",
+      "C": "The number of columns updated",
+      "D": "Whether a transaction was committed"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "SQL%FOUND is TRUE after a DML statement if at least one row was affected; it is FALSE if no rows were affected. It is an attribute of Oracle's implicit SQL cursor.",
+    "highYield": true,
+    "examTip": "SQL%FOUND: TRUE if DML affected at least 1 row; FALSE if 0 rows affected.",
+    "topic": "Cursors & Attributes (%ROWCOUNT, %FOUND)"
+  },
+  {
+    "num": 100,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which sequence of operations is typical for an explicit cursor?",
+    "options": {
+      "A": "FETCH, OPEN, DECLARE, CLOSE",
+      "B": "DECLARE, OPEN, FETCH, CLOSE",
+      "C": "OPEN, DECLARE, CLOSE, FETCH",
+      "D": "DECLARE, FETCH, CLOSE, OPEN"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "The standard explicit cursor lifecycle is DECLARE, OPEN, FETCH, and CLOSE. Declaration defines the cursor query, OPEN executes it, FETCH retrieves rows, and CLOSE releases it.",
+    "highYield": true,
+    "examTip": "Explicit Cursor lifecycle: DECLARE -> OPEN -> FETCH -> CLOSE.",
+    "topic": "Cursors & Attributes (%ROWCOUNT, %FOUND)"
+  },
+  {
+    "num": 101,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which command is used to remove a standalone stored procedure in Oracle?",
+    "options": {
+      "A": "DELETE PROCEDURE",
+      "B": "DROP PROCEDURE",
+      "C": "REMOVE PROCEDURE",
+      "D": "TRUNCATE PROCEDURE"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "DROP PROCEDURE removes a standalone stored procedure in Oracle. DELETE is used for table rows, not stored program objects.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Procedures, Functions & Packages"
+  },
+  {
+    "num": 102,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which component of a package contains public declarations visible to callers?",
+    "options": {
+      "A": "Package body only",
+      "B": "Package specification",
+      "C": "Trigger body",
+      "D": "Cursor declaration"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "The package specification is the public interface of a PL/SQL package. It declares procedures, functions, variables, types, and exceptions that callers may access.",
+    "highYield": true,
+    "examTip": "Package Specification: Public interface (declarations). Package Body: Private implementation and actual subprogram code.",
+    "topic": "Procedures, Functions & Packages"
+  },
+  {
+    "num": 103,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "A subprogram defined in a package body but omitted from its specification is generally:",
+    "options": {
+      "A": "Public",
+      "B": "Private",
+      "C": "A table-level trigger",
+      "D": "An implicit cursor"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A subprogram implemented in the package body but not declared in the package specification is private to the package body. External callers cannot invoke it directly.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "Procedures, Functions & Packages"
+  },
+  {
+    "num": 104,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which trigger timing runs the trigger before the triggering DML operation?",
+    "options": {
+      "A": "AFTER",
+      "B": "BEFORE",
+      "C": "INSTEAD OF only",
+      "D": "ON COMMIT only"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A BEFORE trigger fires before the triggering DML operation is completed. AFTER triggers run after the operation, while INSTEAD OF triggers are used in contexts such as views.",
+    "highYield": true,
+    "examTip": "BEFORE Trigger: Fires before DML executes (ideal for validation/modifying :NEW values). AFTER Trigger: For auditing/logging.",
+    "topic": "Triggers (:NEW vs :OLD)"
+  },
+  {
+    "num": 105,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "In row-level triggers, which symbol refers to the new column value in Oracle PL/SQL?",
+    "options": {
+      "A": ":OLD",
+      "B": ":NEW",
+      "C": "NEW()",
+      "D": "OLD()"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "In an Oracle row-level trigger, :NEW refers to the new column value and :OLD refers to the old value. Availability depends on the triggering operation; for example, INSERT has no meaningful :OLD row.",
+    "highYield": true,
+    "examTip": "Trigger Pseudo-records: :NEW holds inserted/updated value; :OLD holds prior value. INSERT has only :NEW; DELETE has only :OLD.",
+    "topic": "Triggers (:NEW vs :OLD)"
+  },
+  {
+    "num": 106,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which MySQL statement raises a user-defined exception condition in a stored program?",
+    "options": {
+      "A": "SIGNAL",
+      "B": "RAISE ERROR",
+      "C": "THROW SQL",
+      "D": "EXCEPTION"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "MySQL SIGNAL raises a condition, commonly a user-defined SQLSTATE error, from a stored program. It can be used to report validation failures to the caller.",
+    "highYield": true,
+    "examTip": "MySQL Error Signaling: SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error message'; used in stored programs.",
+    "topic": "MySQL Stored Programs, SIGNAL & Handlers"
+  },
+  {
+    "num": 107,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which MySQL construct is used to declare a handler for conditions in a stored program?",
+    "options": {
+      "A": "DECLARE ... HANDLER",
+      "B": "CREATE ... EXCEPTION",
+      "C": "SIGNAL ... HANDLER",
+      "D": "CATCH ... END"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "DECLARE ... HANDLER declares how a MySQL stored program responds to a specified condition, such as NOT FOUND, SQLEXCEPTION, or a particular SQLSTATE.",
+    "highYield": true,
+    "examTip": "DECLARE ... HANDLER FOR SQLEXCEPTION / NOT FOUND: Traps errors in MySQL stored procedures.",
+    "topic": "MySQL Stored Programs, SIGNAL & Handlers"
+  },
+  {
+    "num": 108,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which statement about MySQL stored procedures is correct?",
+    "options": {
+      "A": "They cannot accept parameters",
+      "B": "They can contain SQL statements and control-flow logic",
+      "C": "They must return exactly one scalar value",
+      "D": "They are identical to views"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "MySQL stored procedures can accept parameters and contain SQL statements, variables, conditions, loops, and other control-flow logic. They are not views and need not return exactly one scalar value.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL Stored Programs, SIGNAL & Handlers"
+  },
+  {
+    "num": 109,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which MySQL stored-program construct repeats a block while a condition is true?",
+    "options": {
+      "A": "WHILE loop",
+      "B": "CASE expression only",
+      "C": "VIEW",
+      "D": "INDEX"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "WHILE repeats its statement block as long as its condition evaluates to true. The condition is checked before each iteration, so the loop may execute zero times.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL Stored Programs, SIGNAL & Handlers"
+  },
+  {
+    "num": 110,
+    "section": "Section D – PL/SQL and Stored Programming",
+    "question": "Which MySQL stored-program construct is used to branch among multiple conditions?",
+    "options": {
+      "A": "IF ... ELSEIF ... ELSE",
+      "B": "CREATE INDEX",
+      "C": "ORDER BY",
+      "D": "COMMIT"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "IF ... ELSEIF ... ELSE selects a branch based on one or more conditions. It is control-flow logic, unlike ORDER BY or COMMIT.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MySQL Stored Programs, SIGNAL & Handlers"
+  },
+  {
+    "num": 111,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "MongoDB is primarily classified as which type of database?",
+    "options": {
+      "A": "Relational database",
+      "B": "Document-oriented NoSQL database",
+      "C": "Graph database",
+      "D": "Wide-column database"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "MongoDB is a document-oriented NoSQL database. It stores flexible, JSON-like documents rather than requiring all records to fit relational rows and columns.",
+    "highYield": true,
+    "examTip": "MongoDB is Document-oriented NoSQL; stores JSON-like BSON (Binary JSON) documents in collections.",
+    "topic": "NoSQL & MongoDB Fundamentals (BSON, _id)"
+  },
+  {
+    "num": 112,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "MongoDB stores records primarily as:",
+    "options": {
+      "A": "Rows in fixed relational tables",
+      "B": "BSON documents in collections",
+      "C": "Plain CSV files only",
+      "D": "Keyless binary blocks"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "MongoDB stores records as BSON documents inside collections. BSON is a binary-encoded serialization format that extends JSON-like data with additional types.",
+    "highYield": true,
+    "examTip": "BSON format: Binary-encoded JSON supporting extra data types (Date, ObjectId, Binary, 64-bit int).",
+    "topic": "NoSQL & MongoDB Fundamentals (BSON, _id)"
+  },
+  {
+    "num": 113,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "BSON is best described as:",
+    "options": {
+      "A": "Binary representation/serialization of JSON-like documents",
+      "B": "A SQL query language",
+      "C": "A relational normalization form",
+      "D": "A MongoDB storage engine only"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "BSON is a binary representation/serialization format for JSON-like documents, with additional data types such as dates and binary data. It is the format MongoDB uses for document storage and communication.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "NoSQL & MongoDB Fundamentals (BSON, _id)"
+  },
+  {
+    "num": 114,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "In MongoDB, a group of documents is stored in a:",
+    "options": {
+      "A": "Schema",
+      "B": "Collection",
+      "C": "Trigger",
+      "D": "Cursor table"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A collection is a grouping of MongoDB documents and is broadly analogous to a table in a relational database, though documents can have flexible structures.",
+    "highYield": true,
+    "examTip": "MongoDB Collection = Relational Table; MongoDB Document = Relational Row; MongoDB Field = Relational Column.",
+    "topic": "NoSQL & MongoDB Fundamentals (BSON, _id)"
+  },
+  {
+    "num": 115,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which field is commonly used as the unique identifier of a MongoDB document?",
+    "options": {
+      "A": "_id",
+      "B": "_key",
+      "C": "primary",
+      "D": "docid"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "The _id field is the default unique identifier for documents in a MongoDB collection. MongoDB creates an ObjectId by default if an inserted document does not provide _id.",
+    "highYield": true,
+    "examTip": "Default primary key in MongoDB is '_id'. If omitted, MongoDB automatically generates a 12-byte ObjectId.",
+    "topic": "NoSQL & MongoDB Fundamentals (BSON, _id)"
+  },
+  {
+    "num": 116,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB method inserts one document into a collection?",
+    "options": {
+      "A": "insertOne()",
+      "B": "addRow()",
+      "C": "putRecord()",
+      "D": "createRow()"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "insertOne() inserts one document into a collection. For multiple documents, MongoDB provides insertMany().",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 117,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB method retrieves documents matching a filter?",
+    "options": {
+      "A": "find()",
+      "B": "select()",
+      "C": "fetchRows()",
+      "D": "queryAll()"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "find() retrieves documents matching a filter. An empty filter, find({}), matches all documents in the collection.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 118,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB method updates a single matching document?",
+    "options": {
+      "A": "updateOne()",
+      "B": "modifyRow()",
+      "C": "alterOne()",
+      "D": "replaceTable()"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "updateOne() updates the first document that matches the filter. The update document commonly uses operators such as $set or $inc.",
+    "highYield": true,
+    "examTip": "updateOne() updates first matching document. Requires update operators like $set, $inc, $unset.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 119,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB method deletes a single matching document?",
+    "options": {
+      "A": "removeAll()",
+      "B": "deleteOne()",
+      "C": "dropOne()",
+      "D": "truncateOne()"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "deleteOne() removes the first document matching the filter. deleteMany() is used when all matching documents should be removed.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 120,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB operator is used to specify equality in a query filter?",
+    "options": {
+      "A": "$eq",
+      "B": "$set",
+      "C": "$inc",
+      "D": "$push"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "$eq specifies equality in a MongoDB query predicate. For example, { age: { $eq: 25 } } matches documents whose age equals 25.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 121,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB operator selects documents where a field is greater than a specified value?",
+    "options": {
+      "A": "$lt",
+      "B": "$gt",
+      "C": "$ne",
+      "D": "$in"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "$gt matches values greater than the specified value. Related comparison operators include $lt (less than), $gte (greater than or equal), and $lte (less than or equal).",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 122,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB update operator changes the value of a specified field?",
+    "options": {
+      "A": "$set",
+      "B": "$match",
+      "C": "$project",
+      "D": "$group"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "$set changes the value of a specified field, creating the field if it does not exist. It is an update operator, not an aggregation stage.",
+    "highYield": true,
+    "examTip": "$set operator: Sets/updates field value without overwriting entire document.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 123,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB update operator increments a numeric field by a specified amount?",
+    "options": {
+      "A": "$push",
+      "B": "$inc",
+      "C": "$unset",
+      "D": "$rename"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "$inc increments a numeric field by the specified amount. It is useful for counters and numeric totals without manually reading and replacing the old value.",
+    "highYield": true,
+    "examTip": "$inc operator: Increments numeric field by specified value (e.g. {$inc: {count: 1}}).",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 124,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB operator adds an element to an array field?",
+    "options": {
+      "A": "$push",
+      "B": "$setOnInsert",
+      "C": "$pullAll only",
+      "D": "$eq"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "$push appends an element to an array field. If the field does not exist, MongoDB creates an array; if it is not an array, the update fails.",
+    "highYield": true,
+    "examTip": "$push operator: Appends an item to an array field. To remove, use $pull.",
+    "topic": "MongoDB CRUD & Update Operators ($set, $inc, $push)"
+  },
+  {
+    "num": 125,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB aggregation stage filters documents?",
+    "options": {
+      "A": "$project",
+      "B": "$match",
+      "C": "$sort",
+      "D": "$group"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "$match filters documents in an aggregation pipeline using a query predicate. Placing it early can reduce the number of documents processed by later stages.",
+    "highYield": true,
+    "examTip": "Aggregation Pipeline: $match filters documents (equivalent to WHERE in SQL). Should be placed as early as possible.",
+    "topic": "MongoDB Aggregation Pipeline ($match, $group, $unwind)"
+  },
+  {
+    "num": 126,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB aggregation stage groups documents by a specified expression?",
+    "options": {
+      "A": "$group",
+      "B": "$limit",
+      "C": "$unwind",
+      "D": "$skip"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "$group groups documents by a specified _id expression and can calculate aggregate values using accumulators such as $sum, $avg, $min, and $max.",
+    "highYield": true,
+    "examTip": "$group stage: Groups documents by _id key and computes aggregates using $sum, $avg, $min, $max.",
+    "topic": "MongoDB Aggregation Pipeline ($match, $group, $unwind)"
+  },
+  {
+    "num": 127,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB aggregation stage sorts documents?",
+    "options": {
+      "A": "$match",
+      "B": "$sort",
+      "C": "$count",
+      "D": "$lookup"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "$sort orders documents in an aggregation pipeline. Use 1 for ascending order and -1 for descending order.",
+    "highYield": true,
+    "examTip": "$sort stage: 1 for Ascending, -1 for Descending.",
+    "topic": "MongoDB Aggregation Pipeline ($match, $group, $unwind)"
+  },
+  {
+    "num": 128,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "What does the $unwind aggregation stage do?",
+    "options": {
+      "A": "Combines two collections",
+      "B": "Deconstructs an array field into separate documents",
+      "C": "Deletes an entire collection",
+      "D": "Creates a unique index"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "$unwind deconstructs an array field, outputting a separate pipeline document for each array element. This makes individual array elements available to later stages.",
+    "highYield": true,
+    "examTip": "$unwind stage: Deconstructs an array field from input documents to output a document for each element.",
+    "topic": "MongoDB Aggregation Pipeline ($match, $group, $unwind)"
+  },
+  {
+    "num": 129,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB feature helps improve query performance by avoiding full collection scans for suitable queries?",
+    "options": {
+      "A": "Index",
+      "B": "View only",
+      "C": "Transaction log deletion",
+      "D": "BSON compression only"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "An index stores data structures that help MongoDB locate matching documents without scanning every document for suitable queries. Indexes improve reads in many cases but require storage and add write-maintenance cost.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Indexes & Collections"
+  },
+  {
+    "num": 130,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which command removes an entire collection in MongoDB?",
+    "options": {
+      "A": "deleteOne()",
+      "B": "drop()",
+      "C": "removeField()",
+      "D": "truncate()"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "drop() removes an entire collection, including its documents and indexes. deleteOne() removes only one matching document.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Indexes & Collections"
+  },
+  {
+    "num": 131,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which NoSQL category stores data as key-value pairs?",
+    "options": {
+      "A": "Document store",
+      "B": "Key-value store",
+      "C": "Graph store",
+      "D": "Relational store"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A key-value store organizes data as key-value pairs, where a key is used to retrieve its associated value. It is one of the common NoSQL database categories.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "NoSQL Architecture & Horizontal Scaling"
+  },
+  {
+    "num": 132,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which NoSQL database category represents data using nodes and edges?",
+    "options": {
+      "A": "Wide-column",
+      "B": "Graph database",
+      "C": "Key-value",
+      "D": "Document database"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A graph database represents entities as nodes and their relationships as edges. This model is useful when relationships and traversals are central to the data.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "NoSQL Architecture & Horizontal Scaling"
+  },
+  {
+    "num": 133,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Horizontal scaling means:",
+    "options": {
+      "A": "Adding more CPU/RAM to one machine",
+      "B": "Adding more machines to distribute workload",
+      "C": "Reducing the number of databases",
+      "D": "Moving all data to one table"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "Horizontal scaling adds more machines or nodes to distribute storage and workload. Adding CPU or RAM to one existing machine is vertical scaling.",
+    "highYield": true,
+    "examTip": "Horizontal Scaling (Scale-out): Adding more low-cost server nodes (Sharding in Mongo). Vertical Scaling: Adding RAM/CPU to 1 server.",
+    "topic": "NoSQL Architecture & Horizontal Scaling"
+  },
+  {
+    "num": 134,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which statement best describes a flexible schema in a document database?",
+    "options": {
+      "A": "Every document must have exactly the same fields",
+      "B": "Documents in a collection can have different field structures",
+      "C": "No document can contain nested objects",
+      "D": "All fields must be numeric"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A flexible document schema allows documents in the same collection to contain different fields or field structures. Applications can still enforce validation rules when consistency is needed.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "NoSQL Architecture & Horizontal Scaling"
+  },
+  {
+    "num": 135,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB method creates an index on a field?",
+    "options": {
+      "A": "createIndex()",
+      "B": "makeKey()",
+      "C": "addConstraint()",
+      "D": "buildTableIndex()"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "createIndex() creates an index on one or more fields in a MongoDB collection. For example, db.users.createIndex({ email: 1 }) creates an ascending index on email.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 136,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB command is commonly used to view databases?",
+    "options": {
+      "A": "show dbs",
+      "B": "SHOW DATABASES()",
+      "C": "list schemas SQL",
+      "D": "db.listTables()"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "show dbs (or show databases) displays databases known to the MongoDB deployment, subject to visibility and privileges. It is a mongosh helper command.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 137,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB command switches to a database or creates a database context?",
+    "options": {
+      "A": "use databaseName",
+      "B": "connect databaseName",
+      "C": "select databaseName",
+      "D": "open databaseName"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "use databaseName switches the current mongosh database context. If the database does not yet contain data, it may not appear in the database list until data is stored.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 138,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "What is the role of MongoDB Compass?",
+    "options": {
+      "A": "A graphical user interface for working with MongoDB",
+      "B": "A SQL compiler",
+      "C": "A relational database engine",
+      "D": "A backup-only file format"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "MongoDB Compass is MongoDB's graphical user interface for exploring data, running queries and aggregations, and managing database objects. It is not a relational database engine.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 139,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which MongoDB feature supports multi-document ACID transactions on replica sets and sharded clusters?",
+    "options": {
+      "A": "Aggregation pipeline",
+      "B": "Transactions",
+      "C": "Capped collections only",
+      "D": "Text index"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "MongoDB supports multi-document ACID transactions on replica sets and sharded clusters. Transactions allow multiple operations to commit together or abort together.",
+    "highYield": true,
+    "examTip": "ACID in MongoDB: Multi-document ACID transactions are fully supported since MongoDB 4.0 on replica sets and 4.2 on sharded clusters.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 140,
+    "section": "Section E – NoSQL and MongoDB",
+    "question": "Which statement about embedding documents in MongoDB is generally correct?",
+    "options": {
+      "A": "It can store related data together in one document",
+      "B": "It always requires a join at query time",
+      "C": "It is prohibited in MongoDB",
+      "D": "It converts collections into SQL tables"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "Embedding related documents stores associated data together inside one document. This can make common reads efficient and avoid a separate lookup, though document size and update patterns should guide the design.",
+    "highYield": true,
+    "examTip": "Embedding vs Referencing: Embedding stores related sub-documents together for single-read retrieval.",
+    "topic": "MongoDB Admin, Compass, Transactions & Modeling"
+  },
+  {
+    "num": 141,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "Which statement about a MySQL cursor is incorrect?",
+    "options": {
+      "A": "A MySQL cursor is read-only",
+      "B": "A MySQL cursor is non-scrollable",
+      "C": "A MySQL cursor is always insensitive by default",
+      "D": "A cursor is used to process rows returned by a query"
+    },
+    "correctAnswer": "C",
+    "correctExplanation": "MySQL cursors are read-only and non-scrollable, and MySQL describes them as asensitive: the server may or may not make a copy of the result table. Therefore, saying they are always insensitive is incorrect.",
+    "highYield": true,
+    "examTip": "MySQL Cursor properties: Read-only, Non-scrollable, and Asensitive (server may or may not make a temporary copy).",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 142,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "Which index maintenance operation discards and recreates an index?",
+    "options": {
+      "A": "Refresh",
+      "B": "Remake",
+      "C": "Reorganize",
+      "D": "Rebuild"
+    },
+    "correctAnswer": "D",
+    "correctExplanation": "Rebuilding an index discards and recreates its index structure. It is distinct from reorganizing an index, which typically rearranges existing leaf-level pages without a full rebuild.",
+    "highYield": true,
+    "examTip": "Index Rebuild vs Reorganize: REBUILD drops and recreates the index completely. REORGANIZE defragments leaf nodes.",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 143,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "Which statement about a MySQL temporary table is correct?",
+    "options": {
+      "A": "It is visible to every session",
+      "B": "It is automatically removed when the creating session ends",
+      "C": "It cannot have the same name as a permanent table",
+      "D": "MySQL does not support temporary tables"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A MySQL temporary table is scoped to the session that created it and is automatically dropped when that session ends. It is not visible to every session.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 144,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "Which statement about WITH CHECK OPTION in a view is correct?",
+    "options": {
+      "A": "It can be used with an updatable view to ensure modified rows satisfy the view condition",
+      "B": "It is used only to sort a view",
+      "C": "It disables all view updates",
+      "D": "It creates a temporary table"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "WITH CHECK OPTION on an updatable view ensures that inserted or updated rows continue to satisfy the view's WHERE condition. It does not sort the view or disable updates.",
+    "highYield": true,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 145,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "A complex view is generally a view created using:",
+    "options": {
+      "A": "Only one base table without expressions",
+      "B": "Multiple tables, joins, or aggregate expressions",
+      "C": "Only a constant value",
+      "D": "A table without columns"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A complex view commonly uses multiple base tables, joins, expressions, or aggregate functions. A simple view is generally based on a single table and avoids such complexity.",
+    "highYield": false,
+    "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 146,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "In MySQL stored programs, which statement can raise a user-defined condition?",
+    "options": {
+      "A": "SIGNAL",
+      "B": "DECLARE",
+      "C": "END",
+      "D": "OPEN"
+    },
+    "correctAnswer": "A",
+    "correctExplanation": "SIGNAL raises a condition in a MySQL stored program, commonly to return a deliberate error with a chosen SQLSTATE and message. DECLARE defines variables or handlers but does not itself raise the condition.",
+    "highYield": true,
+    "examTip": "SIGNAL statement raises a custom condition/exception in MySQL stored procedures.",
+    "topic": "DBT Question Paper Exam Review"
+  },
+  {
+    "num": 147,
+    "section": "Section F – Previously Shared DBT Question Paper Questions",
+    "question": "Which statement best describes the difference between a PRIMARY KEY and a UNIQUE key?",
+    "options": {
+      "A": "Both allow duplicate values",
+      "B": "A primary key does not allow NULL and only one primary-key constraint is defined per table; multiple UNIQUE constraints may be defined",
+      "C": "A unique key must always be the foreign key",
+      "D": "A primary key can contain NULL values"
+    },
+    "correctAnswer": "B",
+    "correctExplanation": "A table can have only one PRIMARY KEY constraint, and primary-key columns cannot contain NULL. A table may have multiple UNIQUE constraints; their NULL handling differs from primary-key rules and depends on the DBMS.",
+    "highYield": true,
+    "examTip": "PRIMARY KEY vs UNIQUE: Table has max 1 PK (no NULLs allowed). Table can have multiple UNIQUE keys (NULLs handled differently).",
+    "topic": "DBT Question Paper Exam Review"
+  }
+]

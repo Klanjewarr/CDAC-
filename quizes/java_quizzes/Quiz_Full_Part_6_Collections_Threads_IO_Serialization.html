@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Bank Part 6: Collections, Threads, File I/O & JDBC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Full Bank Part 6: Collections, Threads, File I/O & JDBC</div>
+            <div class="quiz-subtitle">Questions Q186 to Q241 (All 55 bank questions)</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 186, "question": "Q186. MCQ: What is the main difference between `ArrayList` and `LinkedList` in Java?", "options": ["`ArrayList` is a resizable array-based implementation, while `LinkedList` is a doubly-linked list-", "`ArrayList` allows null elements, while `LinkedList` does not allow null elements.", "`ArrayList` is a thread-safe collection, while `LinkedList` is not thread-safe.", "`ArrayList` allows constant-time insertion and deletion, while `LinkedList` allows constant-time"], "correctIndex": 0, "hint": "", "correctExplanation": "ArrayList is backed by a resizable array; LinkedList is a doubly linked list. Their access and insertion costs differ.", "wrongExplanation": "ArrayList is backed by a resizable array; LinkedList is a doubly linked list. Their access and insertion costs differ."}, {"num": 187, "question": "Q187. MCQ: What is the purpose of the \"Island of Isolation\" in the context of garbage collection?", "options": ["It refers to a group of objects with circular references that cannot be garbage collected.", "It is a term used to describe objects that are not eligible for garbage collection.", "It is a garbage collection algorithm used by the JVM.", "It refers to a group of objects with strong references that can be garbage collected together."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "An island of isolation is a group of objects that reference one another but are unreachable from GC roots. The garbage collector can reclaim them despite their circular references.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "An island of isolation is a group of objects that reference one another but are unreachable from GC roots. The garbage collector can reclaim them despite their circular references.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 188, "question": "Q188. Which Java method is used to add all of the specified elements to the specified collection?", "options": ["addValue()", "copy()", "cpy()", "addAll()"], "correctIndex": 3, "hint": "", "correctExplanation": "Collection.addAll(Collection) adds all elements from the supplied collection to the receiver.", "wrongExplanation": "Collection.addAll(Collection) adds all elements from the supplied collection to the receiver."}, {"num": 189, "question": "Q189. MCQ: Which method is used to sort a collection of objects using a custom `Comparator`?", "options": ["`sort()`", "`Collections.sort()`", "`sorted()`", "`Collections.sorted()`"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A List has a sort(Comparator) method, and Collections.sort(list, comparator) is also available. Both APIs can sort with a custom Comparator; the question does not specify which API it means.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A List has a sort(Comparator) method, and Collections.sort(list, comparator) is also available. Both APIs can sort with a custom Comparator; the question does not specify which API it means.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 190, "question": "Q190. MCQ: What is the return type of a lambda expression that represents a void method?", "options": ["`void`", "`null`", "`None`", "It is inferred by the compiler."], "correctIndex": 3, "hint": "", "correctExplanation": "A void-compatible lambda targets a functional method whose return type is void; the lambda does not return a value.", "wrongExplanation": "A void-compatible lambda targets a functional method whose return type is void; the lambda does not return a value."}, {"num": 191, "question": "Q191. MCQ: What is the main advantage of using `LinkedList` over `ArrayList` in Java?", "options": ["`LinkedList` allows constant-time access to elements by index.", "`LinkedList` allows constant-time insertion and deletion.", "`LinkedList` uses less memory compared to `ArrayList`.", "`LinkedList` allows duplicate elements."], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "LinkedList can insert or remove a node in constant time once the node/position is reached. Finding an element by index is linear, so it is not generally faster than ArrayList for arbitrary indexed operations.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "LinkedList can insert or remove a node in constant time once the node/position is reached. Finding an element by index is linear, so it is not generally faster than ArrayList for arbitrary indexed operations.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 192, "question": "Q192. MCQ: How does the lambda expression in Java relate to functional interfaces?", "options": ["Lambda expressions can only be used with functional interfaces.", "Lambda expressions are used to define abstract classes in Java.", "Lambda expressions are a replacement for constructors in functional interfaces.", "Lambda expressions can be used with any Java class or interface."], "correctIndex": 0, "hint": "", "correctExplanation": "Lambda expressions are target-typed and used to implement functional interfaces.", "wrongExplanation": "Lambda expressions are target-typed and used to implement functional interfaces."}, {"num": 193, "question": "Q193. MCQ: What is the primary purpose of using lambda expressions in Java?", "options": ["To create new instances of classes.", "To implement abstract methods in interfaces.", "To create anonymous inner classes.", "To improve the performance of the code."], "correctIndex": 1, "hint": "", "correctExplanation": "Lambdas provide concise implementations of functional-interface methods, commonly for callbacks and collection operations.", "wrongExplanation": "Lambdas provide concise implementations of functional-interface methods, commonly for callbacks and collection operations."}, {"num": 194, "question": "Q194. MCQ: What is the purpose of requesting garbage collection in Java?", "options": ["To force the JVM to immediately free up memory.", "To clean up unused objects and reclaim memory.", "To automatically optimize memory usage in the application.", "To stop the execution of the Java program."], "correctIndex": 1, "hint": "", "correctExplanation": "System.gc() requests garbage collection but does not force immediate memory reclamation.", "wrongExplanation": "System.gc() requests garbage collection but does not force immediate memory reclamation."}, {"num": 195, "question": "Q195. MCQ: When would you use a concurrent collection in Java?", "options": ["When you need to perform complex mathematical operations on collection elements.", "When you need to enforce a specific order of elements in the collection.", "When you need to ensure thread safety for accessing and modifying collections from multiple", "When you need to store elements in a sorted order."], "correctIndex": 2, "hint": "", "correctExplanation": "Concurrent collections are designed for safe concurrent access and updates by multiple threads.", "wrongExplanation": "Concurrent collections are designed for safe concurrent access and updates by multiple threads."}, {"num": 196, "question": "Q196. Which Java method is used to clear element of ArrayList?", "options": ["deleteAll()", "delete()", "clearAll()", "clear()"], "correctIndex": 3, "hint": "", "correctExplanation": "ArrayList.clear() removes all elements from the list.", "wrongExplanation": "ArrayList.clear() removes all elements from the list."}, {"num": 197, "question": "Q197. What is garbage collection in java?", "options": ["Method to manage memory in java", "Create new garbage values", "Delete all values", "All of these"], "correctIndex": 0, "hint": "", "correctExplanation": "Garbage collection reclaims heap memory occupied by objects that are no longer reachable.", "wrongExplanation": "Garbage collection reclaims heap memory occupied by objects that are no longer reachable."}, {"num": 198, "question": "Q198. What is a comparator in Java?", "options": ["Interface to compare integer", "Comparison method for lists", "Interface to compare two objects in java", "All of these"], "correctIndex": 2, "hint": "", "correctExplanation": "Comparator<T> is an interface that defines compare(T o1, T o2) for ordering two objects.", "wrongExplanation": "Comparator<T> is an interface that defines compare(T o1, T o2) for ordering two objects."}, {"num": 199, "question": "Q199. MCQ: In lambda expressions, how do you represent a single parameter?", "options": ["(param)", "(param1, param2)", "param", "[param]"], "correctIndex": 2, "hint": "", "correctExplanation": "A single lambda parameter may be written without parentheses when its type is inferred, e.g. x -> x * 2.\nMultithreading & Concurrency", "wrongExplanation": "A single lambda parameter may be written without parentheses when its type is inferred, e.g. x -> x * 2.\nMultithreading & Concurrency"}, {"num": 200, "question": "Q200. MCQ (Coding): Which of the following is a common cause of deadlock in multi-threading?", "options": ["Lack of synchronization in critical sections.", "Excessive use of `sleep()` method.", "Excessive use of `yield()` method.", "Lack of thread priority settings."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Lack of synchronization is commonly associated with race conditions, not by itself a defining cause of deadlock. Deadlock involves threads waiting cyclically for locks/resources.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Lack of synchronization is commonly associated with race conditions, not by itself a defining cause of deadlock. Deadlock involves threads waiting cyclically for locks/resources.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 201, "question": "Q201. MCQ: Which of the following interfaces in Java is used for creating a thread?", "options": ["`Runnable`", "`Thread`", "`Executor`", "`Timer`"], "correctIndex": 0, "hint": "", "correctExplanation": "Runnable is a functional interface representing a task with a run() method; Thread can execute it.", "wrongExplanation": "Runnable is a functional interface representing a task with a run() method; Thread can execute it."}, {"num": 202, "question": "Q202. MCQ: What happens when a thread calls the `wait()` method in Java?", "options": ["The thread releases the lock on the object's monitor and waits until another thread notifies it.", "The thread continues its execution without any delay.", "The thread enters a waiting state for a specified duration.", "The thread terminates its execution."], "correctIndex": 0, "hint": "", "correctExplanation": "wait() releases the object's monitor and places the calling thread in that object's wait set until notification/interruption/timeout.", "wrongExplanation": "wait() releases the object's monitor and places the calling thread in that object's wait set until notification/interruption/timeout."}, {"num": 203, "question": "Q203. MCQ: Which method is used to temporarily pause the execution of a thread to give other threads a chance to run in Java?", "options": ["`sleep()`", "`join()`", "`yield()`", "`pause()`"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Thread.yield() is a scheduler hint that the current thread is willing to yield. The JVM/OS is not required to schedule another thread immediately.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Thread.yield() is a scheduler hint that the current thread is willing to yield. The JVM/OS is not required to schedule another thread immediately.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 204, "question": "Q204. MCQ: Which method is used to pause the execution of a thread for a specific amount of time in Java?", "options": ["`sleep()`", "`join()`", "`yield()`", "`pause()`"], "correctIndex": 0, "hint": "", "correctExplanation": "Thread.sleep(ms) pauses the current thread for at least the requested duration, subject to scheduling.", "wrongExplanation": "Thread.sleep(ms) pauses the current thread for at least the requested duration, subject to scheduling."}, {"num": 205, "question": "Q205. MCQ: What is the role of the `wait()` and `notify()` methods in the producer-consumer problem?", "options": ["The `wait()` method is used by the producer to wait for the consumer to consume data, and the", "The `wait()` method is used by the consumer to wait for the producer to produce data, and the", "Both the `wait()` and `notify()` methods are used by the producer to wait for the consumer to", "Both the `wait()` and `notify()` methods are used by the consumer to wait for the producer to"], "correctIndex": 1, "hint": "", "correctExplanation": "In producer-consumer coordination, the consumer waits while the buffer is empty; the producer notifies after producing data (and vice versa for a full buffer).", "wrongExplanation": "In producer-consumer coordination, the consumer waits while the buffer is empty; the producer notifies after producing data (and vice versa for a full buffer)."}, {"num": 206, "question": "Q206. MCQ (Coding): When do you typically use the `wait()`, `notify()`, and `notifyAll()` methods?", "options": ["When you want to pause a thread for a specific duration.", "When you want to stop the execution of a thread.", "When you want to synchronize access to shared resources.", "When you want to wait for a specific condition to be met."], "correctIndex": 3, "hint": "", "correctExplanation": "wait/notify/notifyAll coordinate threads around a condition guarded by an object's monitor; wait must be called while owning that monitor.", "wrongExplanation": "wait/notify/notifyAll coordinate threads around a condition guarded by an object's monitor; wait must be called while owning that monitor."}, {"num": 207, "question": "Q207. MCQ (Coding): Which method is used to notify a waiting thread to resume execution in Java?", "options": ["`notify()`", "`notifyAll()`", "`resume()`", "`awake()`"], "correctIndex": 0, "hint": "", "correctExplanation": "notify() wakes one thread waiting on that object's monitor; it does not immediately transfer the lock.", "wrongExplanation": "notify() wakes one thread waiting on that object's monitor; it does not immediately transfer the lock."}, {"num": 208, "question": "Q208. MCQ: Which method is used to check if a thread is still alive and running in Java?", "options": ["`isRunning()`", "`isAlive()`", "`isExecuting()`", "`isWorking()`"], "correctIndex": 1, "hint": "", "correctExplanation": "isAlive() reports whether a thread has been started and has not yet terminated.", "wrongExplanation": "isAlive() reports whether a thread has been started and has not yet terminated."}, {"num": 209, "question": "Q209. MCQ: Which method is used to wait for a thread to finish its execution in Java?", "options": ["`sleep()`", "`join()`", "`yield()`", "`wait()`"], "correctIndex": 1, "hint": "", "correctExplanation": "join() makes the calling thread wait for the target thread to terminate.", "wrongExplanation": "join() makes the calling thread wait for the target thread to terminate."}, {"num": 210, "question": "Q210. MCQ: In a deadlock situation, how can you identify which threads are involved?", "options": ["By using the `Thread.getAllStackTraces()` method.", "By analyzing the CPU utilization of each thread.", "By using the `Thread.dumpStack()` method.", "By checking the thread states using the `getState()` method."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Thread.getAllStackTraces() can enumerate threads and their stack traces. For programmatic deadlock detection, ManagementFactory.getThreadMXBean() provides findDeadlockedThreads() and related methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Thread.getAllStackTraces() can enumerate threads and their stack traces. For programmatic deadlock detection, ManagementFactory.getThreadMXBean() provides findDeadlockedThreads() and related methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 211, "question": "Q211. MCQ: What is a resource acquisition hierarchy in the context of deadlock?", "options": ["It is a way to prioritize threads based on their resource requirements.", "It is a strategy to break the circular wait condition among threads.", "It is a technique to avoid priority inversion.", "It is a way to grant exclusive access to a resource for only one thread at a time."], "correctIndex": 1, "hint": "", "correctExplanation": "A consistent global lock/resource ordering prevents circular wait, one of the necessary deadlock conditions.", "wrongExplanation": "A consistent global lock/resource ordering prevents circular wait, one of the necessary deadlock conditions."}, {"num": 212, "question": "Q212. MCQ: Which method is used to start the execution of a thread in Java?", "options": ["`start()`", "`run()`", "`execute()`", "`begin()`"], "correctIndex": 0, "hint": "", "correctExplanation": "start() schedules a new thread of execution and the JVM invokes run() on that new thread.", "wrongExplanation": "start() schedules a new thread of execution and the JVM invokes run() on that new thread."}, {"num": 213, "question": "Q213. MCQ: Which method is used to set the priority of a thread in Java?", "options": ["`setPriority()`", "`priority()`", "`assignPriority()`", "`setThreadPriority()`"], "correctIndex": 0, "hint": "", "correctExplanation": "setPriority(int) sets a thread's priority hint; scheduling behaviour is JVM/OS dependent.", "wrongExplanation": "setPriority(int) sets a thread's priority hint; scheduling behaviour is JVM/OS dependent."}, {"num": 214, "question": "Q214. MCQ: Which method is used to get the priority of a thread in Java?", "options": ["`getPriority()`", "`priority()`", "`retrievePriority()`", "`getThreadPriority()`"], "correctIndex": 0, "hint": "", "correctExplanation": "getPriority() returns the thread's current priority value.", "wrongExplanation": "getPriority() returns the thread's current priority value."}, {"num": 215, "question": "Q215. MCQ: What is the purpose of concurrent collections in Java?", "options": ["Concurrent collections ensure that elements are stored in sorted order.", "Concurrent collections provide a way to perform mathematical operations on numeric data types", "Concurrent collections allow multiple threads to access and modify collections safely without", "Concurrent collections allow collections to be resized dynamically based on the number of"], "correctIndex": 2, "hint": "", "correctExplanation": "Concurrent collections provide thread-safe operations for concurrent access without requiring callers to externally synchronize every operation.", "wrongExplanation": "Concurrent collections provide thread-safe operations for concurrent access without requiring callers to externally synchronize every operation."}, {"num": 216, "question": "Q216. MCQ: What is the purpose of the `run()` method in a thread?", "options": ["It is called when the thread is created.", "It is used to start the execution of a thread.", "It contains the code that will be executed by the thread.", "It is used to pause the execution of a thread."], "correctIndex": 2, "hint": "", "correctExplanation": "run() contains the task body. Calling run() directly does not create a new thread; start() does.", "wrongExplanation": "run() contains the task body. Calling run() directly does not create a new thread; start() does."}, {"num": 217, "question": "Q217. MCQ: What is the purpose of the `wait()` method in Java?", "options": ["It is used to put a thread to sleep for a specific duration.", "It is used to pause the execution of a thread indefinitely.", "It is used to wait for a specific condition to be met before resuming execution.", "It is used to terminate a thread's execution."], "correctIndex": 2, "hint": "", "correctExplanation": "wait() is used for condition-based coordination and releases the object's monitor while waiting.", "wrongExplanation": "wait() is used for condition-based coordination and releases the object's monitor while waiting."}, {"num": 218, "question": "Q218. MCQ: Concurrent collections achieve thread-safety by:", "options": ["Restricting access to the collections to a single thread at a time.", "Using explicit synchronization on collection methods.", "Allowing only read operations on the collections.", "Implementing internal mechanisms to handle concurrent access and modifications."], "correctIndex": 3, "hint": "", "correctExplanation": "Concurrent collections use implementation-specific mechanisms such as fine-grained locking, lock-free algorithms or concurrent data structures.", "wrongExplanation": "Concurrent collections use implementation-specific mechanisms such as fine-grained locking, lock-free algorithms or concurrent data structures."}, {"num": 219, "question": "Q219. MCQ (Coding): How can you break a deadlock in Java?", "options": ["By forcibly terminating one of the threads involved in the deadlock.", "By increasing the thread priorities of the deadlock threads.", "By using the `interrupt()` method on one of the deadlock threads.", "By releasing the resources held by one of the deadlock threads."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nFile I/O, Serialization & Networking", "correctExplanation": "Deadlock recovery requires changing the locking/resource protocol or arranging for a participant to release resources. Java has no safe general-purpose API to forcibly release another thread's intrinsic monitor; interrupt() does not automatically break monitor deadlocks.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nFile I/O, Serialization & Networking", "wrongExplanation": "Deadlock recovery requires changing the locking/resource protocol or arranging for a participant to release resources. Java has no safe general-purpose API to forcibly release another thread's intrinsic monitor; interrupt() does not automatically break monitor deadlocks.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nFile I/O, Serialization & Networking"}, {"num": 220, "question": "Q220. MCQ: What is the purpose of using the `BufferedReader` and `BufferedWriter` classes in Java?", "options": ["They are used for reading and writing character data from and to files.", "They are used for reading and writing binary data from and to files.", "They are used for reading and writing data over the network.", "They are used for creating new files in the file system."], "correctIndex": 0, "hint": "", "correctExplanation": "BufferedReader and BufferedWriter buffer character I/O, reducing underlying read/write operations; they can be used with files or other character streams.", "wrongExplanation": "BufferedReader and BufferedWriter buffer character I/O, reducing underlying read/write operations; they can be used with files or other character streams."}, {"num": 221, "question": "Q221. MCQ: Which method is used to read a line of text from a file using `BufferedReader` in Java?", "options": ["`readLine()`", "`read()`", "`readChar()`", "`readText()`"], "correctIndex": 0, "hint": "", "correctExplanation": "BufferedReader.readLine() reads one line and returns null at end of stream.", "wrongExplanation": "BufferedReader.readLine() reads one line and returns null at end of stream."}, {"num": 222, "question": "Q222. MCQ: Which method is used to write a line of text to a file using `BufferedWriter` in Java?", "options": ["`writeLine()`", "`write()`", "`writeChar()`", "`writeText()`"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "BufferedWriter has write() and newLine(); it does not define writeLine(). To write a line, call write(text) and then newLine().\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "BufferedWriter has write() and newLine(); it does not define writeLine(). To write a line, call write(text) and then newLine().\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 223, "question": "Q223. MCQ: What is the purpose of the `transient` keyword in Java serialization?", "options": ["The `transient` keyword indicates that a variable should not be serialized.", "The `transient` keyword indicates that a variable should be given higher priority during", "The `transient` keyword indicates that a variable should be serialized twice for redundancy.", "The `transient` keyword indicates that a variable should be serialized with a delay."], "correctIndex": 0, "hint": "", "correctExplanation": "transient marks an instance field to be skipped by default Java serialization.", "wrongExplanation": "transient marks an instance field to be skipped by default Java serialization."}, {"num": 224, "question": "Q224. To access manipulators the file ____ should be included in the program.", "options": ["iomanip", "ios", "#include", "None"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "iomanip is a C++ header, not a Java package or file. This question does not belong in a Java OOP question bank.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "iomanip is a C++ header, not a Java package or file. This question does not belong in a Java OOP question bank.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 225, "question": "Q225. Which method is used to add a new line to file in Java?", "options": ["file.addLine()", "file.nextLine()", "file.write()", "file.line()"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Java has no general file.write() method. For BufferedWriter, use write(text) and newLine(); for Files, use Files.write or a suitable writer API.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Java has no general file.write() method. For BufferedWriter, use write(text) and newLine(); for Files, use Files.write or a suitable writer API.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 226, "question": "Q226. MCQ: What is the purpose of de-serialization in Java?", "options": ["De-serialization is used to convert a Java object into a byte stream to store it in a file or send it", "De-serialization is used to convert a byte stream into a Java object for processing.", "De-serialization is used to convert a Java object into a character stream for reading.", "De-serialization is used to convert a character stream into a Java object for writing."], "correctIndex": 1, "hint": "", "correctExplanation": "Deserialization reconstructs an object from a serialized byte stream.", "wrongExplanation": "Deserialization reconstructs an object from a serialized byte stream."}, {"num": 227, "question": "Q227. Which is the correct absolute path of a file in Java?", "options": ["C:\\Program Files\\Java\\jdk1.8.0_131\\bin\\file_name.txt", "C:\\Program Files\\Java\\file_name.txt", "C:\\Program Files\\Java\\jdk1.8.0_131\\file_name.txt", "C:\\Program Files\\Java\\jdk1.8.0_131\\bin\\File Handling\\file_name.txt"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "An absolute path depends on the machine, operating system, installation directory and file location. None of the hard-coded paths can be universally correct.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "An absolute path depends on the machine, operating system, installation directory and file location. None of the hard-coded paths can be universally correct.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 228, "question": "Q228. Which method in java is used to read lines from file?", "options": ["file.read()", "file.nextLine()", "file.getLine()", "All of these"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "File itself has no getLine() method. Use BufferedReader.readLine() or Scanner.nextLine(), depending on the API.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "File itself has no getLine() method. Use BufferedReader.readLine() or Scanner.nextLine(), depending on the API.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 229, "question": "Q229. How can we access methods for file handling in java?", "options": ["Java.files", "Java.io", "Java.io.File", "Java.FileHandling"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "File-handling classes such as File, FileReader, FileWriter, BufferedReader and BufferedWriter are in the java.io package. java.io.File is one class, not the package.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "File-handling classes such as File, FileReader, FileWriter, BufferedReader and BufferedWriter are in the java.io package. java.io.File is one class, not the package.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 230, "question": "Q230. MCQ: What is the purpose of serialization in Java?", "options": ["Serialization is used to convert a Java object into a byte stream to store it in a file or send it over", "Serialization is used to convert a byte stream into a Java object for processing.", "Serialization is used to convert a Java object into a character stream for reading.", "Serialization is used to convert a character stream into a Java object for writing."], "correctIndex": 0, "hint": "", "correctExplanation": "Serialization converts an object graph into a byte stream, typically via ObjectOutputStream.", "wrongExplanation": "Serialization converts an object graph into a byte stream, typically via ObjectOutputStream."}, {"num": 231, "question": "Q231. Which method deletes a file in Java?", "options": ["file.delete()", "file.remove()", "file.garbage()", "file.dump()"], "correctIndex": 0, "hint": "", "correctExplanation": "File.delete() attempts to delete the filesystem entry represented by that File; it returns a boolean result.", "wrongExplanation": "File.delete() attempts to delete the filesystem entry represented by that File; it returns a boolean result."}, {"num": 232, "question": "Q232. What is file handling in java?", "options": ["It is creating, deleting, and modifying files using a java program.", "Creating new method", "Filing method to different file to extract them better", "All of these"], "correctIndex": 0, "hint": "", "correctExplanation": "File handling means creating, reading, writing, updating and deleting files using Java APIs.\nJDBC & Database Connectivity", "wrongExplanation": "File handling means creating, reading, writing, updating and deleting files using Java APIs.\nJDBC & Database Connectivity"}, {"num": 233, "question": "Q233. Which statement is correct about re-assigning reference variables?", "options": ["It is done using the '->' operator.", "It can only be done in the main method.", "It changes the object's value, not the reference.", "It can lead to memory leaks if not done properly."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Reference reassignment uses '='. It changes which object a variable refers to; it does not directly change the object's fields. Reassignment alone does not inherently cause a memory leak.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Reference reassignment uses '='. It changes which object a variable refers to; it does not directly change the object's fields. Reassignment alone does not inherently cause a memory leak.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 234, "question": "Q234. Which statement is correct for private member in Java?", "options": ["Access outside the class is allowed", "Any class can access", "Declared using private keyword", "All of these"], "correctIndex": 2, "hint": "", "correctExplanation": "private is an access modifier that restricts direct access to members to the declaring top-level class (including its nested classes).", "wrongExplanation": "private is an access modifier that restricts direct access to members to the declaring top-level class (including its nested classes)."}, {"num": 235, "question": "Q235. Which of the following statement is not true for virtual functions?", "options": ["The virtual function must be members of some class", "The virtual function can be a static member", "Virtual functions are accessed by using an object pointer", "The virtual function can be a friend of another class"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Virtual functions are a C++ language feature. Java uses virtual dispatch for overridable instance methods but has no 'virtual' keyword. The question is framed as C++ and should be removed from a Java bank.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Virtual functions are a C++ language feature. Java uses virtual dispatch for overridable instance methods but has no 'virtual' keyword. The question is framed as C++ and should be removed from a Java bank.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 236, "question": "Q236. Which statement demonstrates dynamic method dispatch?", "options": ["Animal a = new Dog(); a.sound();", "Dog d = new Dog();", "int x = 10;", "Animal a = new Animal();"], "correctIndex": 0, "hint": "", "correctExplanation": "An Animal reference points to a Dog object; overridden instance method dispatch selects Dog.sound() at runtime.", "wrongExplanation": "An Animal reference points to a Dog object; overridden instance method dispatch selects Dog.sound() at runtime."}, {"num": 237, "question": "Q237. In the context of the `if-else-if` statement, which condition is evaluated if all preceding conditions are false?", "options": ["First `if` condition", "Last `if` condition", "First `else` condition", "First `else if` condition"], "correctIndex": 3, "hint": "", "correctExplanation": "In an if/else-if chain, conditions are tested in order; each else-if is considered only if earlier conditions are false.", "wrongExplanation": "In an if/else-if chain, conditions are tested in order; each else-if is considered only if earlier conditions are false."}, {"num": 238, "question": "Q238. The `if-else-if` statement can be used to handle ___________.", "options": ["Multiple conditions, one after the other", "Only two mutually exclusive conditions", "Recursive function calls", "Switch-case scenarios"], "correctIndex": 0, "hint": "", "correctExplanation": "An if/else-if chain evaluates multiple conditions in sequence and executes the first matching branch.", "wrongExplanation": "An if/else-if chain evaluates multiple conditions in sequence and executes the first matching branch."}, {"num": 239, "question": "Q239. The break statement in Java is used to ___.", "options": ["Terminates from the loop immediately", "Terminates from the program immediately", "Skips the current iteration", "All of these"], "correctIndex": 0, "hint": "", "correctExplanation": "break exits the nearest enclosing loop or switch; it does not terminate the whole program.", "wrongExplanation": "break exits the nearest enclosing loop or switch; it does not terminate the whole program."}, {"num": 240, "question": "Q240. The `if` statement is used to ___________.", "options": ["Execute a block of code repeatedly", "Make a decision based on a condition", "Declare variables and methods", "Perform arithmetic operations"], "correctIndex": 1, "hint": "", "correctExplanation": "if evaluates a boolean condition and executes its block when the condition is true.", "wrongExplanation": "if evaluates a boolean condition and executes its block when the condition is true."}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

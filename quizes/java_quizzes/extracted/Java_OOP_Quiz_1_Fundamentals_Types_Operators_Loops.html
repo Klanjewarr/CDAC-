@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 - Fundamentals, Types, Operators, Loops</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 1 - Fundamentals, Types, Operators, Loops</div>
+            <div class="quiz-subtitle">Based on 1 source</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"question": "What is printed?\n\nint x = 10;\nx += 3.7;\nSystem.out.println(x);", "options": ["14", "Compile error", "13.7", "13"], "correctIndex": 3, "hint": "Look for a hidden cast.", "correctExplanation": "Compound assignment (+=) has a hidden cast: x = (int)(x + 3.7) = (int)13.7 = 13. Plain x = x + 3.7 would NOT compile. (Related: Bank Q16 - assigning a double to an int WITHOUT a cast fails, but += casts for you.)", "wrongExplanation": "Compound assignment (+=) has a hidden cast: x = (int)(x + 3.7) = (int)13.7 = 13. Plain x = x + 3.7 would NOT compile. (Related: Bank Q16 - assigning a double to an int WITHOUT a cast fails, but += casts for you.)"}, {"question": "What is printed?\n\nint i = 0;\nint j = i++ + i++;\nSystem.out.println(i + \" \" + j);", "options": ["2 1", "1 1", "1 0", "2 0"], "correctIndex": 0, "hint": "", "correctExplanation": "i++ yields the OLD value then increments. First i++ gives 0 (i=1), second i++ gives 1 (i=2). j = 0 + 1 = 1, i = 2.", "wrongExplanation": "i++ yields the OLD value then increments. First i++ gives 0 (i=1), second i++ gives 1 (i=2). j = 0 + 1 = 1, i = 2."}, {"question": "What is the value of product printed? (Bank Q17 - the bank's key says 1, which is WRONG)\n\nint product = 1;\nint i = 0;\ndo { product *= i; i++; } while (i <= 5);\nSystem.out.println(product);", "options": ["720", "120", "0", "1"], "correctIndex": 2, "hint": "", "correctExplanation": "In the very first iteration i = 0, so product = 1 * 0 = 0. Once product is 0 it stays 0 forever (0 * anything = 0). The bank key (B = 1) is wrong - always trace the first iteration.", "wrongExplanation": "In the very first iteration i = 0, so product = 1 * 0 = 0. Once product is 0 it stays 0 forever (0 * anything = 0). The bank key (B = 1) is wrong - always trace the first iteration."}, {"question": "What is printed?\n\nSystem.out.println('a' + 'b' + \"c\");", "options": ["97bc", "Compile error", "abc", "195c"], "correctIndex": 3, "hint": "", "correctExplanation": "'a' + 'b' are two chars, so they are added numerically: 97 + 98 = 195. Only then is \"c\" concatenated. Left-to-right evaluation matters.", "wrongExplanation": "'a' + 'b' are two chars, so they are added numerically: 97 + 98 = 195. Only then is \"c\" concatenated. Left-to-right evaluation matters."}, {"question": "What is printed?\n\nSystem.out.println((int)'A' + 1 + \" \" + (char)('A' + 1));", "options": ["66 b", "A B", "65 A", "66 B"], "correctIndex": 3, "hint": "", "correctExplanation": "(int)'A' is 65, +1 = 66, then + \" \" makes a String. (char)('A'+1) casts 66 back to a char: 'B'.", "wrongExplanation": "(int)'A' is 65, +1 = 66, then + \" \" makes a String. (char)('A'+1) casts 66 back to a char: 'B'."}, {"question": "What is printed?\n\nint a = 5, b = 2;\ndouble d = a / b;\nSystem.out.println(d);", "options": ["2.0", "2", "2.5", "Compile error"], "correctIndex": 0, "hint": "", "correctExplanation": "a / b is INTEGER division = 2. It is then widened to double 2.0 when stored in d. The division happened before the widening, so you never get 2.5.", "wrongExplanation": "a / b is INTEGER division = 2. It is then widened to double 2.0 when stored in d. The division happened before the widening, so you never get 2.5."}, {"question": "What happens?\n\nshort s = 10;\ns = s + 1;\nSystem.out.println(s);", "options": ["Prints 10", "Compile error", "Runtime exception", "Prints 11"], "correctIndex": 1, "hint": "", "correctExplanation": "s + 1 is promoted to int, and int cannot be assigned to short without a cast. Fix: s = (short)(s + 1); or s++ / s += 1 (those have a hidden cast).", "wrongExplanation": "s + 1 is promoted to int, and int cannot be assigned to short without a cast. Fix: s = (short)(s + 1); or s++ / s += 1 (those have a hidden cast)."}, {"question": "What is printed?\n\nboolean b = false;\nif (b = true) System.out.println(\"yes\");\nelse System.out.println(\"no\");", "options": ["Compile error", "yes", "Nothing", "no"], "correctIndex": 1, "hint": "", "correctExplanation": "b = true is an ASSIGNMENT (not ==), and its value is true. In Java an assignment in an if is legal when the variable is boolean, so it prints yes. (With an int it would be a compile error.)", "wrongExplanation": "b = true is an ASSIGNMENT (not ==), and its value is true. In Java an assignment in an if is legal when the variable is boolean, so it prints yes. (With an int it would be a compile error.)"}, {"question": "What is the value of c?\n\nint c = 0;\nfor (int i = 0; i < 10; i++) {\n  if (i % 2 == 0) continue;\n  if (i > 7) break;\n  c += i;\n}\nSystem.out.println(c);", "options": ["16", "25", "24", "9"], "correctIndex": 0, "hint": "", "correctExplanation": "Odd i only: 1, 3, 5, 7 are added (sum 16). Even i is skipped by continue. At i = 9, i > 7 triggers break BEFORE adding. Total = 16.", "wrongExplanation": "Odd i only: 1, 3, 5, 7 are added (sum 16). Even i is skipped by continue. At i = 9, i > 7 triggers break BEFORE adding. Total = 16."}, {"question": "What is printed?\n\nint d = 2;\nswitch (d) {\n  case 1: System.out.print(\"A\");\n  case 2: System.out.print(\"B\");\n  case 3: System.out.print(\"C\"); break;\n  default: System.out.print(\"D\");\n}", "options": ["BCD", "BC", "ABC", "B"], "correctIndex": 1, "hint": "", "correctExplanation": "Classic switch (old style) FALLS THROUGH. d = 2 jumps into case 2, prints B, no break, runs case 3 and prints C, then break stops it. default is skipped. Arrow-style switch (Java 14+) has no fall-through.", "wrongExplanation": "Classic switch (old style) FALLS THROUGH. d = 2 jumps into case 2, prints B, no break, runs case 3 and prints C, then break stops it. default is skipped. Arrow-style switch (Java 14+) has no fall-through."}, {"question": "What is printed?\n\nbyte b = (byte) 130;\nSystem.out.println(b);", "options": ["-126", "130", "126", "Compile error"], "correctIndex": 0, "hint": "", "correctExplanation": "byte range is -128..127. 130 wraps around: 130 - 256 = -126. The explicit cast makes the code compile; the bits are simply truncated to 8 bits.", "wrongExplanation": "byte range is -128..127. 130 wraps around: 130 - 256 = -126. The explicit cast makes the code compile; the bits are simply truncated to 8 bits."}, {"question": "What is printed? (literals)\n\nSystem.out.println(0b101 + 0x1F + 010);", "options": ["36", "18", "44", "Compile error"], "correctIndex": 2, "hint": "", "correctExplanation": "0b101 is binary = 5, 0x1F is hex = 31, and 010 is OCTAL (leading zero) = 8. 5 + 31 + 8 = 44. The leading-zero octal trap is a favourite exam question.", "wrongExplanation": "0b101 is binary = 5, 0x1F is hex = 31, and 010 is OCTAL (leading zero) = 8. 5 + 31 + 8 = 44. The leading-zero octal trap is a favourite exam question."}, {"question": "Which data type stores floating-point numbers with HIGHER precision than float? (Bank Q22 - the key says 'long double', which is WRONG)", "options": ["long double", "BigInteger", "double", "float128"], "correctIndex": 2, "hint": "", "correctExplanation": "double (64-bit) is the answer. Java has no 'long double' or 'float128' - those are C/C++ ideas. BigDecimal also exists for exact decimals, but it is a class, not a primitive type. The bank's key (C = long double) is a C++ leftover.", "wrongExplanation": "double (64-bit) is the answer. Java has no 'long double' or 'float128' - those are C/C++ ideas. BigDecimal also exists for exact decimals, but it is a class, not a primitive type. The bank's key (C = long double) is a C++ leftover."}, {"question": "Where is an int INSTANCE FIELD of an object stored? (Bank Q29 over-simplifies this)", "options": ["In the String pool", "On the stack", "On the heap, inside the object", "In the method area / metaspace"], "correctIndex": 2, "hint": "", "correctExplanation": "Instance fields live inside the object, and objects live on the heap. The rule 'primitives on stack, objects on heap' only holds for LOCAL variables: a local int sits in the stack frame, a field int sits inside its heap object.", "wrongExplanation": "Instance fields live inside the object, and objects live on the heap. The rule 'primitives on stack, objects on heap' only holds for LOCAL variables: a local int sits in the stack frame, a field int sits inside its heap object."}, {"question": "What is printed? (shallow vs deep copy of a primitive array)\n\nint[] a = {1, 2, 3};\nint[] b = a.clone();\nb[0] = 9;\nSystem.out.println(a[0] + \" \" + b[0]);", "options": ["1 1", "1 9", "9 9", "9 1"], "correctIndex": 1, "hint": "", "correctExplanation": "clone() makes a new array with copied values. For an int[] the elements are primitives, so b is fully independent: changing b[0] does not touch a. Just writing int[] b = a (Bank Q1 Option 1) is NOT a copy at all - both names point to the same array. 'Shallow vs deep' only matters when elements are objects.", "wrongExplanation": "clone() makes a new array with copied values. For an int[] the elements are primitives, so b is fully independent: changing b[0] does not touch a. Just writing int[] b = a (Bank Q1 Option 1) is NOT a copy at all - both names point to the same array. 'Shallow vs deep' only matters when elements are objects."}];
+        const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

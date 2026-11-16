@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDAC Java Module Mastery - Complete Question Bank & High-Yield Booster</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #4338ca;
+            --primary-hover: #3730a3;
+            --high-yield: #d97706;
+            --high-yield-hover: #b45309;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --badge-bg: #e0e7ff;
+            --badge-text: #3730a3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        p.desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .stats-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-card .num {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* High Yield Featured Card */
+        .featured-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s ease;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.25);
+            border-color: #d97706;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #d97706;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .featured-info h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #78350f;
+            margin-bottom: 8px;
+        }
+
+        .featured-info p {
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            max-width: 620px;
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #b45309;
+        }
+
+        .featured-btn {
+            background: #d97706;
+            color: white;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 999px;
+            white-space: nowrap;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+        }
+
+        .featured-card:hover .featured-btn {
+            background: #b45309;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .quizzes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quiz-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .quiz-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .quiz-number {
+            width: 44px;
+            height: 44px;
+            background: #ede9fe;
+            color: #4f46e5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .quiz-details h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #1e1b4b;
+        }
+
+        .quiz-details p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .quiz-meta {
+            display: flex;
+            gap: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .start-btn {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .quiz-card:hover .start-btn {
+            background: var(--primary-hover);
+        }
+
+        @media (max-width: 640px) {
+            .featured-card, .quiz-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .featured-btn, .start-btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">CDAC Java Examination Prep</div>
+            <h1>Java OOP Complete Practice Portal</h1>
+            <p class="desc">Includes <strong>all 239 questions</strong> from your CDAC document, organized by syllabus section, plus a dedicated <strong>High-Yield Booster</strong> to maximize marks with minimum effort.</p>
+        </header>
+
+        <div class="stats-banner">
+            <div class="stat-card">
+                <div class="num">239</div>
+                <div class="label">Total Bank Questions Included</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" style="color: #d97706;">58</div>
+                <div class="label">High-Yield "Must-Know" Questions</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">80 / 20</div>
+                <div class="label">Effort-to-Score Efficiency Rule</div>
+            </div>
+        </div>
+
+        <!-- SPECIAL SECTION: HIGH-YIELD EXAM BOOSTER -->
+        <a href="Quiz_High_Yield_CDAC_Booster.html" class="featured-card">
+            <div class="featured-info">
+                <span class="featured-badge">⭐ Recommended: Maximum Score / Minimum Questions</span>
+                <h2>High-Yield CDAC Exam Booster (80/20 Rule)</h2>
+                <p>Curated <strong>58 critical questions</strong> representing 80%+ of exam concepts: tricky wrapper caching (<code>-128..127</code>), shallow vs deep copy, multi-catch restrictions, thread <code>start()</code> vs <code>run()</code> & deadlock, String pool <code>intern()</code>, protected cross-package access, downcasting <code>ClassCastException</code>, and CDAC answer key trap corrections.</p>
+                <div class="featured-meta">
+                    <span>⚡ 58 High-Yield Questions</span>
+                    <span>⏱️ ~30-40 mins Practice</span>
+                    <span>🎯 Highest Mark Return</span>
+                </div>
+            </div>
+            <div class="featured-btn">Start Booster →</div>
+        </a>
+
+        <!-- FULL QUESTION BANK BY CHAPTER -->
+        <div class="section-title">Full Question Bank by Module (All 239 Questions)</div>
+
+        <div class="quizzes-grid">
+            <a href="Quiz_Full_Part_1_Fundamentals_Operators_Loops.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">01</div>
+                    <div class="quiz-details">
+                        <h3>Part 1: Java Fundamentals, Data Types & Operators</h3>
+                        <p>Array cloning, wrapper caching, switch fall-through, do-while evaluation, widening/narrowing casts, ternary expressions, and boxing.</p>
+                        <div class="quiz-meta">
+                            <span>📝 30 Questions (Q1–Q30)</span>
+                            <span>⏱️ ~25 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 30 Qs →</div>
+            </a>
+
+            <a href="Quiz_Full_Part_2_Classes_Objects_Static_Memory.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">02</div>
+                    <div class="quiz-details">
+                        <h3>Part 2: Classes, Objects, Constructors & Static</h3>
+                        <p>Unchecked/checked exception hierarchy, finalize() lifecycle, System.gc(), protected modifier inheritance, method overriding, and super/this keywords.</p>
+                        <div class="quiz-meta">
+                            <span>📝 44 Questions (Q31–Q75)</span>
+                            <span>⏱️ ~35 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 44 Qs →</div>
+            </a>
+
+            <a href="Quiz_Full_Part_3_OOP_Inheritance_Polymorphism.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">03</div>
+                    <div class="quiz-details">
+                        <h3>Part 3: OOP Principles, Inheritance & Relationships</h3>
+                        <p>Encapsulation, compile-time vs runtime polymorphism, upcasting vs downcasting, instanceof safety, multilevel/hierarchical inheritance, and access specifiers.</p>
+                        <div class="quiz-meta">
+                            <span>📝 40 Questions (Q76–Q115)</span>
+                            <span>⏱️ ~30 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 40 Qs →</div>
+            </a>
+
+            <a href="Quiz_Full_Part_4_Abstract_Interfaces_Java17.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">04</div>
+                    <div class="quiz-details">
+                        <h3>Part 4: Abstract Classes, Interfaces & Modern Java</h3>
+                        <p>Runnable, @FunctionalInterface, Comparator vs Comparable, Collections.sort, interface variables (public static final), default methods, and pass-by-value.</p>
+                        <div class="quiz-meta">
+                            <span>📝 25 Questions (Q116–Q140)</span>
+                            <span>⏱️ ~20 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 25 Qs →</div>
+            </a>
+
+            <a href="Quiz_Full_Part_5_Strings_Wrappers_Exceptions.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">05</div>
+                    <div class="quiz-details">
+                        <h3>Part 5: Strings, Wrappers & Exception Handling</h3>
+                        <p>String pool, intern(), StringBuilder vs StringBuffer synchronization, parseXXX methods, multi-catch syntax rules, throws clause, and custom exceptions.</p>
+                        <div class="quiz-meta">
+                            <span>📝 45 Questions (Q141–Q185)</span>
+                            <span>⏱️ ~35 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 45 Qs →</div>
+            </a>
+
+            <a href="Quiz_Full_Part_6_Collections_Threads_IO_Serialization.html" class="quiz-card">
+                <div class="quiz-info">
+                    <div class="quiz-number">06</div>
+                    <div class="quiz-details">
+                        <h3>Part 6: Collections, Threads, File I/O & Essentials</h3>
+                        <p>ArrayList vs LinkedList, lambda syntax, thread methods (start, run, sleep, wait, notify, yield, join), deadlock prevention, transient, BufferedReader, and dynamic dispatch.</p>
+                        <div class="quiz-meta">
+                            <span>📝 55 Questions (Q186–Q240)</span>
+                            <span>⏱️ ~40 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-btn">Practice 55 Qs →</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

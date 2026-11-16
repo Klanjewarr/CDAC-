@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Bank Part 3: OOP Principles, Inheritance & Relationships</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Full Bank Part 3: OOP Principles, Inheritance & Relationships</div>
+            <div class="quiz-subtitle">Questions Q76 to Q115 (All 40 bank questions)</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 76, "question": "Q76. MCQ: If the `privateVar` in `MyClass.java` is changed to `protected`, what will be the output of the demo application?", "options": ["The code will not compile because `privateVar` is not accessible.", "The code will compile, but only public and protected variables will be accessible and displayed.", "The code will compile, but only public variables will be accessible and displayed.", "The code will compile, and all variables will be accessible and displayed."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Changing private to protected does not make the field universally accessible. Same-package classes can access it; cross-package access is limited to subclass contexts. The omitted demo/package details are needed for a definite output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Changing private to protected does not make the field universally accessible. Same-package classes can access it; cross-package access is limited to subclass contexts. The omitted demo/package details are needed for a definite output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 77, "question": "Q77. MCQ: What is the output of the demo application if `Main.java` is in a different package than `MyClass.java`?", "options": ["The code will not compile because `MyClass` is not accessible.", "The code will compile, but only public variables will be accessible and displayed.", "The code will compile, but all variables will be accessible and displayed.", "The code will compile, but only protected and public variables will be accessible and displayed."], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Across packages, public members are accessible to any caller. Protected members require subclass access; package-private and private members are not accessible to an unrelated caller.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Across packages, public members are accessible to any caller. Protected members require subclass access; package-private and private members are not accessible to an unrelated caller.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 78, "question": "Q78. ____ is the process of compartmentalizing the elements of an abstraction that contribute to its structure and behavior?", "options": ["Encapsulation", "Abstraction", "Classes", "Inheritance"], "correctIndex": 0, "hint": "", "correctExplanation": "Encapsulation bundles state and behaviour and controls access to internal state.", "wrongExplanation": "Encapsulation bundles state and behaviour and controls access to internal state."}, {"num": 79, "question": "Q79. What happens if a non-abstract subclass fails to implement all the abstract methods from its abstract superclass?", "options": ["The subclass will inherit the abstract methods and become abstract itself.", "The subclass will have a default implementation of the missing abstract methods.", "The code will not compile, resulting in a compilation error.", "The abstract methods will be automatically inherited from the Object class."], "correctIndex": 2, "hint": "", "correctExplanation": "Java supports single, multilevel and hierarchical class inheritance; it does not support multiple inheritance of classes.", "wrongExplanation": "Java supports single, multilevel and hierarchical class inheritance; it does not support multiple inheritance of classes."}, {"num": 80, "question": "Q80. MCQ: What happens if the `display()` method in `Grandparent.java` is changed from `protected` to `private`?", "options": ["The code will not compile due to access modifier conflicts.", "The code will compile, but there will be a runtime exception.", "The code will compile, but the output will be \"This is the Grandparent class.\"", "The code will compile, but the output will be \"This is the Parent class.\""], "correctIndex": 0, "hint": "", "correctExplanation": "A method is overridden when a subclass declares an instance method with a compatible signature.", "wrongExplanation": "A method is overridden when a subclass declares an instance method with a compatible signature."}, {"num": 81, "question": "Q81. What happens if a subclass tries to access a private member (data member or method) of its superclass?", "options": ["The program will compile but throw a runtime exception.", "The program will throw a compilation error.", "The private member will be accessible from the subclass.", "The superclass will automatically become a subclass."], "correctIndex": 1, "hint": "", "correctExplanation": "Encapsulation protects internal data by controlling access through methods and access modifiers.", "wrongExplanation": "Encapsulation protects internal data by controlling access through methods and access modifiers."}, {"num": 82, "question": "Q82. MCQ: What happens if multiple exception types in a multi-catch block have an inheritance relationship?", "options": ["The code will not compile due to ambiguity.", "The catch block will only catch exceptions of the superclass type, not the subclasses.", "The catch block will only catch exceptions of the subclass type, not the superclass.", "The code will compile, and the catch block will catch exceptions of both the superclass and"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The code does not compile if a multi-catch lists exception types related by inheritance. For example, catch (Exception | IOException e) is illegal because IOException is a subclass of Exception. The actual reason is the subtype relationship, not ambiguity; none of the supplied options states that accurately.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The code does not compile if a multi-catch lists exception types related by inheritance. For example, catch (Exception | IOException e) is illegal because IOException is a subclass of Exception. The actual reason is the subtype relationship, not ambiguity; none of the supplied options states that accurately.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 83, "question": "Q83. What happens if a subclass tries to override a method in its superclass that is marked as \"final\"?", "options": ["The subclass can override the final method without any issues.", "The compiler will generate an error, and the method cannot be overridden.", "The subclass can only override the method if it is also marked as \"final.\"", "The behavior is undefined, and it depends on the specific Java compiler."], "correctIndex": 1, "hint": "", "correctExplanation": "The `final` keyword in Java prevents modification:\n1. A `final` variable cannot be reassigned (constant).\n2. A `final` class cannot be subclassed/extended.\n3. A `final` method cannot be overridden by any subclass.\nAttempting to override a final method generates a compile-time error: 'cannot override ... overridden method is final'.", "wrongExplanation": "The `final` keyword in Java prevents modification:\n1. A `final` variable cannot be reassigned (constant).\n2. A `final` class cannot be subclassed/extended.\n3. A `final` method cannot be overridden by any subclass.\nAttempting to override a final method generates a compile-time error: 'cannot override ... overridden method is final'."}, {"num": 84, "question": "Q84. Which type of polymorphism is resolved at compile time in Java?", "options": ["Runtime polymorphism", "Compile-time polymorphism", "Dynamic polymorphism", "Static polymorphism"], "correctIndex": 1, "hint": "", "correctExplanation": "Method overriding is the runtime polymorphism mechanism for instance methods.", "wrongExplanation": "Method overriding is the runtime polymorphism mechanism for instance methods."}, {"num": 85, "question": "Q85. What is compile-time polymorphism also known as in Java?", "options": ["Method overloading", "Method overriding", "Method hiding", "Method wrapping"], "correctIndex": 0, "hint": "", "correctExplanation": "In Java:\n- **Compile-time (Static) Polymorphism** is achieved via **Method Overloading** (methods with the same name but different parameter signatures within the same class/hierarchy), because which method to call is bound at compile time based on reference types and arguments.\n- **Runtime (Dynamic) Polymorphism** is achieved via **Method Overriding** (invoking an overridden instance method via a superclass reference), where dispatch is determined at runtime based on the actual object instance.", "wrongExplanation": "In Java:\n- **Compile-time (Static) Polymorphism** is achieved via **Method Overloading** (methods with the same name but different parameter signatures within the same class/hierarchy), because which method to call is bound at compile time based on reference types and arguments.\n- **Runtime (Dynamic) Polymorphism** is achieved via **Method Overriding** (invoking an overridden instance method via a superclass reference), where dispatch is determined at runtime based on the actual object instance."}, {"num": 86, "question": "Q86. What is runtime polymorphism also known as in Java?", "options": ["Method overloading", "Method overriding", "Method hiding", "Method wrapping"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java:\n- **Runtime (Dynamic) Polymorphism** is also known as **Method Overriding** or **Dynamic Method Dispatch**. At runtime, Java inspects the actual object type on the heap to decide which overridden version of the instance method to execute.\n- **Method Overloading** represents compile-time (static) polymorphism.", "wrongExplanation": "In Java:\n- **Runtime (Dynamic) Polymorphism** is also known as **Method Overriding** or **Dynamic Method Dispatch**. At runtime, Java inspects the actual object type on the heap to decide which overridden version of the instance method to execute.\n- **Method Overloading** represents compile-time (static) polymorphism."}, {"num": 87, "question": "Q87. MCQ (Coding): What happens if `defaultVar` in `MyClass.java` is changed to `protected`?", "options": ["The code will not compile due to access modifier conflicts.", "The code will compile, but only public and protected variables will be accessible and displayed.", "The code will compile, but only public variables will be accessible and displayed.", "The code will compile, and all variables will be accessible and displayed."], "correctIndex": 0, "hint": "", "correctExplanation": "Access modifiers control visibility and accessibility of classes, methods and fields.", "wrongExplanation": "Access modifiers control visibility and accessibility of classes, methods and fields."}, {"num": 88, "question": "Q88. Which of the following statements is true about downcasting in Java?", "options": ["Downcasting requires explicit casting using the \"downcast\" keyword.", "Downcasting can result in a loss of data if the object is not of the expected subclass type.", "Downcasting can only be performed between unrelated classes.", "Downcasting is an automatic process and doesn't require any special handling."], "correctIndex": 1, "hint": "", "correctExplanation": "**Downcasting** is casting a superclass reference down to a subclass type (e.g., `(Dog) animal`).\n- In Java, downcasting requires an explicit cast `(Subclass) ref`.\n- If the actual object on the heap is NOT an instance of the target subclass (or its descendants), JVM throws a runtime `ClassCastException`.\n- (Choice B notes potential mismatch/failure if the object is not of the expected subclass type). To prevent this, always test with `instanceof` before downcasting.", "wrongExplanation": "**Downcasting** is casting a superclass reference down to a subclass type (e.g., `(Dog) animal`).\n- In Java, downcasting requires an explicit cast `(Subclass) ref`.\n- If the actual object on the heap is NOT an instance of the target subclass (or its descendants), JVM throws a runtime `ClassCastException`.\n- (Choice B notes potential mismatch/failure if the object is not of the expected subclass type). To prevent this, always test with `instanceof` before downcasting."}, {"num": 89, "question": "Q89. Which of the following statements is true about upcasting in Java?", "options": ["Upcasting is always allowed and does not require any explicit casting.", "Upcasting is only allowed if the superclass is abstract.", "Upcasting may result in a loss of subclass-specific features and methods.", "Upcasting is not supported in Java."], "correctIndex": 0, "hint": "", "correctExplanation": "**Upcasting** is casting a subclass reference up to a superclass type (e.g., `Animal a = new Dog();`).\n- Upcasting is always widening and type-safe in Java, so it is performed automatically (implicitly) without requiring an explicit cast operator.\n- Note that via the superclass reference, only methods/members declared in the superclass (or overridden) can be accessed directly; subclass-specific members become inaccessible through that superclass reference without downcasting.", "wrongExplanation": "**Upcasting** is casting a subclass reference up to a superclass type (e.g., `Animal a = new Dog();`).\n- Upcasting is always widening and type-safe in Java, so it is performed automatically (implicitly) without requiring an explicit cast operator.\n- Note that via the superclass reference, only methods/members declared in the superclass (or overridden) can be accessed directly; subclass-specific members become inaccessible through that superclass reference without downcasting."}, {"num": 90, "question": "Q90. In encapsulation, why do we declare data members as private?", "options": ["To make them accessible from any class.", "To prevent direct access from outside the class.", "To allow subclasses to access them.", "To avoid using getter and setter methods."], "correctIndex": 1, "hint": "", "correctExplanation": "A top-level class can be public or package-private; protected and private are not allowed for top-level classes.", "wrongExplanation": "A top-level class can be public or package-private; protected and private are not allowed for top-level classes."}, {"num": 91, "question": "Q91. Which of the following is true about encapsulation?", "options": ["Encapsulation increases the complexity of the code.", "Encapsulation makes it harder to maintain and debug the code.", "Encapsulation allows you to hide the internal implementation details of a class.", "Encapsulation is only applicable to primitive data types."], "correctIndex": 2, "hint": "", "correctExplanation": "**Encapsulation** hides internal implementation details and protects an object's state by keeping data fields `private` and exposing safe access via public getter/setter methods.", "wrongExplanation": "**Encapsulation** hides internal implementation details and protects an object's state by keeping data fields `private` and exposing safe access via public getter/setter methods."}, {"num": 92, "question": "Q92. How many types of valid inheritance are there?", "options": ["4 types", "5 types", "6 types", "3 types"], "correctIndex": 1, "hint": "", "correctExplanation": "Validation constraints can be enforced in setters/constructors, rather than by exposing mutable public fields.", "wrongExplanation": "Validation constraints can be enforced in setters/constructors, rather than by exposing mutable public fields."}, {"num": 93, "question": "Q93. In inheritance, what is a method override?", "options": ["A method that is declared as private in the superclass.", "A method that is accessible only from the subclass.", "A method that has the same name and signature in the subclass as in the superclass.", "A method that is declared as final in the superclass."], "correctIndex": 2, "hint": "", "correctExplanation": "A method **override** occurs when a subclass defines an instance method with the **same name, return type (or covariant), and parameter list (signature)** as a method in its superclass.", "wrongExplanation": "A method **override** occurs when a subclass defines an instance method with the **same name, return type (or covariant), and parameter list (signature)** as a method in its superclass."}, {"num": 94, "question": "Q94. Why is encapsulation important in Java?", "options": ["It improves code readability.", "It prevents unauthorized access to the data members of a class.", "It eliminates the need for using objects in Java.", "It enables the use of multiple inheritance in Java."], "correctIndex": 1, "hint": "", "correctExplanation": "Encapsulation is crucial in OOP because it prevents unauthorized or direct external access to the internal state of a class, ensuring data validation, integrity, and loose coupling.", "wrongExplanation": "Encapsulation is crucial in OOP because it prevents unauthorized or direct external access to the internal state of a class, ensuring data validation, integrity, and loose coupling."}, {"num": 95, "question": "Q95. The feature in Java that allows a subclass to provide a specific implementation of a method that is already defined in its superclass is called:", "options": ["Abstraction", "Polymorphism", "Encapsulation", "Inheritance"], "correctIndex": 1, "hint": "", "correctExplanation": "The feature allowing a subclass to provide a specific implementation of a method defined in its superclass is **polymorphism** (specifically, runtime polymorphism via method overriding).", "wrongExplanation": "The feature allowing a subclass to provide a specific implementation of a method defined in its superclass is **polymorphism** (specifically, runtime polymorphism via method overriding)."}, {"num": 96, "question": "Q96. What is the process called when a subclass provides a specific implementation for a method that is already defined in its superclass?", "options": ["Overriding", "Overloading", "Inheriting", "Encapsulating"], "correctIndex": 0, "hint": "", "correctExplanation": "The process where a subclass provides its own specific implementation for an inherited method from its superclass is called **Method Overriding**.", "wrongExplanation": "The process where a subclass provides its own specific implementation for an inherited method from its superclass is called **Method Overriding**."}, {"num": 97, "question": "Q97. Which keyword is used to invoke a method of the superclass in a subclass, even if the subclass has overridden that method?", "options": ["override", "overload", "super", "this"], "correctIndex": 2, "hint": "", "correctExplanation": "The `super` keyword in Java allows a subclass to invoke an overridden superclass method (`super.methodName()`) or call the superclass constructor (`super()`).", "wrongExplanation": "The `super` keyword in Java allows a subclass to invoke an overridden superclass method (`super.methodName()`) or call the superclass constructor (`super()`)."}, {"num": 98, "question": "Q98. MCQ: What type of inheritance relationship is depicted in the code between `Grandparent`, `Parent`, and `Main` classes?", "options": ["Single inheritance", "Multiple inheritance", "Multilevel inheritance", "Hierarchical inheritance"], "correctIndex": 2, "hint": "", "correctExplanation": "`Grandparent` -> `Parent extends Grandparent` -> `Main extends Parent` (or uses Parent) represents a **Multilevel Inheritance** hierarchy.", "wrongExplanation": "`Grandparent` -> `Parent extends Grandparent` -> `Main extends Parent` (or uses Parent) represents a **Multilevel Inheritance** hierarchy."}, {"num": 99, "question": "Q99. In encapsulation, what is the role of access modifiers (e.g., private, public) for methods and data members?", "options": ["They define the data types for methods and data members.", "They determine the order of execution for methods.", "They control the visibility and accessibility of methods and data members.", "They enforce encapsulation rules automatically."], "correctIndex": 2, "hint": "", "correctExplanation": "In encapsulation, access modifiers (`private`, `default`, `protected`, `public`) control the **visibility and accessibility** of classes, variables, and methods across classes and packages.", "wrongExplanation": "In encapsulation, access modifiers (`private`, `default`, `protected`, `public`) control the **visibility and accessibility** of classes, variables, and methods across classes and packages."}, {"num": 100, "question": "Q100. Can an interface have variables with different access modifiers (e.g., public, private, protected) in Java?", "options": ["Yes, but only if the variables are declared as final.", "Yes, there are no restrictions on the access modifiers for variables in an interface.", "No, all variables in an interface must have the same access modifier.", "No, an interface cannot have any variables."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Interface fields are implicitly public, static and final. The listed alternatives do not accurately state that rule.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Interface fields are implicitly public, static and final. The listed alternatives do not accurately state that rule.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 101, "question": "Q101. To avoid the risk of ClassCastException when performing downcasting in Java, you should use which keyword?", "options": ["instanceof", "checkcast", "safecast", "convert"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "To safely perform downcasting and avoid a runtime `ClassCastException`, Java provides the `instanceof` operator.\nIt evaluates whether the runtime object belongs to or implements the specified type:\n```java\nif (animal instanceof Dog) {\n    Dog d = (Dog) animal; // completely safe from ClassCastException\n}\n```", "wrongExplanation": "To safely perform downcasting and avoid a runtime `ClassCastException`, Java provides the `instanceof` operator.\nIt evaluates whether the runtime object belongs to or implements the specified type:\n```java\nif (animal instanceof Dog) {\n    Dog d = (Dog) animal; // completely safe from ClassCastException\n}\n```"}, {"num": 102, "question": "Q102. MCQ: Which access modifier is often used for methods that should be accessible from anywhere in the code?", "options": ["`public`", "`private`", "`protected`", "default (no modifier)"], "correctIndex": 0, "hint": "", "correctExplanation": "The `public` access modifier makes methods accessible from any class or package across the entire application.", "wrongExplanation": "The `public` access modifier makes methods accessible from any class or package across the entire application."}, {"num": 103, "question": "Q103. Which keyword is used to annotate a method in the superclass that can be overridden by its subclasses?", "options": ["this", "abstract", "super", "override"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "@Override is an annotation, not a Java keyword. It tells the compiler to check that a method overrides or implements a method from a supertype.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "@Override is an annotation, not a Java keyword. It tells the compiler to check that a method overrides or implements a method from a supertype.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 104, "question": "Q104. How can you ensure that the value of a data member remains within a specific range in encapsulation?", "options": ["By declaring the data member as public.", "By declaring the data member as static.", "By using conditional statements in the getter and setter methods.", "Java does not allow setting constraints on data members."], "correctIndex": 2, "hint": "", "correctExplanation": "In encapsulation, data members are kept `private`. Range constraints and validations are enforced using conditional logic (`if/else`) inside setter methods before updating the fields.", "wrongExplanation": "In encapsulation, data members are kept `private`. Range constraints and validations are enforced using conditional logic (`if/else`) inside setter methods before updating the fields."}, {"num": 105, "question": "Q105. The access specifier used to make a method or variable accessible only within the same package is:", "options": ["private", "public", "protected", "package-private (default)"], "correctIndex": 3, "hint": "", "correctExplanation": "The access modifier used when no keyword is specified is **package-private (default)**, which restricts visibility exclusively to classes within the same package.", "wrongExplanation": "The access modifier used when no keyword is specified is **package-private (default)**, which restricts visibility exclusively to classes within the same package."}, {"num": 106, "question": "Q106. MCQ: How is the accessibility of `protected` variables different from `protected` methods in Java?", "options": ["`protected` variables are accessible from any package, while `protected` methods are not.", "`protected` methods are accessible from any package, while `protected` variables are not.", "There is no difference; both `protected` variables and methods are accessible from any package.", "`protected` variables and methods have the same accessibility within the same package but are"], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Protected fields and protected methods follow the same access-control rules. Within a package they are accessible; across packages access is available to subclasses subject to Java's protected-access restrictions.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Protected fields and protected methods follow the same access-control rules. Within a package they are accessible; across packages access is available to subclasses subject to Java's protected-access restrictions.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 107, "question": "Q107. MCQ: Can a `protected` member of a superclass be accessed from a subclass in a different package?", "options": ["Yes, always.", "No, `protected` members are accessible only within the same package.", "Yes, but only if the subclass is in the same package as the superclass.", "Yes, but only if the subclass is in a subclassing relationship with the superclass."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A subclass in another package can access an inherited protected member through the subclass context, not as an unrestricted public member.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A subclass in another package can access an inherited protected member through the subclass context, not as an unrestricted public member.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 108, "question": "Q108. MCQ: If no package is specified at the beginning of a Java file, which package does it belong to?", "options": ["`java.lang`", "`java.util`", "The file won't compile without a package declaration.", "The default package (no package)."], "correctIndex": 3, "hint": "", "correctExplanation": "If a Java file omits the `package` declaration at the top, its classes are placed into the **default (unnamed) package**.", "wrongExplanation": "If a Java file omits the `package` declaration at the top, its classes are placed into the **default (unnamed) package**."}, {"num": 109, "question": "Q109. MCQ: Can a `protected` method in a superclass be accessed from a subclass in a different package?", "options": ["Yes, always.", "No, `protected` methods can only be accessed within the same package.", "Yes, but only if the subclass is in the same package as the superclass.", "Yes, but only if the subclass is in a subclassing relationship with the superclass."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Protected access across packages is restricted to subclass code and qualifying subclass references; it is not generally available to unrelated classes.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Protected access across packages is restricted to subclass code and qualifying subclass references; it is not generally available to unrelated classes.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 110, "question": "Q110. In Java, can a subclass inherit private members (data members and methods) from the superclass?", "options": ["Yes, a subclass can inherit private members.", "No, private members are not inherited by subclasses.", "It depends on the access modifier used for the private members.", "It depends on whether the superclass is abstract."], "correctIndex": 1, "hint": "", "correctExplanation": "`private` members of a superclass are encapsulated within that class and are **not inherited** or directly accessible by subclasses.", "wrongExplanation": "`private` members of a superclass are encapsulated within that class and are **not inherited** or directly accessible by subclasses."}, {"num": 111, "question": "Q111. Which access specifier is commonly used for the getter and setter methods in encapsulation?", "options": ["private", "protected", "public", "default (package-private)"], "correctIndex": 2, "hint": "", "correctExplanation": "In standard Java encapsulation, instance variables are declared `private`, and their corresponding getter and setter methods are declared `public` for controlled external access.", "wrongExplanation": "In standard Java encapsulation, instance variables are declared `private`, and their corresponding getter and setter methods are declared `public` for controlled external access."}, {"num": 112, "question": "Q112. Which of the following is a valid example of upcasting?", "options": ["Dog d = new Animal();", "Animal a = new Dog();", "Dog d = (Dog) new Animal();", "Animal a = (Animal) new Object();"], "correctIndex": 1, "hint": "", "correctExplanation": "`Animal a = new Dog();` is an example of **Upcasting** (assigning a subclass `Dog` reference to a superclass `Animal` reference type).", "wrongExplanation": "`Animal a = new Dog();` is an example of **Upcasting** (assigning a subclass `Dog` reference to a superclass `Animal` reference type)."}, {"num": 113, "question": "Q113. Which of the following is a benefit of inheritance?", "options": ["Code reusability", "Code duplication", "Data deletion", "Memory wastage"], "correctIndex": 0, "hint": "", "correctExplanation": "The primary benefit of inheritance in OOP is **code reusability**, allowing child classes to inherit attributes and methods from existing parent classes without duplicate code.", "wrongExplanation": "The primary benefit of inheritance in OOP is **code reusability**, allowing child classes to inherit attributes and methods from existing parent classes without duplicate code."}, {"num": 114, "question": "Q114. Which access modifier allows a member to be accessed from classes in the same package and subclasses in other packages?", "options": ["private", "protected", "default", "final"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java's access control hierarchy:\n- `private`: Accessible only within the same class.\n- `default (package-private)`: Accessible only within the same package.\n- `protected`: Accessible within the same package AND by subclasses in different packages.\n- `public`: Accessible from anywhere across all packages.", "wrongExplanation": "In Java's access control hierarchy:\n- `private`: Accessible only within the same class.\n- `default (package-private)`: Accessible only within the same package.\n- `protected`: Accessible within the same package AND by subclasses in different packages.\n- `public`: Accessible from anywhere across all packages."}, {"num": 115, "question": "Q115. Which type of inheritance occurs when multiple subclasses inherit from the same superclass?", "options": ["Single inheritance", "Multilevel inheritance", "Hierarchical inheritance", "Multiple inheritance"], "correctIndex": 2, "hint": "", "correctExplanation": "When multiple subclasses inherit from a single common superclass (e.g., `Dog extends Animal` and `Cat extends Animal`), it is called **Hierarchical Inheritance**.", "wrongExplanation": "When multiple subclasses inherit from a single common superclass (e.g., `Dog extends Animal` and `Cat extends Animal`), it is called **Hierarchical Inheritance**."}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

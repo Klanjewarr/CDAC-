@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 3: MySQL Architecture, Relational Algebra, CTEs & Window Functions | CDAC CCME Database Technologies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning-light: #fffbeb;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .nav-logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+        }
+
+        .nav-title-group h1 {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .nav-title-group p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-badge.timer {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: white;
+            border-color: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+        .btn-warning:hover {
+            background: #fde68a;
+        }
+
+        /* Container Layout */
+        .layout {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 24px 20px 80px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+        }
+
+        /* Header Banner */
+        .quiz-hero {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hero-info h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-badge {
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--primary-light); color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .hero-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: #e2e8f0;
+            padding: 3px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .mode-option {
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+
+        .mode-option.active {
+            background: white;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Progress Bar */
+        .progress-bar-wrap {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 9999px;
+        }
+
+        /* Filter Controls */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-tab:hover {
+            border-color: #cbd5e1;
+            color: var(--text-dark);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Question Cards Area */
+        .questions-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .q-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .q-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .q-card.status-correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .q-card.status-incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            gap: 12px;
+        }
+
+        .q-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .q-number {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-topic {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-highyield-pill {
+            font-size: 11px;
+            font-weight: 700;
+            background: #fef3c7;
+            color: #b45309;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-flag {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.15s;
+            padding: 4px;
+        }
+
+        .btn-flag:hover {
+            transform: scale(1.15);
+            color: var(--accent);
+        }
+
+        .btn-flag.active {
+            color: var(--accent);
+        }
+
+        .q-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .q-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: white;
+            user-select: none;
+            gap: 12px;
+        }
+
+        .opt-item:hover:not(.disabled) {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+
+        .opt-item.selected .opt-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+
+        /* Feedback Styling in Instant Mode */
+        .opt-item.correct {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-item.correct .opt-letter {
+            background: var(--success) !important;
+            color: white !important;
+        }
+
+        .opt-item.wrong {
+            background: var(--danger-light) !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-item.wrong .opt-letter {
+            background: var(--danger) !important;
+            color: white !important;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-top: 16px;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .exp-text {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .exam-tip-box {
+            background: var(--warning-light);
+            border-left: 4px solid var(--accent);
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .tip-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tip-content {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        /* Sidebar Question Palette */
+        .sidebar {
+            position: sticky;
+            top: 86px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .pal-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pal-btn.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .pal-btn.wrong {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .pal-btn.flagged::after {
+            content: '★';
+            position: absolute;
+            top: 1px;
+            right: 2px;
+            font-size: 8px;
+            color: var(--accent);
+        }
+
+        .palette-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        /* Floating / Bottom Finish Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 40;
+        }
+
+        .bottom-bar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Score Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 520px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: modalPop 0.25s ease-out;
+        }
+
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) calc(var(--percent, 0) * 1%), #e2e8f0 0);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 86px;
+            height: 86px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: relative;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .score-headline {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .score-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+        }
+
+        .m-stat-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .m-stat-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-logo-icon">DB</div>
+            <div class="nav-title-group">
+                <h1>CDAC CCME Database Tech</h1>
+                <p>Part 3: MySQL Architecture, Relational Algebra, CTEs & Window Functions</p>
+            </div>
+        </a>
+
+        <div class="nav-stats">
+            <div class="stat-badge timer" id="timerBadge">⏱️ 00:00</div>
+            <div class="stat-badge" id="scoreBadge">🎯 Score: 0/40</div>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html" class="btn btn-outline">← All Quizzes</a>
+            <button class="btn btn-primary" onclick="showResultsModal()">Submit & Score</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <div class="layout">
+        
+        <!-- Hero Header -->
+        <div class="quiz-hero">
+            <div class="hero-info">
+                <h2>
+                    Part 3: MySQL Architecture, Relational Algebra, CTEs & Window Functions
+                    <span class="hero-badge">Questions 51 - 90</span>
+                </h2>
+                <p>Indexes (B+ Tree), BCNF, Relational Algebra (σ & π), Subqueries, WITH CTEs, ROW_NUMBER vs RANK vs DENSE_RANK</p>
+            </div>
+            <div class="hero-controls">
+                <div class="mode-toggle">
+                    <div class="mode-option active" id="modePractice" onclick="setMode('practice')">Study Mode (Instant Key)</div>
+                    <div class="mode-option" id="modeExam" onclick="setMode('exam')">Mock Exam Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-bar-wrap">
+            <div class="progress-meta">
+                <span id="progressCount">Answered 0 of 40 questions</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Left: Question Flow -->
+        <div class="questions-area">
+            
+            <!-- Filters -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="setFilter('all', this)">All Questions (40)</button>
+                <button class="filter-tab" onclick="setFilter('unanswered', this)">Unanswered</button>
+                <button class="filter-tab" onclick="setFilter('incorrect', this)">Incorrect ❌</button>
+                <button class="filter-tab" onclick="setFilter('flagged', this)">Flagged ⭐</button>
+            </div>
+
+            <!-- Dynamic Question Cards -->
+            <div class="questions-flow" id="questionsFlow"></div>
+        </div>
+
+        <!-- Right: Question Palette Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">
+                    <span>Question Palette</span>
+                    <span id="paletteAnsweredCount" style="font-size: 12px; color: var(--text-muted);">0/40</span>
+                </div>
+                <div class="palette-grid" id="paletteGrid"></div>
+                <div class="palette-legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#e2e8f0;"></span> Unanswered</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--primary-light); border: 1px solid var(--primary);"></span> Answered</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--success);"></span> Correct</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--danger);"></span> Wrong</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">Exam Day Strategies</div>
+                <ul style="font-size: 12.5px; color: #475569; padding-left: 18px; line-height: 1.6;">
+                    <li><strong>TRUNCATE vs DELETE:</strong> TRUNCATE is DDL, resets AUTO_INCREMENT, and cannot be rolled back in MySQL.</li>
+                    <li><strong>WHERE vs HAVING:</strong> WHERE filters individual rows before grouping; HAVING filters groups after.</li>
+                    <li><strong>NULL Checks:</strong> Never use <code>= NULL</code>. Always use <code>IS NULL</code>.</li>
+                    <li><strong>Window Functions:</strong> <code>RANK()</code> leaves gaps on ties (1,1,3); <code>DENSE_RANK()</code> does not (1,1,2).</li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="bottom-bar">
+        <div class="bottom-bar-content">
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-muted);" id="bottomStatus">
+                Ready to review. Select your answers above.
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="resetAll()">Reset Quiz</button>
+                <button class="btn btn-primary" onclick="showResultsModal()">Finish & View Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal-overlay" id="resultsModal">
+        <div class="modal-content">
+            <div class="score-circle" id="modalScoreCircle">
+                <span class="score-text" id="modalScoreText">0%</span>
+            </div>
+            <h3 class="score-headline" id="modalHeadline">Great Effort!</h3>
+            <p class="score-desc" id="modalSubheadline">Here is your CDAC CCME performance breakdown.</p>
+            
+            <div class="modal-stats">
+                <div>
+                    <div class="m-stat-val" id="statCorrect" style="color: var(--success);">0</div>
+                    <div class="m-stat-lbl">Correct</div>
+                </div>
+                <div>
+                    <div class="m-stat-val" id="statWrong" style="color: var(--danger);">0</div>
+                    <div class="m-stat-lbl">Wrong</div>
+                </div>
+                <div>
+                    <div class="m-stat-val" id="statUnanswered" style="color: #64748b;">0</div>
+                    <div class="m-stat-lbl">Skipped</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeResultsModal()">Review Questions</button>
+                <button class="btn btn-warning" onclick="filterOnlyMissed()">Review Missed (❌)</button>
+                <a href="index.html" class="btn btn-primary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [{"num": 51, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which SQL command category includes GRANT and REVOKE?", "options": {"A": "DDL", "B": "DML", "C": "DCL", "D": "TCL"}, "correctAnswer": "C", "correctExplanation": "GRANT and REVOKE manage privileges and access rights. They belong to Data Control Language (DCL).", "highYield": true, "examTip": "DCL (Data Control Language) manages security and permissions: GRANT and REVOKE.", "topic": "Command Categories & Auto Increment"}, {"num": 52, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which command category includes COMMIT and ROLLBACK?", "options": {"A": "DCL", "B": "TCL/DTL", "C": "DDL", "D": "DQL"}, "correctAnswer": "B", "correctExplanation": "COMMIT and ROLLBACK control transaction boundaries, so they belong to Transaction Control Language (TCL), sometimes called Transaction Management Language.", "highYield": true, "examTip": "TCL (Transaction Control Language): COMMIT, ROLLBACK, SAVEPOINT.", "topic": "Command Categories & Auto Increment"}, {"num": 53, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which statement about DELETE and TRUNCATE is generally correct in MySQL?", "options": {"A": "DELETE cannot use WHERE", "B": "TRUNCATE removes all rows and resets AUTO_INCREMENT in common MySQL use", "C": "TRUNCATE is a row-by-row DML operation", "D": "DELETE always removes table structure"}, "correctAnswer": "B", "correctExplanation": "TRUNCATE removes all rows without a WHERE filter and, in normal MySQL use, resets the table's AUTO_INCREMENT counter. DELETE can selectively remove rows and is a DML operation.", "highYield": true, "examTip": "CDAC Favorite: TRUNCATE vs DELETE. TRUNCATE is DDL, resets AUTO_INCREMENT, cannot be filtered with WHERE.", "topic": "Command Categories & Auto Increment"}, {"num": 54, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What does AUTO_INCREMENT do in MySQL?", "options": {"A": "Automatically generates a sequential value when a value is not supplied", "B": "Creates a foreign key automatically", "C": "Sorts the table by primary key", "D": "Prevents duplicate rows in every column"}, "correctAnswer": "A", "correctExplanation": "AUTO_INCREMENT generates the next sequence value for a column when an INSERT does not explicitly provide one. It is commonly used for surrogate identifier columns.", "highYield": true, "examTip": "AUTO_INCREMENT automatically assigns next integer sequence when null/omitted. Only 1 auto_increment column allowed per table, must be indexed.", "topic": "Command Categories & Auto Increment"}, {"num": 55, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which data type is generally suitable for storing a calendar date without time?", "options": {"A": "TIME", "B": "DATE", "C": "DATETIME", "D": "YEAR-MONTH"}, "correctAnswer": "B", "correctExplanation": "DATE stores a calendar date without a time-of-day component. TIME stores a time value, while DATETIME stores both date and time.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Data Types & Temporal Values"}, {"num": 56, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which MySQL type stores both date and time values?", "options": {"A": "DATE", "B": "TIME", "C": "DATETIME", "D": "CHAR"}, "correctAnswer": "C", "correctExplanation": "DATETIME stores both calendar date and time-of-day information. DATE has no time component and TIME has no date component.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Data Types & Temporal Values"}, {"num": 57, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which constraint supplies a value when an INSERT statement omits that column?", "options": {"A": "CHECK", "B": "DEFAULT", "C": "UNIQUE", "D": "FOREIGN KEY"}, "correctAnswer": "B", "correctExplanation": "DEFAULT supplies a column value when an INSERT omits that column or explicitly requests DEFAULT. It does not override a value that is explicitly supplied.", "highYield": true, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Constraints (DEFAULT & CHECK)"}, {"num": 58, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is the purpose of a CHECK constraint?", "options": {"A": "To sort records", "B": "To enforce a Boolean condition on inserted or updated values", "C": "To create an index", "D": "To join two tables"}, "correctAnswer": "B", "correctExplanation": "CHECK enforces a Boolean condition on values being inserted or updated. Rows that violate an enforced check condition are rejected.", "highYield": true, "examTip": "CHECK constraint validates condition on INSERT/UPDATE. In MySQL 8.0+, CHECK is actively enforced.", "topic": "Constraints (DEFAULT & CHECK)"}, {"num": 59, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which index structure is commonly used by MySQL InnoDB for primary and secondary indexes?", "options": {"A": "B-tree family", "B": "Stack", "C": "Hash map only", "D": "Binary search tree in memory only"}, "correctAnswer": "A", "correctExplanation": "InnoDB uses B-tree-family structures (implemented as B+ trees) for its common primary and secondary indexes. These structures support efficient key lookups and ordered range scans.", "highYield": true, "examTip": "InnoDB uses B+ Trees for clustered and secondary indexes. Root to leaf depth is typically 3-4 levels for millions of rows.", "topic": "Indexing & Storage Engines (B+ Trees)"}, {"num": 60, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is a likely trade-off of adding indexes to a table?", "options": {"A": "Reads may become faster, but writes and storage can become more expensive", "B": "All queries become constant time", "C": "Indexes eliminate the need for constraints", "D": "Indexes always reduce storage"}, "correctAnswer": "A", "correctExplanation": "Indexes can speed up suitable reads by reducing the amount of data scanned, but they consume storage and must be maintained when rows are inserted, updated, or deleted. Too many indexes can slow writes.", "highYield": true, "examTip": "Index Trade-off: Speeds up SELECT queries; slows down INSERT, UPDATE, and DELETE (extra maintenance).", "topic": "Indexing & Storage Engines (B+ Trees)"}, {"num": 61, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is a candidate key?", "options": {"A": "Any column that contains NULL", "B": "A minimal set of attributes that uniquely identifies a row", "C": "A key used only for sorting", "D": "A foreign key without a parent"}, "correctAnswer": "B", "correctExplanation": "A candidate key is a minimal set of attributes that uniquely identifies a row. Minimal means no proper subset of that attribute set can still uniquely identify rows.", "highYield": true, "examTip": "Candidate Key: Minimal Superkey (superkey with no redundant attributes).", "topic": "Functional Dependencies, Keys & BCNF"}, {"num": 62, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "A composite key is:", "options": {"A": "A key consisting of two or more attributes", "B": "A key that allows duplicate values", "C": "A key that references multiple databases only", "D": "A key created automatically by a view"}, "correctAnswer": "A", "correctExplanation": "A composite key contains two or more attributes whose combination identifies a row. Individual columns may not be unique, while the combined values are.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Functional Dependencies, Keys & BCNF"}, {"num": 63, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "A functional dependency X → Y means:", "options": {"A": "Y determines X in every possible relation", "B": "Each value of X is associated with exactly one value of Y", "C": "X and Y must be primary keys", "D": "X and Y must contain identical values"}, "correctAnswer": "B", "correctExplanation": "X → Y means that each value of X determines exactly one associated value of Y in the relation. Different X values may still determine the same Y value.", "highYield": true, "examTip": "Functional Dependency X -> Y: If two rows agree on X, they MUST agree on Y.", "topic": "Functional Dependencies, Keys & BCNF"}, {"num": 64, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "A relation is in BCNF if, for every non-trivial functional dependency X → Y:", "options": {"A": "Y is a foreign key", "B": "X is a superkey", "C": "Y is a candidate key", "D": "X contains one attribute only"}, "correctAnswer": "B", "correctExplanation": "In BCNF, the determinant X of every non-trivial functional dependency X → Y must be a superkey. This is stricter than 3NF.", "highYield": true, "examTip": "BCNF (Boyce-Codd Normal Form): For EVERY non-trivial FD X -> Y, X MUST be a Superkey. Stricter than 3NF.", "topic": "Functional Dependencies, Keys & BCNF"}, {"num": 65, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which anomaly can occur when the same fact is unnecessarily repeated in multiple rows?", "options": {"A": "Insertion anomaly", "B": "Update anomaly", "C": "Deletion anomaly", "D": "All of the above"}, "correctAnswer": "D", "correctExplanation": "Repeated facts can cause insertion, update, and deletion anomalies. Therefore, all three anomaly types may arise from poorly structured redundant data.", "highYield": true, "examTip": "Redundancy causes 3 anomalies: Insertion Anomaly, Update/Modification Anomaly, Deletion Anomaly.", "topic": "Functional Dependencies, Keys & BCNF"}, {"num": 66, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which relational algebra operation selects rows satisfying a predicate?", "options": {"A": "Projection", "B": "Selection", "C": "Union", "D": "Rename"}, "correctAnswer": "B", "correctExplanation": "Relational algebra selection (σ) filters rows that satisfy a predicate. It is analogous to the WHERE clause in SQL.", "highYield": true, "examTip": "Relational Algebra: Selection (sigma σ) = filters ROWS (WHERE clause).", "topic": "Relational Algebra & Set Compatibility"}, {"num": 67, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which relational algebra operation selects specified columns?", "options": {"A": "Selection", "B": "Projection", "C": "Difference", "D": "Join"}, "correctAnswer": "B", "correctExplanation": "Projection (π) selects specified columns from a relation. It is analogous to choosing the column list in SELECT.", "highYield": true, "examTip": "Relational Algebra: Projection (pi π) = selects COLUMNS (SELECT column_list).", "topic": "Relational Algebra & Set Compatibility"}, {"num": 68, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which condition is required for two relations to be union-compatible?", "options": {"A": "Same number of attributes with compatible corresponding domains", "B": "Same table name", "C": "Same primary-key values", "D": "Same number of rows"}, "correctAnswer": "A", "correctExplanation": "UNION-compatible relations must have the same number of attributes, and corresponding attributes must have compatible domains or data types. Their names and row counts need not be identical.", "highYield": true, "examTip": "Union Compatibility: Same degree (number of attributes) and compatible corresponding domains (data types).", "topic": "Relational Algebra & Set Compatibility"}, {"num": 69, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What does UNION ALL do compared with UNION?", "options": {"A": "It removes duplicates more aggressively", "B": "It retains duplicate rows", "C": "It sorts only numeric columns", "D": "It returns only common rows"}, "correctAnswer": "B", "correctExplanation": "UNION ALL combines result sets while retaining duplicate rows. UNION performs duplicate elimination.", "highYield": true, "examTip": "UNION vs UNION ALL: UNION performs duplicate elimination; UNION ALL simply appends result sets.", "topic": "Relational Algebra & Set Compatibility"}, {"num": 70, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which clause is used to combine rows having the same values in specified columns?", "options": {"A": "ORDER BY", "B": "GROUP BY", "C": "WHERE", "D": "LIMIT"}, "correctAnswer": "B", "correctExplanation": "GROUP BY groups rows that share values in one or more columns, allowing aggregate functions to calculate a result per group.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Aggregates, Grouping & NULL Semantics"}, {"num": 71, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which query condition correctly checks for rows where commission is not NULL?", "options": {"A": "commission <> NULL", "B": "commission = NOT NULL", "C": "commission IS NOT NULL", "D": "commission != 'NULL'"}, "correctAnswer": "C", "correctExplanation": "IS NOT NULL correctly tests for a value that is not NULL. Expressions such as column <> NULL evaluate to UNKNOWN rather than performing the intended test.", "highYield": true, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Aggregates, Grouping & NULL Semantics"}, {"num": 72, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which aggregate function returns the average of non-NULL values in a numeric column?", "options": {"A": "SUM()", "B": "AVG()", "C": "COUNT()", "D": "MAX()"}, "correctAnswer": "B", "correctExplanation": "AVG() calculates the arithmetic average of non-NULL values in a numeric expression. NULL values are excluded from the average.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Aggregates, Grouping & NULL Semantics"}, {"num": 73, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is the result of COUNT(column_name) with respect to NULL values?", "options": {"A": "It counts all rows", "B": "It ignores NULL values in that column", "C": "It counts only NULL values", "D": "It returns an error"}, "correctAnswer": "B", "correctExplanation": "COUNT(column_name) counts only rows where that column is non-NULL. Use COUNT(*) when the intention is to count rows regardless of column NULL values.", "highYield": true, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Aggregates, Grouping & NULL Semantics"}, {"num": 74, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which subquery operator tests whether at least one row is returned by a subquery?", "options": {"A": "EXISTS", "B": "ALL", "C": "BETWEEN", "D": "LIKE"}, "correctAnswer": "A", "correctExplanation": "EXISTS tests whether a subquery returns at least one row. It is true when a matching row exists and false when the subquery returns no rows.", "highYield": true, "examTip": "EXISTS operator: Evaluates to TRUE as soon as subquery finds 1 matching row; stops scanning immediately (efficient).", "topic": "Subqueries (EXISTS, IN, Correlated)"}, {"num": 75, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which operator can test whether a value matches any value returned by a subquery?", "options": {"A": "IN", "B": "IS NULL", "C": "LIKE", "D": "AS"}, "correctAnswer": "A", "correctExplanation": "IN tests whether a value equals any value in a list or the result of a subquery. It is commonly used for membership checks.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Subqueries (EXISTS, IN, Correlated)"}, {"num": 76, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "A correlated subquery:", "options": {"A": "Runs independently without referring to outer query", "B": "References a column from the outer query", "C": "Cannot appear in WHERE", "D": "Must return exactly one row"}, "correctAnswer": "B", "correctExplanation": "A correlated subquery refers to a column from the outer query. It is logically evaluated in relation to each candidate outer row, although the optimizer may transform its execution.", "highYield": true, "examTip": "Correlated Subquery: References columns from outer query; re-evaluated for each candidate outer row.", "topic": "Subqueries (EXISTS, IN, Correlated)"}, {"num": 77, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is a Common Table Expression (CTE) introduced by?", "options": {"A": "DEFINE", "B": "WITH", "C": "TEMP", "D": "DECLARE TABLE"}, "correctAnswer": "B", "correctExplanation": "A Common Table Expression is introduced with WITH. It names a temporary result set that can be referenced by the statement that follows.", "highYield": true, "examTip": "CTE (Common Table Expression): Declared using WITH cte_name AS (SELECT ...). Improves readability over subqueries.", "topic": "Common Table Expressions (CTEs)"}, {"num": 78, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is a recursive CTE commonly used for?", "options": {"A": "Encrypting columns", "B": "Traversing hierarchical or tree-like data", "C": "Creating indexes automatically", "D": "Replacing all joins"}, "correctAnswer": "B", "correctExplanation": "A recursive CTE repeatedly refers to its own result and is useful for traversing hierarchical data such as employee reporting structures or tree-like categories.", "highYield": true, "examTip": "Recursive CTE: Contains an anchor member and a recursive member joined with UNION ALL. Used for trees/hierarchies.", "topic": "Common Table Expressions (CTEs)"}, {"num": 79, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which window function assigns a unique sequential number to each row within a partition?", "options": {"A": "RANK()", "B": "DENSE_RANK()", "C": "ROW_NUMBER()", "D": "NTILE()"}, "correctAnswer": "C", "correctExplanation": "ROW_NUMBER() assigns a distinct sequential number to each row within a window partition, following the window's ORDER BY. Tied ordering values still receive different row numbers.", "highYield": true, "examTip": "ROW_NUMBER(): Assigns sequential integers (1, 2, 3, 4) with NO ties and NO gaps.", "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"}, {"num": 80, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "If two rows tie, which function assigns the same rank and leaves a gap in the next rank?", "options": {"A": "ROW_NUMBER()", "B": "RANK()", "C": "DENSE_RANK()", "D": "NTILE()"}, "correctAnswer": "B", "correctExplanation": "RANK() assigns equal ranks to tied rows and leaves a gap after the tie. For example, ranks may be 1, 1, 3; DENSE_RANK() would produce 1, 1, 2.", "highYield": true, "examTip": "RANK() vs DENSE_RANK(): Ties get same rank. RANK() leaves gaps (1, 1, 3); DENSE_RANK() has NO gaps (1, 1, 2).", "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"}, {"num": 81, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which window clause divides rows into groups for independent window calculations?", "options": {"A": "GROUP BY", "B": "PARTITION BY", "C": "HAVING", "D": "WITH"}, "correctAnswer": "B", "correctExplanation": "PARTITION BY divides the rows into independent groups for a window function. The function is calculated separately within each partition without collapsing rows.", "highYield": true, "examTip": "PARTITION BY in OVER() clause: Divides rows into groups without collapsing them into a single row like GROUP BY.", "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"}, {"num": 82, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which clause is used inside OVER() to define the ordering for a window function?", "options": {"A": "ORDER BY", "B": "WHERE", "C": "LIMIT", "D": "DISTINCT"}, "correctAnswer": "A", "correctExplanation": "ORDER BY inside OVER() defines the order used by the window function within its partition. This ordering is separate from the final query's ORDER BY.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"}, {"num": 83, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which statement about a window function is correct?", "options": {"A": "It collapses each group into one row like GROUP BY", "B": "It calculates across related rows while retaining individual result rows", "C": "It can only be used with DELETE", "D": "It always returns one row"}, "correctAnswer": "B", "correctExplanation": "Window functions calculate values across related rows while keeping each input row in the result. GROUP BY generally collapses each group into one output row.", "highYield": true, "examTip": "Window Functions calculate aggregates while retaining original row identities and individual row counts.", "topic": "Window Functions (ROW_NUMBER, RANK, DENSE_RANK)"}, {"num": 84, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which MySQL command displays the structure of a table?", "options": {"A": "DESCRIBE table_name", "B": "SHOW ROWS table_name", "C": "STRUCTURE table_name", "D": "VIEW TABLE table_name"}, "correctAnswer": "A", "correctExplanation": "DESCRIBE table_name (also written DESC table_name) displays a table's columns and structural details, such as types, nullability, keys, and defaults.", "highYield": true, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 85, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which MySQL client provides a graphical interface for database development and administration?", "options": {"A": "MySQL Workbench", "B": "MySQL Router only", "C": "mysqldump", "D": "mysqladmin only"}, "correctAnswer": "A", "correctExplanation": "MySQL Workbench is a graphical tool for database design, SQL development, and administration. The other listed tools are command-line or utility tools rather than the general GUI described.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 86, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which MySQL client is a command-line interface for executing SQL statements?", "options": {"A": "MySQL Workbench", "B": "mysql monitor/client", "C": "Mongo Shell", "D": "Compass"}, "correctAnswer": "B", "correctExplanation": "The mysql client (also called the MySQL monitor) is a command-line program for connecting to MySQL and executing SQL statements. MySQL Workbench is the graphical alternative.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 87, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which statement about a view is correct?", "options": {"A": "A view is always a physically stored copy of all source rows", "B": "A view is a named query that can present data from one or more tables", "C": "A view cannot contain joins", "D": "A view always has its own independent data"}, "correctAnswer": "B", "correctExplanation": "A view is a named query that presents data from one or more underlying tables or views. It is not necessarily a physically stored copy of the source data.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 88, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "What is the purpose of WITH CHECK OPTION in an updatable view?", "options": {"A": "It prevents all SELECT statements", "B": "It ensures rows modified through the view satisfy the view's defining condition", "C": "It automatically creates a primary key", "D": "It disables all constraints"}, "correctAnswer": "B", "correctExplanation": "WITH CHECK OPTION requires rows inserted or updated through an updatable view to continue satisfying the view's defining WHERE condition. It prevents changes that would make the row disappear from that view.", "highYield": true, "examTip": "WITH CHECK OPTION: Prevents INSERT/UPDATE through a view that would violate the view's WHERE condition.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 89, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which statement about a MySQL temporary table is correct?", "options": {"A": "It is visible to every database user", "B": "It is generally visible only within the creating session", "C": "It survives server restart permanently", "D": "It cannot share a name with a permanent table"}, "correctAnswer": "B", "correctExplanation": "A MySQL TEMPORARY TABLE is visible only to the session that created it and is automatically dropped when that session ends. Other sessions cannot use that temporary table.", "highYield": true, "examTip": "TEMPORARY TABLE in MySQL: Exists only for duration of current user session; automatically dropped when session ends.", "topic": "MySQL CLI, Views & Session Temp Tables"}, {"num": 90, "section": "Section C – MySQL, SQL Programming and Advanced Querying", "question": "Which command is used to rename a table in MySQL?", "options": {"A": "ALTER TABLE old_name RENAME TO new_name", "B": "UPDATE TABLE old_name TO new_name", "C": "CHANGE TABLE old_name new_name", "D": "MODIFY TABLE old_name"}, "correctAnswer": "A", "correctExplanation": "ALTER TABLE old_name RENAME TO new_name renames a table in MySQL. RENAME TABLE old_name TO new_name is another supported form.", "highYield": false, "examTip": "Master the exact definitions and standard SQL syntax. Remember that keywords and execution order are heavily tested in CCME.", "topic": "MySQL CLI, Views & Session Temp Tables"}];
+        const STORAGE_KEY = "cdac_db_Quiz_Full_Part_3_MySQL_AdvancedSQL_WindowFunctions";
+        let currentMode = "practice"; // 'practice' or 'exam'
+        let currentFilter = "all";
+        let userAnswers = {}; // { qIndex: "A" }
+        let flagged = {};     // { qIndex: true }
+        let secondsElapsed = 0;
+        let timerInterval = null;
+
+        // Initialize state from localStorage
+        function loadSavedState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    userAnswers = parsed.answers || {};
+                    flagged = parsed.flagged || {};
+                    secondsElapsed = parsed.seconds || 0;
+                }
+            } catch(e) {
+                console.error("Failed to load saved state", e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    answers: userAnswers,
+                    flagged: flagged,
+                    seconds: secondsElapsed
+                }));
+            } catch(e) {}
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timerBadge').innerText = `⏱️ ${mins}:${secs}`;
+                if (secondsElapsed % 5 === 0) saveState();
+            }, 1000);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsFlow');
+            container.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const isAnswered = userAnswers[idx] !== undefined;
+                const userChoice = userAnswers[idx];
+                const isCorrect = userChoice === q.correctAnswer;
+                const isFlagged = !!flagged[idx];
+
+                // Filtering logic
+                let visible = true;
+                if (currentFilter === 'unanswered' && isAnswered) visible = false;
+                if (currentFilter === 'incorrect' && (!isAnswered || isCorrect)) visible = false;
+                if (currentFilter === 'flagged' && !isFlagged) visible = false;
+
+                if (!visible) return;
+
+                const card = document.createElement('div');
+                card.className = `q-card ${currentMode === 'practice' && isAnswered ? (isCorrect ? 'status-correct' : 'status-incorrect') : ''}`;
+                card.id = `qCard_${idx}`;
+
+                let highYieldBadge = q.highYield ? `<span class="q-highyield-pill">⭐ High-Yield</span>` : '';
+
+                let optionsHtml = '';
+                for (const [letter, text] of Object.entries(q.options)) {
+                    let itemClass = 'opt-item';
+                    if (userChoice === letter) itemClass += ' selected';
+                    
+                    if (currentMode === 'practice' && isAnswered) {
+                        if (letter === q.correctAnswer) {
+                            itemClass += ' correct';
+                        } else if (userChoice === letter && !isCorrect) {
+                            itemClass += ' wrong';
+                        }
+                    }
+
+                    optionsHtml += `
+                        <div class="${itemClass}" onclick="selectOption(${idx}, '${letter}')">
+                            <span class="opt-letter">${letter}</span>
+                            <span class="opt-text">${text}</span>
+                        </div>
+                    `;
+                }
+
+                let explanationClass = (currentMode === 'practice' && isAnswered) ? 'explanation-box show' : 'explanation-box';
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta-left">
+                            <span class="q-number">Q${q.num}</span>
+                            <span class="q-topic">${q.topic || 'Database'}</span>
+                            ${highYieldBadge}
+                        </div>
+                        <button class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${idx})" title="Flag for review">
+                            ★
+                        </button>
+                    </div>
+
+                    <div class="q-text">${q.question}</div>
+
+                    <div class="q-options">${optionsHtml}</div>
+
+                    <div class="${explanationClass}" id="exp_${idx}">
+                        <div class="exp-header">
+                            <span>💡 Detailed Explanation:</span>
+                            <span style="color: var(--success); font-weight: 700;">(Correct Answer: ${q.correctAnswer})</span>
+                        </div>
+                        <div class="exp-text">${q.correctExplanation}</div>
+                        <div class="exam-tip-box">
+                            <div class="tip-title">⚡ CDAC CCME Key Takeaway / Exam Trap:</div>
+                            <div class="tip-content">${q.examTip || 'Focus on correct syntax and relational semantics.'}</div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            renderPalette();
+            updateStats();
+        }
+
+        function selectOption(qIdx, letter) {
+            userAnswers[qIdx] = letter;
+            saveState();
+            renderQuestions();
+        }
+
+        function toggleFlag(qIdx) {
+            flagged[qIdx] = !flagged[qIdx];
+            saveState();
+            renderQuestions();
+        }
+
+        function renderPalette() {
+            const grid = document.getElementById('paletteGrid');
+            grid.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.innerText = idx + 1;
+
+                const isAnswered = userAnswers[idx] !== undefined;
+                const isCorrect = userAnswers[idx] === q.correctAnswer;
+
+                if (isAnswered) {
+                    if (currentMode === 'practice') {
+                        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+                    } else {
+                        btn.classList.add('answered');
+                    }
+                }
+
+                if (flagged[idx]) {
+                    btn.classList.add('flagged');
+                }
+
+                btn.onclick = () => {
+                    // Switch to 'all' filter if question is hidden
+                    if (currentFilter !== 'all') {
+                        setFilter('all', document.querySelector('.filter-tab'));
+                    }
+                    setTimeout(() => {
+                        const el = document.getElementById(`qCard_${idx}`);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.style.boxShadow = '0 0 0 3px #4f46e5';
+                            setTimeout(() => el.style.boxShadow = '', 1500);
+                        }
+                    }, 50);
+                };
+
+                grid.appendChild(btn);
+            });
+        }
+
+        function updateStats() {
+            const total = questions.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            let correctCount = 0;
+
+            for (const [idx, ans] of Object.entries(userAnswers)) {
+                if (questions[idx] && ans === questions[idx].correctAnswer) {
+                    correctCount++;
+                }
+            }
+
+            const percent = Math.round((answeredCount / total) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressCount').innerText = `Answered ${answeredCount} of ${total} questions`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('paletteAnsweredCount').innerText = `${answeredCount}/${total}`;
+            document.getElementById('scoreBadge').innerText = `🎯 Score: ${correctCount}/${total}`;
+            document.getElementById('bottomStatus').innerText = `Answered ${answeredCount}/${total} questions. Current score: ${correctCount} points.`;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modePractice').classList.toggle('active', mode === 'practice');
+            document.getElementById('modeExam').classList.toggle('active', mode === 'exam');
+            renderQuestions();
+        }
+
+        function setFilter(filterType, element) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            if (element) element.classList.add('active');
+            renderQuestions();
+        }
+
+        function filterOnlyMissed() {
+            closeResultsModal();
+            setMode('practice');
+            const incTab = document.querySelectorAll('.filter-tab')[2];
+            setFilter('incorrect', incTab);
+        }
+
+        function showResultsModal() {
+            const total = questions.length;
+            let correct = 0;
+            let answered = 0;
+
+            for (const [idx, ans] of Object.entries(userAnswers)) {
+                answered++;
+                if (questions[idx] && ans === questions[idx].correctAnswer) {
+                    correct++;
+                }
+            }
+
+            const wrong = answered - correct;
+            const unanswered = total - answered;
+            const scorePercent = Math.round((correct / total) * 100);
+
+            document.getElementById('statCorrect').innerText = correct;
+            document.getElementById('statWrong').innerText = wrong;
+            document.getElementById('statUnanswered').innerText = unanswered;
+
+            document.getElementById('modalScoreText').innerText = `${scorePercent}%`;
+            document.getElementById('modalScoreCircle').style.setProperty('--percent', scorePercent);
+
+            let headline = "Good Effort!";
+            let subheadline = "Keep drilling down on tricky normalization and joins to secure an A+ grade in CDAC CCME.";
+
+            if (scorePercent >= 85) {
+                headline = "🌟 CDAC Exam Topper Grade!";
+                subheadline = "Outstanding! You demonstrate exceptional mastery of Database Technologies concepts.";
+            } else if (scorePercent >= 70) {
+                headline = "👍 Strong CCME Foundation!";
+                subheadline = "Well done! Review the missed questions below to solidify your full score.";
+            }
+
+            document.getElementById('modalHeadline').innerText = headline;
+            document.getElementById('modalSubheadline').innerText = subheadline;
+
+            document.getElementById('resultsModal').classList.add('show');
+        }
+
+        function closeResultsModal() {
+            document.getElementById('resultsModal').classList.remove('show');
+        }
+
+        function resetAll() {
+            if (confirm("Are you sure you want to reset all answers and progress for this quiz?")) {
+                userAnswers = {};
+                flagged = {};
+                secondsElapsed = 0;
+                localStorage.removeItem(STORAGE_KEY);
+                renderQuestions();
+            }
+        }
+
+        // Startup
+        loadSavedState();
+        startTimer();
+        renderQuestions();
+    </script>
+</body>
+</html>

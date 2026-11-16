@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-stone-50 text-stone-900 dark:bg-[#0c1017] dark:text-stone-100 antialiased min-h-screen;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+}
+
+/* Subtle modern emerald and amber mesh gradient backdrop */
+.bg-mesh-pattern {
+  background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.05) 0px, transparent 50%);
+}
+
+.dark .bg-mesh-pattern {
+  background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.08) 0px, transparent 50%);
+}
+
+/* Glassmorphism card utility with refined emerald/stone border */
+.glass-panel {
+  @apply bg-white/85 dark:bg-[#111722]/85 backdrop-blur-md border border-stone-200/80 dark:border-emerald-500/10;
+}

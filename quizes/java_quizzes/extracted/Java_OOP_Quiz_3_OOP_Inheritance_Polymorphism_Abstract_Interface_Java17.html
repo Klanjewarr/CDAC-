@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 3 - OOP, Inheritance, Abstract, Interface, Java 17</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 3 - OOP, Inheritance, Abstract, Interface, Java 17</div>
+            <div class="quiz-subtitle">Based on 1 source</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"question": "What is printed?\n\nclass A { int x = 10; void f() { System.out.println(\"A.f\"); } }\nclass B extends A { int x = 20; void f() { System.out.println(\"B.f\"); } }\nA a = new B();\nSystem.out.println(a.x);\na.f();", "options": ["10 then B.f", "20 then A.f", "20 then B.f", "10 then A.f"], "correctIndex": 0, "hint": "", "correctExplanation": "FIELDS are not polymorphic: a.x uses the reference type A, so 10. METHODS are: a.f() uses the actual object type B, so B.f.", "wrongExplanation": "FIELDS are not polymorphic: a.x uses the reference type A, so 10. METHODS are: a.f() uses the actual object type B, so B.f."}, {"question": "What is printed?\n\nclass P { void show() { System.out.println(\"P\"); } }\nclass C extends P {\n  void show() { System.out.println(\"C\"); super.show(); }\n}\nnew C().show();", "options": ["C then P", "P only", "C only", "P then C"], "correctIndex": 0, "hint": "", "correctExplanation": "C.show() prints C, then super.show() explicitly calls the parent version, which prints P. super lets you reuse the overridden implementation.", "wrongExplanation": "C.show() prints C, then super.show() explicitly calls the parent version, which prints P. super lets you reuse the overridden implementation."}, {"question": "What is printed? (overload vs override trap)\n\nclass P { void f(Object o) { System.out.println(\"Obj\"); } }\nclass C extends P { void f(String s) { System.out.println(\"Str\"); } }\nP p = new C();\np.f(\"hi\");", "options": ["Runtime exception", "Obj", "Str", "Compile error"], "correctIndex": 1, "hint": "", "correctExplanation": "C.f(String) has a DIFFERENT parameter type, so it is an OVERLOAD, not an override. The compiler picks the method from the reference type P: only f(Object) exists there, so it is chosen at compile time -> Obj.", "wrongExplanation": "C.f(String) has a DIFFERENT parameter type, so it is an OVERLOAD, not an override. The compiler picks the method from the reference type P: only f(Object) exists there, so it is chosen at compile time -> Obj."}, {"question": "What is printed?\n\nObject o = \"hi\";\nSystem.out.println((o instanceof String) + \" \" + (o instanceof Integer));", "options": ["Compile error", "false false", "true false", "true true"], "correctIndex": 2, "hint": "", "correctExplanation": "o really holds a String, so instanceof String is true and instanceof Integer is false. Because o is declared Object, both checks compile.", "wrongExplanation": "o really holds a String, so instanceof String is true and instanceof Integer is false. Because o is declared Object, both checks compile."}, {"question": "What happens? (Bank Q38)\n\nclass Animal { }\nclass Dog extends Animal { }\nclass Cat extends Animal { }\nAnimal a = new Dog();\nCat c = (Cat) a;", "options": ["Prints Dog barks", "Compile error", "Prints Cat meows", "ClassCastException at runtime"], "correctIndex": 3, "hint": "", "correctExplanation": "Animal -> Cat is a legal downcast for the compiler (they are related), so it compiles. At runtime the object is really a Dog, which is not a Cat, so ClassCastException. Guard with instanceof.", "wrongExplanation": "Animal -> Cat is a legal downcast for the compiler (they are related), so it compiles. At runtime the object is really a Dog, which is not a Cat, so ClassCastException. Guard with instanceof."}, {"question": "What happens? (Bank Q55 - the key says 'runtime exception', which is WRONG)\n\nInteger i = 5;\nString s = (String) i;", "options": ["ClassCastException at runtime", "Compile error - inconvertible types", "NullPointerException", "Prints normally"], "correctIndex": 1, "hint": "", "correctExplanation": "Integer and String are unrelated classes (neither extends the other), so the compiler refuses the cast outright. It is the same for Bank Q55: Main does not extend MyClass, so ((Main)obj) is a COMPILE error, not a runtime one. Rule: cast between unrelated classes = compile error; between related types = maybe runtime ClassCastException.", "wrongExplanation": "Integer and String are unrelated classes (neither extends the other), so the compiler refuses the cast outright. It is the same for Bank Q55: Main does not extend MyClass, so ((Main)obj) is a COMPILE error, not a runtime one. Rule: cast between unrelated classes = compile error; between related types = maybe runtime ClassCastException."}, {"question": "What happens?\n\nabstract class Shape { abstract void draw(); }\nShape s = new Shape();", "options": ["Prints nothing", "Creates an empty Shape", "Compile error - cannot instantiate an abstract class", "Runtime exception"], "correctIndex": 2, "hint": "", "correctExplanation": "Abstract classes can never be instantiated with new. You create objects of concrete subclasses. (But abstract classes CAN have constructors, called via super(...) from subclasses - Bank Q64.)", "wrongExplanation": "Abstract classes can never be instantiated with new. You create objects of concrete subclasses. (But abstract classes CAN have constructors, called via super(...) from subclasses - Bank Q64.)"}, {"question": "What is printed? (Java 8 + 9 interface features)\n\ninterface Greeter {\n  default void hi() { System.out.println(msg()); }\n  private String msg() { return \"Hello\"; }\n  static void util() { System.out.println(\"util\"); }\n}\nnew Greeter() { }.hi();\nGreeter.util();", "options": ["Hello only", "Hello then util", "Compile error (private not allowed)", "util then Hello"], "correctIndex": 1, "hint": "", "correctExplanation": "Interfaces may have default methods (Java 8), static methods (Java 8) and private methods (Java 9). hi() calls the private helper msg() and prints Hello; Greeter.util() prints util.", "wrongExplanation": "Interfaces may have default methods (Java 8), static methods (Java 8) and private methods (Java 9). hi() calls the private helper msg() and prints Hello; Greeter.util() prints util."}, {"question": "What is printed? (sealed + record + pattern matching instanceof)\n\nsealed interface Shape permits Circle, Square { }\nrecord Circle(double r) implements Shape { }\nrecord Square(double side) implements Shape { }\nShape s = new Circle(2);\nif (s instanceof Circle c) System.out.println(\"Circle \" + c.r());", "options": ["Circle 2", "Nothing", "Circle 2.0", "Compile error"], "correctIndex": 2, "hint": "", "correctExplanation": "Shape is sealed, so only Circle and Square can implement it. Records auto-create the accessor r() (returns the double 2.0). instanceof Circle c binds c without a cast.", "wrongExplanation": "Shape is sealed, so only Circle and Square can implement it. Records auto-create the accessor r() (returns the double 2.0). instanceof Circle c binds c without a cast."}, {"question": "What is printed?\n\nrecord Point(int x, int y) { }\nPoint p1 = new Point(1, 2), p2 = new Point(1, 2);\nSystem.out.println(p1);\nSystem.out.println(p1.equals(p2));", "options": ["Point[x=1, y=2] then true", "Compile error", "x=1,y=2 then true", "Point@1b2c3d then false"], "correctIndex": 0, "hint": "", "correctExplanation": "A record auto-generates toString (Point[x=1, y=2]) and a value-based equals/hashCode, so two records with equal components are equal.", "wrongExplanation": "A record auto-generates toString (Point[x=1, y=2]) and a value-based equals/hashCode, so two records with equal components are equal."}, {"question": "What happens at new Age(-1)?\n\nrecord Age(int v) {\n  Age {\n    if (v < 0) throw new IllegalArgumentException(\"neg\");\n  }\n}\nnew Age(-1);", "options": ["Creates an Age with -1", "IllegalArgumentException", "Compile error", "Value silently becomes 0"], "correctIndex": 1, "hint": "", "correctExplanation": "A compact canonical constructor runs before the fields are assigned, so it is the right place for validation. Throwing from it prevents an invalid record from ever existing.", "wrongExplanation": "A compact canonical constructor runs before the fields are assigned, so it is the right place for validation. Throwing from it prevents an invalid record from ever existing."}, {"question": "Which of these CAN be overridden in a subclass?", "options": ["static method", "private method", "public instance method", "final method"], "correctIndex": 2, "hint": "", "correctExplanation": "Only public/protected/package instance methods that are not final or private can be overridden. A static method is HIDDEN (resolved by reference type); a private method is not even visible to the subclass; a final method is explicitly blocked.", "wrongExplanation": "Only public/protected/package instance methods that are not final or private can be overridden. A static method is HIDDEN (resolved by reference type); a private method is not even visible to the subclass; a final method is explicitly blocked."}, {"question": "Several related classes must share common STATE (fields) and a constructor, plus some abstract behaviour. What should you choose?", "options": ["An interface", "A record", "A sealed interface only", "An abstract class"], "correctIndex": 3, "hint": "", "correctExplanation": "Abstract classes can hold instance fields, constructors and partial implementations; interfaces cannot hold instance state (their fields are public static final). Prefer an interface for pure capabilities that unrelated classes can share (Connectable, Rechargeable).", "wrongExplanation": "Abstract classes can hold instance fields, constructors and partial implementations; interfaces cannot hold instance state (their fields are public static final). Prefer an interface for pure capabilities that unrelated classes can share (Connectable, Rechargeable)."}, {"question": "Which form of inheritance is NOT supported for CLASSES in Java?", "options": ["Multilevel", "Hierarchical", "Single", "Multiple (a class extending two classes)"], "correctIndex": 3, "hint": "", "correctExplanation": "A class can extend only one class, which avoids the 'diamond problem' (two parents with the same method). Multiple inheritance of TYPE is possible through interfaces. Single, multilevel and hierarchical are all fine.", "wrongExplanation": "A class can extend only one class, which avoids the 'diamond problem' (two parents with the same method). Multiple inheritance of TYPE is possible through interfaces. Single, multilevel and hierarchical are all fine."}, {"question": "Which of the following is a valid FUNCTIONAL interface?", "options": ["interface B { void a(); default void b() { } static void c() { } }", "interface C { }", "abstract class D { abstract void a(); }", "interface A { void a(); void b(); }"], "correctIndex": 0, "hint": "", "correctExplanation": "A functional interface has EXACTLY ONE abstract method. Default and static methods do not count (so B qualifies and may have many of them). A has two abstract methods, C has none, and D is a class, not an interface.", "wrongExplanation": "A functional interface has EXACTLY ONE abstract method. Default and static methods do not count (so B qualifies and may have many of them). A has two abstract methods, C has none, and D is a class, not an interface."}];
+        const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

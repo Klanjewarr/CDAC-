@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Bank Part 4: Abstract Classes, Interfaces & Modern Java</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Full Bank Part 4: Abstract Classes, Interfaces & Modern Java</div>
+            <div class="quiz-subtitle">Questions Q116 to Q140 (All 25 bank questions)</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 116, "question": "Q116. MCQ: Which of the following statements is true about the `Runnable` interface in Java?", "options": ["It is a class that represents a thread.", "It is an interface that allows a class to be executed as a thread.", "It is a method that starts a thread.", "It is a package that contains thread-related classes."], "correctIndex": 1, "hint": "", "correctExplanation": "`java.lang.Runnable` is a core functional interface in Java representing an executable task.\n- It contains a single abstract method: `public abstract void run();`\n- Any class implementing `Runnable` can have its `run()` method executed asynchronously by passing an instance to a `Thread` constructor (`new Thread(runnable).start()`) or an `ExecutorService`.", "wrongExplanation": "`java.lang.Runnable` is a core functional interface in Java representing an executable task.\n- It contains a single abstract method: `public abstract void run();`\n- Any class implementing `Runnable` can have its `run()` method executed asynchronously by passing an instance to a `Thread` constructor (`new Thread(runnable).start()`) or an `ExecutorService`."}, {"num": 117, "question": "Q117. MCQ: Which of the following is a valid example of a functional interface?", "options": ["`public interface MyInterface { void method1(); void method2(); }`", "`public interface MyInterface { void method1() { } }`", "`public interface MyInterface { int method1(int a, int b); }`", "`public interface MyInterface { default void method1() { } }`"], "correctIndex": 2, "hint": "", "correctExplanation": "Before Java 8, interface methods were abstract by default unless otherwise specified; Java 8 added default and static methods.", "wrongExplanation": "Before Java 8, interface methods were abstract by default unless otherwise specified; Java 8 added default and static methods."}, {"num": 118, "question": "Q118. Which of the following methods are present in comparator interface?", "options": ["compare()", "equate()", "isEqual()", "All of these"], "correctIndex": 0, "hint": "", "correctExplanation": "A class implements an interface with the implements keyword; interfaces are not instantiated directly.", "wrongExplanation": "A class implements an interface with the implements keyword; interfaces are not instantiated directly."}, {"num": 119, "question": "Q119. MCQ: Which Java interface is used to represent a collection that maintains an ordered sequence of elements with no duplicates allowed?", "options": ["`List`", "`Queue`", "`Set`", "`Map`"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The `java.util.Set` interface represents an unordered collection that contains **no duplicate elements** (guaranteeing element uniqueness based on `equals()` and `hashCode()`).\n- In contrast, `List` permits duplicates and preserves indexed insertion order.\n- `Map` stores key-value pairs (keys are unique, values can duplicate).\n- `Queue` represents a collection designed for holding elements prior to processing (FIFO).", "wrongExplanation": "The `java.util.Set` interface represents an unordered collection that contains **no duplicate elements** (guaranteeing element uniqueness based on `equals()` and `hashCode()`).\n- In contrast, `List` permits duplicates and preserves indexed insertion order.\n- `Map` stores key-value pairs (keys are unique, values can duplicate).\n- `Queue` represents a collection designed for holding elements prior to processing (FIFO)."}, {"num": 120, "question": "Q120. MCQ: Which Java interface is used to represent a collection that maintains an ordered sequence of elements with duplicates allowed?", "options": ["`List`", "`Queue`", "`Set`", "`Map`"], "correctIndex": 0, "hint": "", "correctExplanation": "Interface fields are public, static and final implicitly.", "wrongExplanation": "Interface fields are public, static and final implicitly."}, {"num": 121, "question": "Q121. MCQ: Which interface in Java is used to represent a collection that stores elements in a queue (first- in, first-out) manner?", "options": ["`List`", "`Queue`", "`Set`", "`Map`"], "correctIndex": 1, "hint": "", "correctExplanation": "Interface fields are constants: public static final.", "wrongExplanation": "Interface fields are constants: public static final."}, {"num": 122, "question": "Q122. MCQ: In Java, which interface is used to define custom sorting of objects based on different criteria?", "options": ["`Comparable`", "`Comparator`", "`Sorting`", "`Orderable`"], "correctIndex": 1, "hint": "", "correctExplanation": "In Java, sorting can be handled via two interfaces:\n- `Comparable<T>`: Defines the natural ordering of objects internally via `compareTo(T o)`.\n- `Comparator<T>`: Defines custom, external sorting logic based on multiple or different criteria via `compare(T o1, T o2)`. Multiple `Comparator` implementations can be created for the same class (e.g. SortByName, SortByAge, SortByPrice).", "wrongExplanation": "In Java, sorting can be handled via two interfaces:\n- `Comparable<T>`: Defines the natural ordering of objects internally via `compareTo(T o)`.\n- `Comparator<T>`: Defines custom, external sorting logic based on multiple or different criteria via `compare(T o1, T o2)`. Multiple `Comparator` implementations can be created for the same class (e.g. SortByName, SortByAge, SortByPrice)."}, {"num": 123, "question": "Q123. MCQ: Which method is used to sort a collection of objects that implement the `Comparable` interface?", "options": ["`sort()`", "`Collections.sort()`", "`sorted()`", "`Collections.sorted()`"], "correctIndex": 1, "hint": "", "correctExplanation": "For collections containing elements that implement `Comparable<T>` (natural ordering), Java provides the utility method `Collections.sort(List<T> list)` from `java.util.Collections`.\nIt sorts the specified list into ascending order according to the natural ordering of its elements.", "wrongExplanation": "For collections containing elements that implement `Comparable<T>` (natural ordering), Java provides the utility method `Collections.sort(List<T> list)` from `java.util.Collections`.\nIt sorts the specified list into ascending order according to the natural ordering of its elements."}, {"num": 124, "question": "Q124. MCQ: Which interface is used to define custom sorting of objects based on different criteria?", "options": ["`Comparable`", "`Comparator`", "`Sorting`", "`Orderable`"], "correctIndex": 1, "hint": "", "correctExplanation": "Map is the interface for key-value mappings.", "wrongExplanation": "Map is the interface for key-value mappings."}, {"num": 125, "question": "Q125. Which of the following is true about interface methods before Java 8?", "options": ["They could have method implementations", "They were abstract by default", "They were private by default", "They were protected by default"], "correctIndex": 1, "hint": "", "correctExplanation": "@FunctionalInterface marks an interface intended to have one abstract method and enables compiler checking.", "wrongExplanation": "@FunctionalInterface marks an interface intended to have one abstract method and enables compiler checking."}, {"num": 126, "question": "Q126. Which of the following statements about an interface is correct?", "options": ["An interface can be instantiated directly", "A class uses the implements keyword to implement an interface", "An interface must always contain a constructor", "An interface cannot contain any methods"], "correctIndex": 1, "hint": "", "correctExplanation": "Supplier<T> provides a value through get() and takes no input.", "wrongExplanation": "Supplier<T> provides a value through get() and takes no input."}, {"num": 127, "question": "Q127. Which of the following is a property of an interface in Java?", "options": ["Interface can be instantiated directly", "Interface variables are public, static, and final by default", "Interface can contain constructors", "Interface variables are private by default"], "correctIndex": 1, "hint": "", "correctExplanation": "Collection is the root interface for List, Set and Queue; Map is separate.", "wrongExplanation": "Collection is the root interface for List, Set and Queue; Map is separate."}, {"num": 128, "question": "Q128. Which of the following is a property of interface variables?", "options": ["They are private and non-final", "They are public, static, and final by default", "They are protected and static", "They are local variables"], "correctIndex": 1, "hint": "", "correctExplanation": "All variables declared inside a Java interface are implicitly:\n`public static final`\n- `public`: Accessible anywhere the interface is accessible.\n- `static`: Associated with the interface itself, not with any implementing instance.\n- `final`: Constants that must be initialized with a value at declaration and cannot be reassigned.", "wrongExplanation": "All variables declared inside a Java interface are implicitly:\n`public static final`\n- `public`: Accessible anywhere the interface is accessible.\n- `static`: Associated with the interface itself, not with any implementing instance.\n- `final`: Constants that must be initialized with a value at declaration and cannot be reassigned."}, {"num": 129, "question": "Q129. MCQ: Which interface in the Java Collections Framework does not allow duplicate elements?", "options": ["`Collection`", "`List`", "`Set`", "`Map`"], "correctIndex": 2, "hint": "", "correctExplanation": "A functional interface has exactly one abstract method, ignoring public methods matching Object signatures.", "wrongExplanation": "A functional interface has exactly one abstract method, ignoring public methods matching Object signatures."}, {"num": 130, "question": "Q130. MCQ: Which interface in the Java Collections Framework is used to store key-value pairs?", "options": ["`Collection`", "`List`", "`Set`", "`Map`"], "correctIndex": 3, "hint": "", "correctExplanation": "A lambda can target a functional interface and supplies an implementation of its single abstract method.", "wrongExplanation": "A lambda can target a functional interface and supplies an implementation of its single abstract method."}, {"num": 131, "question": "Q131. MCQ: Which Java interface is used to represent a collection that stores key-value pairs?", "options": ["`List`", "`Queue`", "`Set`", "`Map`"], "correctIndex": 3, "hint": "", "correctExplanation": "Interfaces can include default/static concrete methods as well as abstract methods.", "wrongExplanation": "Interfaces can include default/static concrete methods as well as abstract methods."}, {"num": 132, "question": "Q132. MCQ: Which annotation is used to indicate that an interface is a functional interface?", "options": ["@Functional", "@FunctionalInterface", "@FunctionalOnly", "@SingleAbstractMethod"], "correctIndex": 1, "hint": "", "correctExplanation": "`@FunctionalInterface` is an informative annotation introduced in Java 8 used to indicate that an interface declaration is intended to be a **Functional Interface** (an interface with exactly one abstract method).\nWhile not strictly required for a functional interface, using `@FunctionalInterface` instructs the Java compiler to verify and issue an error if the interface does not satisfy SAM (Single Abstract Method) requirements.", "wrongExplanation": "`@FunctionalInterface` is an informative annotation introduced in Java 8 used to indicate that an interface declaration is intended to be a **Functional Interface** (an interface with exactly one abstract method).\nWhile not strictly required for a functional interface, using `@FunctionalInterface` instructs the Java compiler to verify and issue an error if the interface does not satisfy SAM (Single Abstract Method) requirements."}, {"num": 133, "question": "Q133. MCQ: Which functional interface is provided by Java to represent a supplier of values?", "options": ["`Consumer<T>`", "`Predicate<T>`", "`Supplier<T>`", "`Function<T, R>`"], "correctIndex": 2, "hint": "", "correctExplanation": "The interface keyword declares an interface type.", "wrongExplanation": "The interface keyword declares an interface type."}, {"num": 134, "question": "Q134. MCQ: In Java, which interface is the root interface of the Java Collections Framework?", "options": ["`Collection`", "`List`", "`Set`", "`Map`"], "correctIndex": 0, "hint": "", "correctExplanation": "An interface can have multiple default methods while remaining functional, provided it has only one abstract method.", "wrongExplanation": "An interface can have multiple default methods while remaining functional, provided it has only one abstract method."}, {"num": 135, "question": "Q135. What is the purpose of declaring a method in an interface as \"default\" in Java?", "options": ["To specify that the method must be implemented in all classes that implement the interface.", "To provide a default implementation for the method in case a class does not override it.", "To prevent any class from implementing the interface.", "To make the method accessible only within the package."], "correctIndex": 1, "hint": "", "correctExplanation": "Introduced in Java 8, `default` methods allow interfaces to declare methods with a concrete body/implementation:\n```java\ndefault void log(String msg) {\n    System.out.println(msg);\n}\n```\n**Purpose:** They provide backward compatibility, allowing new methods to be added to existing interfaces without breaking legacy classes that already implement the interface.", "wrongExplanation": "Introduced in Java 8, `default` methods allow interfaces to declare methods with a concrete body/implementation:\n```java\ndefault void log(String msg) {\n    System.out.println(msg);\n}\n```\n**Purpose:** They provide backward compatibility, allowing new methods to be added to existing interfaces without breaking legacy classes that already implement the interface."}, {"num": 136, "question": "Q136. MCQ: How many abstract methods are allowed in a functional interface?", "options": ["None", "One", "Two", "As many as needed"], "correctIndex": 1, "hint": "", "correctExplanation": "By specification, a **Functional Interface** (Single Abstract Method or SAM interface) must contain **exactly one abstract method**.\nIt may contain any number of `default` methods, `static` methods, or declarations of public methods inherited from `java.lang.Object` (such as `equals`, `toString`), but exactly one abstract method of its own.", "wrongExplanation": "By specification, a **Functional Interface** (Single Abstract Method or SAM interface) must contain **exactly one abstract method**.\nIt may contain any number of `default` methods, `static` methods, or declarations of public methods inherited from `java.lang.Object` (such as `equals`, `toString`), but exactly one abstract method of its own."}, {"num": 137, "question": "Q137. MCQ: Can a functional interface have more than one default method?", "options": ["Yes, as many as needed.", "No, it can have only one default method.", "Yes, but only if they are marked with the `@Default` annotation.", "No, functional interfaces cannot have default methods."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A functional interface is defined by having one abstract method. It may also declare multiple default methods and static methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A functional interface is defined by having one abstract method. It may also declare multiple default methods and static methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 138, "question": "Q138. Can an interface contain concrete (non-abstract) methods in Java?", "options": ["Yes, an interface can only contain concrete methods.", "No, an interface can only contain abstract methods.", "Yes, an interface can have both abstract and concrete methods.", "No, an interface cannot have any methods."], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Interfaces can contain abstract methods and concrete methods, including default and static methods. Java 9+ also permits private helper methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Interfaces can contain abstract methods and concrete methods, including default and static methods. Java 9+ also permits private helper methods.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 139, "question": "Q139. What is the default method of passing parameters in Java?", "options": ["Pass by value.", "Pass by reference.", "Pass by object.", "Pass by memory address."], "correctIndex": 0, "hint": "", "correctExplanation": "Java uses pass-by-value; object references are copied by value, not passed by reference.", "wrongExplanation": "Java uses pass-by-value; object references are copied by value, not passed by reference."}, {"num": 140, "question": "Q140. Which keyword is used to define an interface in Java?", "options": ["interface", "abstract", "class", "implements"], "correctIndex": 0, "hint": "", "correctExplanation": "The interface keyword introduces an interface declaration.\nStrings, Wrappers & Object Utilities", "wrongExplanation": "The interface keyword introduces an interface declaration.\nStrings, Wrappers & Object Utilities"}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

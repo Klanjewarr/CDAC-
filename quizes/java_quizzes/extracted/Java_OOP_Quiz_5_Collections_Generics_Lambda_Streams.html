@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 5 - Collections, Generics, Lambda, Streams</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 5 - Collections, Generics, Lambda, Streams</div>
+            <div class="quiz-subtitle">Based on 1 source</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"question": "What is printed?\n\nList<String> l = new ArrayList<>(List.of(\"a\", \"b\", \"c\"));\nl.add(1, \"X\");\nl.set(0, \"Z\");\nSystem.out.println(l);", "options": ["[X, Z, b, c]", "[Z, b, c]", "[Z, X, b, c]", "[a, X, b, c]"], "correctIndex": 2, "hint": "", "correctExplanation": "add(1,\"X\") INSERTS at index 1 shifting the rest: [a, X, b, c]. set(0,\"Z\") REPLACES index 0: [Z, X, b, c].", "wrongExplanation": "add(1,\"X\") INSERTS at index 1 shifting the rest: [a, X, b, c]. set(0,\"Z\") REPLACES index 0: [Z, X, b, c]."}, {"question": "What is printed?\n\nSet<String> s = new HashSet<>();\nSystem.out.println(s.add(\"a\") + \" \" + s.add(\"a\") + \" \" + s.size());", "options": ["true false 1", "true true 2", "true false 2", "false false 1"], "correctIndex": 0, "hint": "", "correctExplanation": "Set.add returns true if the element was added and false if it already existed. The size stays 1 because sets reject duplicates (using equals/hashCode).", "wrongExplanation": "Set.add returns true if the element was added and false if it already existed. The size stays 1 because sets reject duplicates (using equals/hashCode)."}, {"question": "What is printed?\n\nTreeSet<Integer> t = new TreeSet<>(List.of(5, 1, 3));\nSystem.out.println(t.descendingSet());\nSystem.out.println(t.first());", "options": ["[1, 3, 5] then 5", "[1, 3, 5] then 1", "[5, 3, 1] then 5", "[5, 3, 1] then 1"], "correctIndex": 3, "hint": "", "correctExplanation": "TreeSet keeps elements sorted ascending [1,3,5]. descendingSet() is a reverse view [5,3,1], while first() is the smallest element of the original ordering: 1.", "wrongExplanation": "TreeSet keeps elements sorted ascending [1,3,5]. descendingSet() is a reverse view [5,3,1], while first() is the smallest element of the original ordering: 1."}, {"question": "What is printed?\n\nMap<String,Integer> m = new HashMap<>();\nSystem.out.println(m.put(\"k\", 1) + \" \" + m.put(\"k\", 2) + \" \" + m.getOrDefault(\"z\", 0));", "options": ["null 1 0", "null null 0", "1 1 null", "1 2 0"], "correctIndex": 0, "hint": "", "correctExplanation": "Map.put returns the PREVIOUS value for that key (null the first time, 1 the second time). getOrDefault returns the supplied default when the key is absent.", "wrongExplanation": "Map.put returns the PREVIOUS value for that key (null the first time, 1 the second time). getOrDefault returns the supplied default when the key is absent."}, {"question": "What is printed? (word count)\n\nString[] words = {\"a\", \"b\", \"a\"};\nMap<String,Integer> m = new TreeMap<>();\nfor (String w : words) m.merge(w, 1, Integer::sum);\nSystem.out.println(m);", "options": ["{a=2, b=1}", "{a=3}", "{b=1, a=2}", "{a=1, b=1}"], "correctIndex": 0, "hint": "", "correctExplanation": "merge(key, 1, Integer::sum) inserts 1 for a new key or adds 1 to the existing value. TreeMap prints keys in sorted order.", "wrongExplanation": "merge(key, 1, Integer::sum) inserts 1 for a new key or adds 1 to the existing value. TreeMap prints keys in sorted order."}, {"question": "What is printed?\n\nList<Integer> l = new ArrayList<>(List.of(3, 1, 2));\nCollections.sort(l);\nCollections.reverse(l);\nSystem.out.println(l + \" \" + Collections.max(l));", "options": ["[1, 2, 3] 3", "[3, 2, 1] 1", "[1, 2, 3] 1", "[3, 2, 1] 3"], "correctIndex": 3, "hint": "", "correctExplanation": "sort gives [1,2,3], reverse flips to [3,2,1], max of the list is 3.", "wrongExplanation": "sort gives [1,2,3], reverse flips to [3,2,1], max of the list is 3."}, {"question": "What is printed?\n\nList<Integer> l = new ArrayList<>(List.of(1, 2, 3, 4));\nl.removeIf(n -> n % 2 == 0);\nSystem.out.println(l);", "options": ["ConcurrentModificationException", "[2, 4]", "[1, 3]", "[1, 2, 3, 4]"], "correctIndex": 2, "hint": "", "correctExplanation": "removeIf safely removes every element matching the predicate (even numbers here). It is the clean alternative to removing inside a for-each loop.", "wrongExplanation": "removeIf safely removes every element matching the predicate (even numbers here). It is the clean alternative to removing inside a for-each loop."}, {"question": "What is printed? (Comparator chain)\n\nList<String> l = new ArrayList<>(List.of(\"bob\", \"al\", \"carl\", \"amy\"));\nl.sort(Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()));\nSystem.out.println(l);", "options": ["[amy, bob, al, carl]", "[al, amy, carl, bob]", "[al, amy, bob, carl]", "[bob, amy, al, carl]"], "correctIndex": 2, "hint": "", "correctExplanation": "Sort by length first (al=2; amy, bob = 3; carl = 4). Ties are broken by natural order: amy before bob.", "wrongExplanation": "Sort by length first (al=2; amy, bob = 3; carl = 4). Ties are broken by natural order: amy before bob."}, {"question": "What is printed?\n\nString r = Stream.of(\"java\", \"go\", \"rust\")\n  .filter(s -> s.length() > 2)\n  .map(String::toUpperCase)\n  .collect(Collectors.joining(\",\"));\nSystem.out.println(r);", "options": ["[JAVA, RUST]", "java,rust", "JAVA,RUST", "JAVA,GO,RUST"], "correctIndex": 2, "hint": "", "correctExplanation": "filter keeps words longer than 2 (java, rust), map upper-cases them, joining(\",\") builds one String (no brackets).", "wrongExplanation": "filter keeps words longer than 2 (java, rust), map upper-cases them, joining(\",\") builds one String (no brackets)."}, {"question": "What is printed? (groupingBy + counting)\n\nMap<Character, Long> m = Stream.of(\"apple\", \"avocado\", \"banana\", \"blueberry\", \"cherry\")\n  .collect(Collectors.groupingBy(s -> s.charAt(0), TreeMap::new, Collectors.counting()));\nSystem.out.println(m);", "options": ["{a=1, b=1, c=1}", "{a=2, b=2, c=1}", "{apple=1, avocado=1}", "{a=[apple, avocado], b=[banana, blueberry], c=[cherry]}"], "correctIndex": 1, "hint": "", "correctExplanation": "groupingBy(first letter, TreeMap::new, counting()) counts how many words start with each letter, with sorted keys.", "wrongExplanation": "groupingBy(first letter, TreeMap::new, counting()) counts how many words start with each letter, with sorted keys."}, {"question": "What is printed?\n\nSystem.out.println(IntStream.rangeClosed(1, 5).reduce(1, (a, b) -> a * b));", "options": ["15", "24", "1", "120"], "correctIndex": 3, "hint": "", "correctExplanation": "reduce(1, (a,b) -> a*b) multiplies 1*1*2*3*4*5 = 120 (factorial of 5). The identity value for multiplication is 1.", "wrongExplanation": "reduce(1, (a,b) -> a*b) multiplies 1*1*2*3*4*5 = 120 (factorial of 5). The identity value for multiplication is 1."}, {"question": "What happens on the second count()?\n\nStream<Integer> s = Stream.of(1, 2);\ns.count();\ns.count();", "options": ["Returns 0", "IllegalStateException - stream already operated upon", "Prints 2 twice", "Compile error"], "correctIndex": 1, "hint": "", "correctExplanation": "A stream can be consumed only ONCE. After a terminal operation (count) it is closed; reusing it throws IllegalStateException. Create a new stream instead.", "wrongExplanation": "A stream can be consumed only ONCE. After a terminal operation (count) it is closed; reusing it throws IllegalStateException. Create a new stream instead."}, {"question": "What is printed? (generic method with bound)\n\nstatic <T extends Comparable<T>> T max(T a, T b) { return a.compareTo(b) >= 0 ? a : b; }\nSystem.out.println(max(3, 7) + \" \" + max(\"pear\", \"apple\"));", "options": ["7 pear", "3 apple", "7 apple", "Compile error"], "correctIndex": 0, "hint": "", "correctExplanation": "T extends Comparable<T> lets the method call compareTo. max(3,7) = 7 and max(\"pear\",\"apple\") = pear (p comes after a alphabetically).", "wrongExplanation": "T extends Comparable<T> lets the method call compareTo. max(3,7) = 7 and max(\"pear\",\"apple\") = pear (p comes after a alphabetically)."}, {"question": "What is printed? (built-in functional interfaces)\n\nPredicate<Integer> even = n -> n % 2 == 0;\nFunction<Integer,Integer> sq = n -> n * n;\nSupplier<String> sup = () -> \"hi\";\nSystem.out.println(even.test(4) + \" \" + sq.andThen(x -> x + 1).apply(3) + \" \" + sup.get());", "options": ["true 9 hi", "true 10 hi", "false 10 hi", "true 10 null"], "correctIndex": 1, "hint": "", "correctExplanation": "Predicate.test(4) -> true. sq.andThen(x+1) applies sq first (3*3=9) then adds 1 -> 10. Supplier.get() returns \"hi\".", "wrongExplanation": "Predicate.test(4) -> true. sq.andThen(x+1) applies sq first (3*3=9) then adds 1 -> 10. Supplier.get() returns \"hi\"."}, {"question": "Which statement about ArrayList vs LinkedList is correct?", "options": ["LinkedList is backed by an array", "ArrayList get(i) is O(1) but middle insertion is O(n)", "ArrayList is doubly linked", "LinkedList is faster for random access get(i)"], "correctIndex": 1, "hint": "", "correctExplanation": "ArrayList is backed by an array: instant index access, slow insert/delete in the middle (elements shift). LinkedList is a doubly linked list: fast insert/delete at known positions or ends, slow get(i) because it must walk the nodes.", "wrongExplanation": "ArrayList is backed by an array: instant index access, slow insert/delete in the middle (elements shift). LinkedList is a doubly linked list: fast insert/delete at known positions or ends, slow get(i) because it must walk the nodes."}];
+        const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

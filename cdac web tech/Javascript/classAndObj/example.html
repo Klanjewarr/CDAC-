@@ -1,0 +1,92 @@
+<script>
+    class Person{
+        constructor(name,age){
+            this.name=name
+            this.age=age
+        }
+        getName(){
+            return this.name
+        }
+        getAge(){
+            this.age=age
+        }
+        //h.w compare age of multiple person in compare func in arr of person obj
+        compareAge(p){
+            if(this.age>p.age){
+                console.log(this.name+"is elder than "+p.name)
+            }
+        }
+
+    }
+
+    class Counter{
+      static count = 0
+        increment =()=>{
+            Counter.count++
+        }
+    }
+//     const p1 = new Person("Kanchan", 12)
+//     const p2 = new Person("Kanchanmn", 32)
+//   p1.compareAge(p2)
+
+const counter1 = new Counter();
+const counter2 = new Counter();
+const counter3 = new Counter();
+const counter4 = new Counter();
+counter1.increment();
+counter2.increment();
+counter3.increment();
+counter4.increment();
+// console.log(counter1.count)
+// console.log(counter2.count)
+// console.log(counter3.count)
+// console.log(counter4.count)
+
+console.log(Counter.count)
+
+// to make variable private use #before var name like #var and to make it protected use _ before var name _var
+class Shapes{
+
+constructor(s1,s2){
+    this.s1==s1
+    this.s2==s2
+}
+
+setSide(s1,s2){
+    this.s1=s1
+    this.s2=s2
+}
+
+area(){
+    console.log("area of shape")
+}
+
+}
+ class Reactangle extends Shapes{
+    constructor(s1,s2){
+        super(s1,s2)
+    }
+    area(s1,s2){
+        return this.s1*this.s2
+        
+    }
+ }
+ class Triangle extends Shapes{
+    constructor(s1,s2){
+        super(s1,s2)
+    }
+    area(s1,s2){
+         return 0.5*this.s1*this.s2
+    }}
+ class Square extends Shapes{
+    constructor(s1,s2){
+        super(s1,s2)
+    }
+    area(s1,s2){
+        return this.s1*this.s1
+    }
+ }
+
+ const r= new Reactangle
+
+</script>

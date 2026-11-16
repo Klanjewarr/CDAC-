@@ -1,0 +1,1748 @@
+OOPS USING JAVACDAC-LEVEL QUESTION BANK
+Java Fundamentals, Data Types & Operators
+Q1. MCQ (Coding): Which of the following code snippets demonstrates a shallow copy of an array? ```java // Option 1 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = sourceArray; // Option 2 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = new int[sourceArray.length]; System.arraycopy(sourceArray, 0, shallowCopy, 0, sourceArray.length); // Option 3 int[] sourceArray = {1, 2, 3, 4, 5}; int[] shallowCopy = Arrays.copyOf(sourceArray, sourceArray.length); ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: B and C — both create separate array copies
+Explanation: The question confuses reference assignment with copying. Option 1 makes both variables refer to the same array; Options 2 and 3 create separate arrays. Because this is an int[] of primitives, the copied elements are independent; shallow-vs-deep copying is not meaningfully different here.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q2. MCQ (Coding): Which of the following code snippets demonstrates a deep copy of an array? ```java // Option 1 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = sourceArray.clone(); // Option 2 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = Arrays.copyOf(sourceArray, sourceArray.length); // Option 3 int[] sourceArray = {1, 2, 3, 4, 5}; int[] deepCopy = new int[sourceArray.length]; System.arraycopy(sourceArray, 0, deepCopy, 0, sourceArray.length); ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. All options create shallow copies, not deep copies.
+Correct Answer: D
+Explanation: All three operations copy the int[] elements into a new array. Since the elements are primitive ints, the result is independent; for arrays of objects, clone/copyOf/arraycopy copy references and are shallow copies, not deep copies.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q3. What will be the output of the following code snippet? ```java int day = 2; switch (day) { case 1: System.out.println("Monday"); break; case 2: System.out.println("Tuesday"); break; case 3: System.out.println("Wednesday"); break; default: System.out.println("Invalid day"); break; } ```
+A. Monday
+B. Tuesday
+C. Wednesday
+D. Invalid day
+Correct Answer: B — Tuesday
+Explanation: day is 2, so the case 2 branch runs and prints Tuesday; break exits the switch.
+Q4. What will be the output of the following code snippet? ```java int age = 25; if (age < 18) { System.out.println("You are a minor."); } else if (age >= 18 && age < 60) { System.out.println("You are an adult."); } else { System.out.println("You are a senior citizen."); } ```
+A. You are a minor.
+B. You are an adult.
+C. You are a senior citizen.
+D. The code will not compile
+Correct Answer: B — You are an adult.
+Explanation: 25 satisfies age >= 18 && age < 60, so the adult branch runs.
+Q5. What will be the output of the following code snippet? ```java int x = 10; if (x > 5) { System.out.println("x is greater than 5"); } else if (x > 0) { System.out.println("x is positive"); } else { System.out.println("x is negative"); } ```
+A. x is greater than 5
+B. x is positive
+C. x is negative
+D. The code will not compile
+Correct Answer: A — x is greater than 5
+Explanation: The first condition x > 5 is true, so later else-if branches are skipped.
+Q6. MCQ (Coding): What is the output of the following Java code snippet? ```java Integer num1 = 100; Integer num2 = 100; System.out.println(num1 == num2); Integer num3 = 200; Integer num4 = 200; System.out.println(num3 == num4); ```
+A. true, true
+B. true, false
+C. false, true
+D. false, false
+Correct Answer: Partly B; not fully determined
+Explanation: Integer values from -128 through 127 are guaranteed to be cached, so the first comparison is true. Caching 200 is not guaranteed by the Java language specification, so the second comparison is implementation-dependent. The question has no universally guaranteed complete output.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q7. Consider the following code: ```java Person p1 = new Person("John"); Person p2 = p1; ``` What will be the value of `p2.name` if we change the value of `p1.name` to "Alice"?
+A. "John"
+B. "Alice"
+C. null
+D. Compilation error
+Correct Answer: B — "Alice"
+Explanation: p1 and p2 refer to the same Person object. Changing its name through p1 is visible through p2.
+Q8. MCQ (Coding): What is the output of the following Java code snippet? ```java Integer num1 = 10; Integer num2 = 10; System.out.println(num1 == num2); ```
+A. true
+B. false
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — true
+Explanation: Integer values from -128 to 127 are guaranteed to be cached, so both references point to the same cached Integer for 10.
+Q9. What is the output of the following code snippet? ```java int sum = 0; for (int i = 1; i <= 10; i++) { sum += i; } System.out.println(sum); ```
+A. 45
+B. 55
+C. 100
+D. 10
+Correct Answer: B — 55
+Explanation: The loop adds 1 through 10; the arithmetic-series sum is 10 × 11 / 2 = 55.
+Q10. What will be the value of `result` after the following code is executed? ```java int a = 5; int b = 8; int result = (a > b) ? a : b; ```
+A. 5
+B. 8
+C. true
+D. false
+Correct Answer: B — 8
+Explanation: The condition 5 > 8 is false, so the ternary operator selects b, which is 8.
+Q11. What is the output of the following code snippet? ```java int x = 5; do { System.out.print(x + " "); x--; } while (x > 0); ```
+A. 5 4 3 2 1
+B. 1 2 3 4 5
+C. 5 5 5 5 5
+D. The code will not compile
+Correct Answer: A — 5 4 3 2 1
+Explanation: do-while prints before checking the condition, producing 5 4 3 2 1.
+Q12. What is the output of the following code snippet? ```java int n = 1; while (n <= 5) { System.out.print(n + " "); n++; } ```
+A. 1 2 3 4 5
+B. 5 4 3 2 1
+C. 1 1 1 1 1
+D. 5 5 5 5 5
+Correct Answer: A — 1 2 3 4 5
+Explanation: The loop prints n from 1 through 5, incrementing n after each print.
+Q13. What is the result of the following ternary expression? `int x = 10; int y = x > 5 ? x + 2 : x - 2;`
+A. x is 12
+B. x is 8
+C. y is 12
+D. y is 8
+Correct Answer: C — y is 12
+Explanation: 10 > 5 is true, so y is assigned x + 2 = 12.
+Q14. MCQ (Coding): Which of the following statements correctly demonstrates boxing in Java? ```java // Option 1 int num = 42; Integer boxedNum = new Integer(num); // Option 2 int num = 42; Integer boxedNum = Integer.valueOf(num); // Option 3 Integer boxedNum = 42; ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: A, B and C — relevant listed choice(s): Both Option 1 and Option 2
+Explanation: All three demonstrate boxing: the constructor explicitly wraps the int, valueOf returns an Integer, and assigning an int to Integer uses autoboxing. The Integer(int) constructor is deprecated, but it is still a boxing example.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q15. Consider the following method: ```java public void display(int a, double b) { // Method implementation } ``` Which of the following method calls would be considered as an example of method overloading?
+A. display(10, 5.0)
+B. display(5.0, 10)
+C. display(10, 10)
+D. display(10, 10, 5.0)
+Correct Answer: No correct option
+Explanation: Method overloading is created by declaring another method with the same name and a different parameter list. Merely calling the existing display(int, double) method with different arguments does not declare an overload.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q16. What happens if you try to assign a floating-point value to an integer variable in Java without explicit casting?
+A. The program will not compile.
+B. The decimal part of the value will be truncated.
+C. The variable will be automatically promoted to a floating-point type.
+D. The program will throw a runtime exception.
+Correct Answer: A — The program will not compile.
+Explanation: Java does not allow an implicit narrowing conversion from double/float to int because fractional information could be lost.
+Q17. What will be the value of `product` after the following loop is executed? ```java int product = 1; int i = 0; do { product *= i; i++; } while (i <= 5); ```
+A. 0
+B. 1
+C. 120
+D. 720
+Correct Answer: A — 0
+Explanation: A do-while loop executes at least once. On the first iteration product *= i means 1 * 0, so product becomes 0 and remains 0.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q18. What will be the value of `sum` after the following loop is executed? ```java int sum = 0; int i = 1; while (i <= 10) { sum += i; i++; } ```
+A. 45
+B. 55
+C. 100
+D. 10
+Correct Answer: B — 55
+Explanation: The loop adds integers 1 through 10, giving 55.
+Q19. What will be the value of `x` after the execution of the following loop? ```java int x = 2; for (int i = 0; i < 5; i++) { x *= 2; } ```
+A. 8
+B. 16
+C. 32
+D. 64
+Correct Answer: C — 32
+Explanation: x is doubled five times: 2 × 2⁵ = 64.
+Q20. MCQ: Which wrapper class provides the `toString()` method to convert a primitive data type to its corresponding string representation?
+A. `Integer`
+B. `Double`
+C. `Character`
+D. `Boolean`
+Correct Answer: A, B, C and D — relevant listed choice(s): `Boolean`
+Explanation: Integer, Double, Character and Boolean all provide toString conversion methods. The question has multiple correct options.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q21. How many times will the following `for` loop be executed? ```java for (int i = 0; i < 5; i++) { System.out.println("Hello"); } ```
+A. 5 times
+B. 6 times
+C. 4 times
+D. Infinite times (loop never terminates)
+Correct Answer: A — 5 times
+Explanation: i takes the values 0, 1, 2, 3 and 4, so the body runs five times.
+Q22. Which data type is used to store floating-point numbers with a higher precision than the `float` data type?
+A. double
+B. float128
+C. long double
+D. BigDecimal
+Correct Answer: A — double
+Explanation: Java's double primitive has greater precision than float. Java has no long double or float128 primitive type. BigDecimal is a class, not a primitive floating-point type.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q23. MCQ: Which wrapper class provides the `parseXXX()` method to convert a string to a primitive data type?
+A. `Integer`
+B. `Double`
+C. `Character`
+D. `Boolean`
+Correct Answer: A, B and D — relevant listed choice(s): `Integer`
+Explanation: Integer, Double and Boolean provide parse methods that convert strings to primitive values. Character does not provide a parseXXX method in the same pattern.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q24. What is the output of the following code snippet? ```java int size = 5; for (int i = 1; i <= size; i++) { for (int j = 1; j <= size; j++) { if (i == 1 || i == size || j == 1 || j == size) { System.out.print("* "); } else { System.out.print(" "); } } System.out.println(); } ```
+A. * * * * *
+B. * * * * *
+C. * * * * *
+D. The code will not compile
+Correct Answer: A/B/C (duplicate choices) — relevant listed choice(s): * * * * *
+Explanation: The code prints a hollow 5-by-5 square: stars on the first and last rows and first and last columns, spaces inside. The listed choices appear duplicated/truncated, so the letter cannot be reliably distinguished.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q25. What is the output of the following code snippet? ```java for (int i = 1; i <= 5; i++) { for (int j = 1; j <= i; j++) { System.out.print("* "); } System.out.println(); } ```
+A. *
+B. * * * * *
+C. * * * * *
+D. The code will not compile
+Correct Answer: No complete matching option
+Explanation: The code prints a left-aligned triangle on five lines: *, then **, ***, **** and *****. The supplied choices show incomplete/truncated patterns.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q26. MCQ (Coding): What is the output of the following Java code snippet? ```java int num = 42; Integer boxedNum = num; System.out.println(boxedNum); ```
+A. 42
+B. "42"
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — 42
+Explanation: Assigning an int to Integer performs autoboxing. println prints the numeric value 42.
+Q27. MCQ (Coding): What is the output of the following Java code snippet? ```java Integer boxedNum = 25; int num = boxedNum; System.out.println(num); ```
+A. 25
+B. "25"
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — 25
+Explanation: Assigning Integer to int performs unboxing, yielding primitive 25.
+Q28. MCQ (Coding): What is the output of the following Java code snippet? ```java Double value = Double.valueOf("3.14"); System.out.println(value); ```
+A. 3.14
+B. "3.14"
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — 3.14
+Explanation: Double.valueOf parses the text into a Double object; println displays 3.14.
+Q29. Which of the following is true about the memory allocation of primitive data types and reference data types in Java?
+A. Primitive data types are stored on the stack, while reference data types are stored on the heap.
+B. Both primitive data types and reference data types are stored on the stack.
+C. Primitive data types are stored on the heap, while reference data types are stored on the stack.
+D. Both primitive data types and reference data types are stored on the heap.
+Correct Answer: No correct option as a general Java rule
+Explanation: Java does not specify that all primitives live on the stack and all reference objects live on the heap. A primitive or reference can be a local variable, instance field or static field; object storage and optimization are JVM implementation details.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q30. Which of the following data types is a reference data type that allows multiple characters to be stored?
+A. char
+B. byte
+C. int
+D. String
+Correct Answer: D — String
+Explanation: String is a reference type representing a sequence of characters; char stores one UTF-16 code unit.
+Classes, Objects, Constructors & Static
+Q31. MCQ (Coding): What will be the output of the following Java code snippet? ```java public void methodA() { throw new ArithmeticException("Exception in methodA"); } public void methodB() { methodA(); } public void methodC() { try { methodB(); } catch (RuntimeException e) { System.out.println("Caught: " + e.getMessage()); } } public static void main(String[] args) { new ExceptionPropagationDemo().methodC(); } ```
+A. The program will terminate abruptly with an error message.
+B. The output will be "Caught: Exception in methodA".
+C. The output will be "Caught: Exception in methodB".
+D. The output will be "Caught: Exception in methodC".
+Correct Answer: B — The output will be "Caught: Exception in methodA".
+Explanation: ArithmeticException is a RuntimeException. It propagates through methodB to methodC, where the catch handles it.
+Q32. MCQ (Coding): Which of the following code snippets correctly defines a user-defined unchecked exception? ```java // Option 1 class MyUncheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyUncheckedException extends Exception { // Constructor and other methods } // Option 3 class MyUncheckedException extends Error { // Constructor and other methods } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: A — Option 1
+Explanation: A user-defined unchecked exception extends RuntimeException (or a subclass of it).
+Q33. MCQ (Coding): Which of the following code snippets correctly defines a user-defined checked exception? ```java // Option 1 class MyCheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyCheckedException extends Exception { // Constructor and other methods } // Option 3 class MyCheckedException extends Error { // Constructor and other methods } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: B — Option 2
+Explanation: A user-defined checked exception normally extends Exception but not RuntimeException.
+Q34. MCQ (Coding): Which of the following code snippets correctly demonstrates the use of the `finalize()` method? ```java // Option 1 public class MyClass { // ... class code ... public void finalize() { // clean up resources here } } // Option 2 public class MyClass { // ... class code ... public void finalize(Object obj) { // clean up resources here } } // Option 3 public class MyClass { // ... class code ... public void finalizing() { // clean up resources here } } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. None of the above
+Correct Answer: A — Option 1
+Explanation: Option 1 is the best-supported choice for the stated Java concept. The rule follows from Java's type, access, inheritance or API contract described in the question.
+Q35. MCQ (Coding): Which of the following code snippets correctly makes an object eligible for garbage collection? ```java // Option 1 Object obj = new Object(); obj = null; // Option 2 Object obj = new Object(); Object obj2 = obj; obj = null; // Option 3 Object obj = new Object(); obj = new Object(); ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. None of the above
+Correct Answer: A and C — relevant listed choice(s): Option 2
+Explanation: Option 1 removes the only reference by assigning null. In Option 2, obj2 still refers to the original object, so it is not eligible. In Option 3, the original object loses its last reference when obj is reassigned, so it becomes eligible.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q36. MCQ (Coding): Given the following Java classes in different packages, what is the output of the demo application? ```java // File: Package1/Grandparent.java package Package1; public class Grandparent { protected void display() { System.out.println("This is the Grandparent class."); } } // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { protected void display() { System.out.println("This is the Parent class."); } } // File: Main.java import Package2.Parent; public class Main { public static void main(String[] args) { Parent obj = new Parent(); obj.display(); } } ```
+A. The code will not compile due to package-private access conflicts.
+B. The code will compile, but the output will be "This is the Parent class."
+C. The code will compile, but the output will be "This is the Grandparent class."
+D. The code will compile, but there will be a runtime exception.
+Correct Answer: B — The code will compile, but the output will be "This is the Parent class."
+Explanation: Parent overrides the protected display method, and dynamic dispatch invokes Parent.display() for a Parent object.
+Q37. MCQ (Coding): Given the following Java classes, what will be the output of the demo application? ```java // File: MyClass.java public class MyClass { public int publicVar = 10; private int privateVar = 20; protected int protectedVar = 30; int defaultVar = 40; public void display() { System.out.println("Public: " + publicVar); System.out.println("Private: " + privateVar); System.out.println("Protected: " + protectedVar); System.out.println("Default: " + defaultVar); } } // File: Main.java public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); obj.display(); } } ```
+A. The code will not compile due to access modifier conflicts.
+B. The code will compile, and all variables will be accessible and displayed.
+C. The code will compile, but only public variables will be accessible and displayed.
+D. The code will compile, but only protected and public variables will be accessible and displayed.
+Correct Answer: B — all four fields are displayed
+Explanation: The display() method is declared inside MyClass, so it can access that class's public, private, protected and package-private fields.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q38. Consider the following code: ```java class Animal { void makeSound() { System.out.println("Animal makes a sound"); } } class Dog extends Animal { void makeSound() { System.out.println("Dog barks"); } } class Cat extends Animal { void makeSound() { System.out.println("Cat meows"); } } ``` What will happen when you try to compile and run the following code snippet? ```java Animal animal = new Dog(); Cat cat = (Cat) animal; cat.makeSound(); ```
+A. It will print "Animal makes a sound."
+B. It will print "Dog barks."
+C. It will print "Cat meows."
+D. It will result in a compilation error or a ClassCastException at runtime.
+Correct Answer: D — It will result in a compilation error or a ClassCastException at runtime.
+Explanation: The cast is permitted by the compiler because Cat and Dog share Animal, but the actual object is Dog; the cast throws ClassCastException.
+Q39. What will be the output of the following code? ```java abstract class Animal { abstract void makeSound(); } class Dog extends Animal { void makeSound() { System.out.println("Dog barks."); } } class Cat extends Animal { void makeSound() { System.out.println("Cat meows."); } } public class Main { public static void main(String[] args) { Animal dog = new Dog(); Animal cat = new Cat(); dog.makeSound(); cat.makeSound(); } } ```
+A. "Dog barks. Cat meows."
+B. "Dog barks. Dog barks."
+C. "Cat meows. Cat meows."
+D. Compilation error due to abstract methods in the Animal class.
+Correct Answer: A — "Dog barks. Cat meows."
+Explanation: The actual objects are Dog and Cat, so overridden makeSound methods print their respective messages.
+Q40. Consider the following code: ```java abstract class Vehicle { abstract void start(); } class Car extends Vehicle { void start() { System.out.println("Car started."); } } class Bike extends Vehicle { void start() { System.out.println("Bike started."); } } public class Main { public static void main(String[] args) { Vehicle vehicle = new Car(); vehicle.start(); } } ``` What will be the output when the Main class is executed?
+A. "Car started."
+B. "Bike started."
+C. Compilation error due to abstract methods in the Vehicle class.
+D. Runtime error due to the abstract start() method not being implemented.
+Correct Answer: A — "Car started."
+Explanation: vehicle refers to a Car object. Dynamic dispatch invokes Car.start().
+Q41. MCQ (Coding): What is the output of the following Java code snippet? ```java public void divide(int num1, int num2) { try { int result = num1 / num2; System.out.println("Result: " + result); } catch (ArithmeticException e) { System.out.println("Error: " + e.getMessage()); } finally { System.out.println("Finally block executed."); } } public static void main(String[] args) { new ExceptionHandlingDemo().divide(10, 0); } ```
+A. Result: Infinity
+B. Error: / by zero
+C. Compilation error
+D. Runtime exception
+Correct Answer: B — Error: / by zero
+Explanation: Integer division by zero throws ArithmeticException, which is caught; the finally block also executes.
+Q42. MCQ (Coding): Given the following Java classes, what is the output of the demo application? ```java // File: Package1/MyClass.java package Package1; public class MyClass { protected void display() { System.out.println("This is a protected method."); } } // File: Main.java import Package1.MyClass; public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); obj.display (); } } ```
+A. The code will not compile because the `display()` method is not accessible.
+B. The code will compile, and "This is a protected method." will be printed.
+C. The code will compile, but there will be a runtime exception.
+D. The code will compile, but the `display()` method will not be invoked.
+Correct Answer: A — does not compile
+Explanation: A protected member in another package is not accessible through an ordinary superclass instance from an unrelated class. Main is not a subclass, so obj.display() is inaccessible.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q43. MCQ (Coding): What is the output of the following Java code snippet? ```java public void performOperation() throws IOException { // Some code that may throw an IOException } public static void main(String[] args) { try { performOperation(); System.out.println("Operation successful."); } catch (IOException e) { System.out.println("An error occurred: " + e.getMessage()); } } ```
+A. Operation successful.
+B. An error occurred: (the error message)
+C. Compilation error
+D. Runtime exception
+Correct Answer: Compilation error (as written)
+Explanation: The snippet invokes a non-static method from a static context without an instance. A non-static method must be called on an object, unless the shown code is inside an instance method.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q44. MCQ (Coding): What is the output of the demo application if `MyClass` is modified as follows? ```java // File: MyClass.java public class MyClass { protected void finalize() { System.out.println("The object is being garbage collected."); } public static void main(String[] args) { MyClass obj1 = new MyClass(); MyClass obj2 = new MyClass(); obj1 = null; System.gc(); } } ```
+A. The code will not compile because of multiple instances of `MyClass`.
+B. The code will compile, but the `finalize()` method will not be invoked.
+C. The code will compile, and "The object is being garbage collected." will be printed twice.
+D. The code will compile, and "The object is being garbage collected." will be printed once.
+Correct Answer: D — The code will compile, and "The object is being garbage collected." will be printed once.
+Explanation: finalize() was historically the finalization hook, but it is deprecated for removal and execution is not guaranteed. Avoid relying on it.
+Q45. Consider the following code: ```java abstract class Shape { abstract void draw(); void display() { System.out.println("Displaying shape."); } } class Circle extends Shape { void draw() { System.out.println("Drawing a circle."); } } ``` What will be the output of the following code? ```java Shape shape = new Circle(); shape.draw(); shape.display(); ```
+A. "Drawing a circle. Displaying shape."
+B. "Displaying shape. Drawing a circle."
+C. Compilation error due to the abstract methods in the Shape class.
+D. Runtime error due to the abstract draw() method not being implemented.
+Correct Answer: A — "Drawing a circle. Displaying shape."
+Explanation: A class can extend only one class in Java, but multiple interfaces can be implemented.
+Q46. MCQ (Coding): Given the following Java class, what will be the output of the demo application? ```java // File: MyClass.java public class MyClass { protected void finalize() { System.out.println("The object is being garbage collected."); } public static void main(String[] args) { MyClass obj = new MyClass(); obj = null; System.gc(); } } ```
+A. The code will not compile because of the call to `System.gc()`.
+B. The code will compile, but the `finalize()` method will not be invoked.
+C. The code will compile, and "The object is being garbage collected." will be printed.
+D. The code will compile, but the output will be "null."
+Correct Answer: C — The code will compile, and "The object is being garbage collected." will be printed.
+Explanation: System.gc() is only a request/hint; it does not guarantee immediate collection or finalization.
+Q47. What will be the output of following Java code? import java.util.Scanner; class ThisKeyword { private int a = 4; private int b = 1; void getSum(int a, int b) { this.a = a; this.b = b; System.out.println(this.a + this.b); } } public class Main { public static void main(String args[]) { ThisKeyword T = new ThisKeyword(); T.getSum(3, 5); } }
+A. 5
+B. 9
+C. 8
+D. 4
+Correct Answer: C — 8
+Explanation: Math.copySign(100.6, -200.6) takes the magnitude from the first argument and sign from the second, producing -100.6.
+Q48. MCQ (Coding): What is the output of the demo application if `Parent.java` is modified as follows? ```java // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { protected void display() { System.out.println("This is the Parent class."); super.display(); } } ```
+A. The code will not compile due to package-private access conflicts.
+B. The code will compile, but there will be a runtime exception.
+C. The code will compile, but the output will be "This is the Grandparent class."
+D. The code will compile, and the output will be "This is the Parent class. This is the Grandparent
+Correct Answer: Compilation error (as written)
+Explanation: The protected member is being accessed from a different package by a class that is not a qualifying subclass. Protected access across packages is restricted.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q49. What is the result of the following code snippet? ```java class Person { String name; Person(String n) { name = n; } } public class Main { public static void main(String[] args) { Person person1 = new Person("Alice"); Person person2 = new Person("Bob"); person2 = person1; System.out.println(person2.name); } } ```
+A. Alice
+B. Bob
+C. null
+D. The code will not compile
+Correct Answer: A — Alice
+Explanation: A concrete class must implement all inherited abstract methods; otherwise it must itself be declared abstract.
+Q50. Consider the following code: ```java class Animal { void makeSound() { System.out.println("Animal makes a sound"); } } class Dog extends Animal { void makeSound() { System.out.println("Dog barks"); } } ``` What is the result of the following code snippet? ```java Animal animal = new Dog(); animal.makeSound(); ```
+A. It will print "Animal makes a sound."
+B. It will print "Dog barks."
+C. It will result in a compilation error.
+D. It will throw a runtime exception.
+Correct Answer: B — It will print "Dog barks."
+Explanation: Calling an instance method through a null reference throws NullPointerException at runtime; a truly uninitialized local variable is a compile-time error.
+Q51. MCQ (Coding): What is the output of the demo application if `Parent.java` is modified as follows? ```java // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { public void display() { System.out.println("This is the Parent class."); } } ```
+A. The code will not compile due to package-private access conflicts.
+B. The code will compile, but there will be a runtime exception.
+C. The code will compile, but the output will be "This is the Grandparent class."
+D. The code will compile, but the output will be "This is the Parent class."
+Correct Answer: D — The code will compile, but the output will be "This is the Parent class."
+Explanation: An array of primitive values is copied element by element; object-array clone/copy operations copy references, not nested objects.
+Q52. Consider the following code: ```java class Animal { public void makeSound() { System.out.println("Animal makes a sound"); } } class Dog extends Animal { public void makeSound() { System.out.println("Dog barks"); } } ``` What is the result of calling `makeSound()` on an object of the `Dog` class?
+A. It will print "Animal makes a sound."
+B. It will print "Dog barks."
+C. It will print both "Animal makes a sound" and "Dog barks."
+D. It will result in a compilation error.
+Correct Answer: B — It will print "Dog barks."
+Explanation: LinkedHashSet preserves insertion order; HashSet does not promise an iteration order.
+Q53. What is the result of the following code snippet? ```java class MyClass { static int count = 0; MyClass() { count++; } } public class Main { public static void main(String[] args) { MyClass obj1 = new MyClass(); MyClass obj2 = new MyClass(); System.out.println(MyClass.count); } } ```
+A. 0
+B. 1
+C. 2
+D. The code will not compile
+Correct Answer: C — 2
+Explanation: The superclass constructor initializes the inherited part of the object; super(x) invokes the matching parent constructor.
+Q54. MCQ (Coding): What is the output of the demo application if `Main.java` is modified as follows? ```java // File: Main.java import Package1.MyClass; public class Main extends MyClass { public static void main(String[] args) { Main obj = new Main(); obj.display(); } } ```
+A. The code will not compile due to access modifier conflicts.
+B. The code will compile, but "This is a protected method." will not be printed.
+C. The code will compile, and "This is a protected method." will be printed.
+D. The code will compile, but there will be a runtime exception.
+Correct Answer: C — The code will compile, and "This is a protected method." will be printed.
+Explanation: System.gc() does not cause a compile error; it merely requests garbage collection, which may or may not happen.
+Q55. MCQ (Coding): What is the output of the demo application if `Main.java` is modified as follows? ```java // File: Main.java import Package1.MyClass; public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); ((Main)obj).display(); } } ```
+A. The code will not compile due to an invalid cast.
+B. The code will compile, but there will be a runtime exception.
+C. The code will compile, and "This is a protected method." will be printed.
+D. The code will compile, but the `display()` method will not be invoked.
+Correct Answer: Compilation error
+Explanation: The cast attempts to convert an instance to an unrelated class type. Java rejects an impossible cast at compile time when the types are unrelated.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q56. Consider the following code snippet: ```java class Parent { int x; Parent(int x) { this.x = x; } } class Child extends Parent { int y; Child(int x, int y) { super(x); this.y = y; } } ``` What is the purpose of the "super(x)" statement in the Child class constructor?
+A. It calls the default constructor of the Parent class.
+B. It sets the value of x in the Parent class to the value passed in the Child class constructor.
+C. It creates a new object of the Parent class.
+D. It is not a valid statement in Java.
+Correct Answer: B — It sets the value of x in the Parent class to the value passed in the Child class constructor.
+Explanation: String.replace(char/CharSequence, ...) returns a new String; it does not modify the original String.
+Q57. MCQ (Coding): What is the output of the following code snippet? ```java public class GarbageCollectionDemo { public static void main(String[] args) { Object obj1 = new Object(); Object obj2 = new Object(); obj1 = obj2; obj2 = null; System.gc(); } } ```
+A. The code will not compile because of the call to `System.gc()`.
+B. The code will compile, but it will throw a runtime exception.
+C. The code will compile, and the objects will be eligible for garbage collection.
+D. The code will compile, but it will have no effect on garbage collection.
+Correct Answer: C — The code will compile, and the objects will be eligible for garbage collection.
+Explanation: The code's comparison and concatenation operators are evaluated according to Java precedence; read the expression left-to-right using the specified precedence.
+Q58. What will be the output of following Java code? public class Main { public static void main(String[] args) { StringBuffer sb = new StringBuffer("include"); sb.append("help"); System.out.println(sb); } }
+A. Error
+B. include
+C. help
+D. Includehelp
+Correct Answer: No correct option
+Explanation: The output is lowercase 'includehelp'. The supplied option uses a capital I ('Includehelp'), so it does not exactly match.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q59. What will be the output of following Java code? public class ConcatNull { public static void main(String[] args) { String str1 = "include"; String str2 = "help"; System.out.println(str1 + str2); } }
+A. includehelp
+B. include
+C. help
+D. None of these
+Correct Answer: A — includehelp
+Explanation: The String method replace is case-sensitive and replaces each matching occurrence.
+Q60. What will be the output of following Java code? public class Main { public static void main(String arg[]) { int i; for (i = 1; i <= 12; i += 2) { if (i == 8) { System.out.println(i); break; } } } }
+A. 1
+B. No output
+C. 8
+D. 1357911
+Correct Answer: B — No output
+Explanation: StringBuilder and StringBuffer are mutable character sequences; StringBuffer synchronizes its methods, whereas StringBuilder does not.
+Q61. What will be the output of following Java code? public class Main { public static void main(String[] args) { String str = "Hello"; str = "Bye"; System.out.println(str); } }
+A. Hello
+B. Bye
+C. Error
+D. All of these
+Correct Answer: B — Bye
+Explanation: The String pool allows identical string literals to share a canonical String object.
+Q62. Which type of inheritance is represented by the following code snippet? ```java class A { // ... } class B extends A { // ... } class C extends A { // ... } ```
+A. Single inheritance
+B. Hierarchical inheritance
+C. Multiple inheritance
+D. Multilevel inheritance
+Correct Answer: C — Multiple inheritance; Both Option 1 and Option 2
+Explanation: String.equals compares contents; == compares object references.
+A. Option 1
+B. Option 2
+C. Both Option 1 and Option 2
+D. Neither Option 1 nor Option 2
+Correct Answer: OptionC
+Q64. Consider the following code: ```java abstract class Fruit { String color; Fruit(String color) { this.color = color; } abstract void eat(); } class Apple extends Fruit { Apple(String color) { super(color); } void eat() { System.out.println("Eating an apple."); } } ``` Which of the following is the correct way to create an instance of the Apple class?
+A. ```java
+B. ```java
+C. ```java
+D. ```java
+Correct Answer: Cannot determine — code/options incomplete
+Explanation: The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q65. MCQ: Which wrapper class provides the `valueOf()` method to convert a string to an object of the corresponding wrapper class?
+A. `Integer`
+B. `Double`
+C. `Character`
+D. `Boolean`
+Correct Answer: B — `Double`
+Explanation: Wrapper classes provide valueOf methods to convert primitive values or strings into wrapper objects.
+Q66. MCQ: Which Java class is used to represent a point in time and provides methods to manipulate dates and times?
+A. `SimpleDateFormat`
+B. `DateFormatter`
+C. `DateTime`
+D. `Calendar`
+Correct Answer: D — `Calendar`
+Explanation: The Date/Time API uses parsing to convert text into a temporal object and formatting to convert a temporal object into text.
+Q67. MCQ: Which method is used to convert a string into a `Date` object using `SimpleDateFormat` in Java?
+A. `parse()`
+B. `format()`
+C. `convert()`
+D. `toDate()`
+Correct Answer: A — `parse()`
+Explanation: A formatter's format method produces text from a date/time value.
+Q68. MCQ: Which method is used to convert a `Date` object into a string using `SimpleDateFormat` in Java?
+A. `parse()`
+B. `format()`
+C. `convert()`
+D. `toString()`
+Correct Answer: B — `format()`
+Explanation: A parser's parse method reads text and creates a date/time value.
+Q69. Consider the following code: ```java abstract class Bird { abstract void fly(); void makeSound() { System.out.println("Chirp Chirp"); } } class Sparrow extends Bird { void fly() { System.out.println("Sparrow flies."); } } class Penguin extends Bird { void fly() { System.out.println("Penguins cannot fly."); } void makeSound() { System.out.println("Penguin sound."); } } ``` What will be the output when the Main class is executed? ```java public class Main { public static void main(String[] args) { Bird sparrow = new Sparrow(); Bird penguin = new Penguin(); sparrow.fly(); penguin.fly(); sparrow.makeSound(); penguin.makeSound(); } } ```
+A. ```
+B. ```
+C. ```
+D. ```
+Correct Answer: Cannot determine — code/options incomplete
+Explanation: The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q70. What will be the output of following Java code? public class Main { public static void main(String[] args) { System.out.println(Math.copySign(100.6, -200.6)); } }
+A. 100.6
+B. -100.6
+C. -200.6
+D. 200.6
+Correct Answer: B — -100.6
+Explanation: Math.copySign returns the magnitude of the first argument with the sign of the second.
+Q71. What happens if a class implements an interface but fails to implement all the abstract methods defined in that interface?
+A. The class will be considered an abstract class and cannot be instantiated.
+B. The class will automatically inherit the implementation of the missing methods from the Object
+C. The code will not compile, resulting in a compilation error.
+D. The abstract methods will be implemented using default values defined in the interface.
+Correct Answer: C — The code will not compile, resulting in a compilation error.
+Explanation: A non-abstract class must implement all interface abstract methods; otherwise it must be declared abstract.
+Q72. What happens if you try to invoke a non-static method on a reference variable before initializing it with an object?
+A. The program will compile, but the method will not be executed.
+B. The program will throw a compilation error.
+C. The program will throw a runtime exception.
+D. The method will be executed, but it will return a null reference.
+Correct Answer: Depends on initialization; usually NPE if null
+Explanation: If the reference is an uninitialized local variable, the code does not compile. If it is initialized to null, calling an instance method throws NullPointerException. The question needs to state which case applies.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q73. MCQ: In the context of shallow copy and deep copy, what happens to the internal objects of the original object?
+A. Shallow copy creates new instances of the internal objects, while deep copy uses the same
+B. Shallow copy and deep copy both create new instances of the internal objects.
+C. Shallow copy and deep copy both use the same instances of the internal objects.
+D. Shallow copy creates references to the internal objects, while deep copy creates new instances of
+Correct Answer: D
+Explanation: A shallow copy duplicates the outer object but shares references to its nested objects. A deep copy recursively creates independent nested objects.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q74. Which access modifier is commonly used for the methods in a base class to allow subclasses to override them?
+A. private
+B. protected
+C. public
+D. default (package-private)
+Correct Answer: B — protected
+Explanation: protected is commonly used when subclasses should be able to access or override a superclass method; public is also overridable.
+Q75. In Java, when you re-assign a reference variable to another object, what happens to the original object?
+A. The original object is deleted from memory.
+B. The original object remains unchanged.
+C. The original object becomes null.
+D. The original object becomes a copy of the new object.
+Correct Answer: B — The original object remains unchanged.
+Explanation: Reassigning a reference changes that variable's target. It does not mutate or immediately delete the original object.
+OOP Principles, Inheritance & Relationships
+Q76. MCQ: If the `privateVar` in `MyClass.java` is changed to `protected`, what will be the output of the demo application?
+A. The code will not compile because `privateVar` is not accessible.
+B. The code will compile, but only public and protected variables will be accessible and displayed.
+C. The code will compile, but only public variables will be accessible and displayed.
+D. The code will compile, and all variables will be accessible and displayed.
+Correct Answer: Depends on package and access context
+Explanation: Changing private to protected does not make the field universally accessible. Same-package classes can access it; cross-package access is limited to subclass contexts. The omitted demo/package details are needed for a definite output.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q77. MCQ: What is the output of the demo application if `Main.java` is in a different package than `MyClass.java`?
+A. The code will not compile because `MyClass` is not accessible.
+B. The code will compile, but only public variables will be accessible and displayed.
+C. The code will compile, but all variables will be accessible and displayed.
+D. The code will compile, but only protected and public variables will be accessible and displayed.
+Correct Answer: B only if the caller is an unrelated class in another package
+Explanation: Across packages, public members are accessible to any caller. Protected members require subclass access; package-private and private members are not accessible to an unrelated caller.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q78. ____ is the process of compartmentalizing the elements of an abstraction that contribute to its structure and behavior?
+A. Encapsulation
+B. Abstraction
+C. Classes
+D. Inheritance
+Correct Answer: A — Encapsulation
+Explanation: Encapsulation bundles state and behaviour and controls access to internal state.
+Q79. What happens if a non-abstract subclass fails to implement all the abstract methods from its abstract superclass?
+A. The subclass will inherit the abstract methods and become abstract itself.
+B. The subclass will have a default implementation of the missing abstract methods.
+C. The code will not compile, resulting in a compilation error.
+D. The abstract methods will be automatically inherited from the Object class.
+Correct Answer: C — The code will not compile, resulting in a compilation error.
+Explanation: Java supports single, multilevel and hierarchical class inheritance; it does not support multiple inheritance of classes.
+Q80. MCQ: What happens if the `display()` method in `Grandparent.java` is changed from `protected` to `private`?
+A. The code will not compile due to access modifier conflicts.
+B. The code will compile, but there will be a runtime exception.
+C. The code will compile, but the output will be "This is the Grandparent class."
+D. The code will compile, but the output will be "This is the Parent class."
+Correct Answer: A — The code will not compile due to access modifier conflicts.
+Explanation: A method is overridden when a subclass declares an instance method with a compatible signature.
+Q81. What happens if a subclass tries to access a private member (data member or method) of its superclass?
+A. The program will compile but throw a runtime exception.
+B. The program will throw a compilation error.
+C. The private member will be accessible from the subclass.
+D. The superclass will automatically become a subclass.
+Correct Answer: B — The program will throw a compilation error.
+Explanation: Encapsulation protects internal data by controlling access through methods and access modifiers.
+Q82. MCQ: What happens if multiple exception types in a multi-catch block have an inheritance relationship?
+A. The code will not compile due to ambiguity.
+B. The catch block will only catch exceptions of the superclass type, not the subclasses.
+C. The catch block will only catch exceptions of the subclass type, not the superclass.
+D. The code will compile, and the catch block will catch exceptions of both the superclass and
+Correct Answer: No correct option
+Explanation: The code does not compile if a multi-catch lists exception types related by inheritance. For example, catch (Exception | IOException e) is illegal because IOException is a subclass of Exception. The actual reason is the subtype relationship, not ambiguity; none of the supplied options states that accurately.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q83. What happens if a subclass tries to override a method in its superclass that is marked as "final"?
+A. The subclass can override the final method without any issues.
+B. The compiler will generate an error, and the method cannot be overridden.
+C. The subclass can only override the method if it is also marked as "final."
+D. The behavior is undefined, and it depends on the specific Java compiler.
+Correct Answer: B — The compiler will generate an error, and the method cannot be overridden.
+Explanation: Polymorphism allows a common supertype reference to invoke an implementation selected by the object's runtime class.
+Q84. Which type of polymorphism is resolved at compile time in Java?
+A. Runtime polymorphism
+B. Compile-time polymorphism
+C. Dynamic polymorphism
+D. Static polymorphism
+Correct Answer: B — Compile-time polymorphism
+Explanation: Method overriding is the runtime polymorphism mechanism for instance methods.
+Q85. What is compile-time polymorphism also known as in Java?
+A. Method overloading
+B. Method overriding
+C. Method hiding
+D. Method wrapping
+Correct Answer: A — Method overloading
+Explanation: The super keyword refers to the superclass portion and can call a superclass constructor or method.
+Q86. What is runtime polymorphism also known as in Java?
+A. Method overloading
+B. Method overriding
+C. Method hiding
+D. Method wrapping
+Correct Answer: B — Method overriding
+Explanation: Java class inheritance is single; multiple inheritance of type is achieved through interfaces.
+Q87. MCQ (Coding): What happens if `defaultVar` in `MyClass.java` is changed to `protected`?
+A. The code will not compile due to access modifier conflicts.
+B. The code will compile, but only public and protected variables will be accessible and displayed.
+C. The code will compile, but only public variables will be accessible and displayed.
+D. The code will compile, and all variables will be accessible and displayed.
+Correct Answer: A — The code will not compile due to access modifier conflicts.
+Explanation: Access modifiers control visibility and accessibility of classes, methods and fields.
+Q88. Which of the following statements is true about downcasting in Java?
+A. Downcasting requires explicit casting using the "downcast" keyword.
+B. Downcasting can result in a loss of data if the object is not of the expected subclass type.
+C. Downcasting can only be performed between unrelated classes.
+D. Downcasting is an automatic process and doesn't require any special handling.
+Correct Answer: B — Downcasting can result in a loss of data if the object is not of the expected subclass type.
+Explanation: Interface fields are implicitly public static final; they cannot be assigned arbitrary access modifiers.
+Q89. Which of the following statements is true about upcasting in Java?
+A. Upcasting is always allowed and does not require any explicit casting.
+B. Upcasting is only allowed if the superclass is abstract.
+C. Upcasting may result in a loss of subclass-specific features and methods.
+D. Upcasting is not supported in Java.
+Correct Answer: A — Upcasting is always allowed and does not require any explicit casting.
+Explanation: instanceof tests whether an object is compatible with a given reference type at runtime.
+Q90. In encapsulation, why do we declare data members as private?
+A. To make them accessible from any class.
+B. To prevent direct access from outside the class.
+C. To allow subclasses to access them.
+D. To avoid using getter and setter methods.
+Correct Answer: B — To prevent direct access from outside the class.
+Explanation: A top-level class can be public or package-private; protected and private are not allowed for top-level classes.
+Q91. Which of the following is true about encapsulation?
+A. Encapsulation increases the complexity of the code.
+B. Encapsulation makes it harder to maintain and debug the code.
+C. Encapsulation allows you to hide the internal implementation details of a class.
+D. Encapsulation is only applicable to primitive data types.
+Correct Answer: C — Encapsulation allows you to hide the internal implementation details of a class.
+Explanation: super refers to the immediate superclass and can be used to invoke its constructor or members.
+Q92. How many types of valid inheritance are there?
+A. 4 types
+B. 5 types
+C. 6 types
+D. 3 types
+Correct Answer: B — 5 types
+Explanation: Validation constraints can be enforced in setters/constructors, rather than by exposing mutable public fields.
+Q93. In inheritance, what is a method override?
+A. A method that is declared as private in the superclass.
+B. A method that is accessible only from the subclass.
+C. A method that has the same name and signature in the subclass as in the superclass.
+D. A method that is declared as final in the superclass.
+Correct Answer: C — A method that has the same name and signature in the subclass as in the superclass.
+Explanation: A top-level class with no access modifier has package-private (default) access.
+Q94. Why is encapsulation important in Java?
+A. It improves code readability.
+B. It prevents unauthorized access to the data members of a class.
+C. It eliminates the need for using objects in Java.
+D. It enables the use of multiple inheritance in Java.
+Correct Answer: B — It prevents unauthorized access to the data members of a class.
+Explanation: Protected methods and fields have the same Java access rules; the distinction in the choices is false.
+Q95. The feature in Java that allows a subclass to provide a specific implementation of a method that is already defined in its superclass is called:
+A. Abstraction
+B. Polymorphism
+C. Encapsulation
+D. Inheritance
+Correct Answer: B — Polymorphism
+Explanation: Across packages, protected access is available to subclasses, subject to the special qualifying-reference rule.
+Q96. What is the process called when a subclass provides a specific implementation for a method that is already defined in its superclass?
+A. Overriding
+B. Overloading
+C. Inheriting
+D. Encapsulating
+Correct Answer: A — Overriding
+Explanation: A class in the unnamed/default package belongs to the default package; it is not automatically in java.lang or java.util.
+Q97. Which keyword is used to invoke a method of the superclass in a subclass, even if the subclass has overridden that method?
+A. override
+B. overload
+C. super
+D. this
+Correct Answer: C — super
+Explanation: A subclass in another package can access inherited protected members from its subclass context.
+Q98. MCQ: What type of inheritance relationship is depicted in the code between `Grandparent`, `Parent`, and `Main` classes?
+A. Single inheritance
+B. Multiple inheritance
+C. Multilevel inheritance
+D. Hierarchical inheritance
+Correct Answer: C — Multilevel inheritance
+Explanation: Private members are not directly accessible to subclasses; they are implementation details of the declaring class.
+Q99. In encapsulation, what is the role of access modifiers (e.g., private, public) for methods and data members?
+A. They define the data types for methods and data members.
+B. They determine the order of execution for methods.
+C. They control the visibility and accessibility of methods and data members.
+D. They enforce encapsulation rules automatically.
+Correct Answer: C — They control the visibility and accessibility of methods and data members.
+Explanation: public allows access from any class, subject to the enclosing type's accessibility.
+Q100. Can an interface have variables with different access modifiers (e.g., public, private, protected) in Java?
+A. Yes, but only if the variables are declared as final.
+B. Yes, there are no restrictions on the access modifiers for variables in an interface.
+C. No, all variables in an interface must have the same access modifier.
+D. No, an interface cannot have any variables.
+Correct Answer: No correct option
+Explanation: Interface fields are implicitly public, static and final. The listed alternatives do not accurately state that rule.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q101. To avoid the risk of ClassCastException when performing downcasting in Java, you should use which keyword?
+A. instanceof
+B. checkcast
+C. safecast
+D. convert
+Correct Answer: A — instanceof
+Explanation: Upcasting a subclass reference to a superclass reference is an implicit, safe widening reference conversion.
+Q102. MCQ: Which access modifier is often used for methods that should be accessible from anywhere in the code?
+A. `public`
+B. `private`
+C. `protected`
+D. default (no modifier)
+Correct Answer: A — `public`
+Explanation: Inheritance allows a subclass to reuse accessible state and behaviour from a superclass.
+Q103. Which keyword is used to annotate a method in the superclass that can be overridden by its subclasses?
+A. this
+B. abstract
+C. super
+D. override
+Correct Answer: No correct option
+Explanation: @Override is an annotation, not a Java keyword. It tells the compiler to check that a method overrides or implements a method from a supertype.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q104. How can you ensure that the value of a data member remains within a specific range in encapsulation?
+A. By declaring the data member as public.
+B. By declaring the data member as static.
+C. By using conditional statements in the getter and setter methods.
+D. Java does not allow setting constraints on data members.
+Correct Answer: C — By using conditional statements in the getter and setter methods.
+Explanation: protected is often chosen to make a member available to subclasses and same-package classes.
+Q105. The access specifier used to make a method or variable accessible only within the same package is:
+A. private
+B. public
+C. protected
+D. package-private (default)
+Correct Answer: D — package-private (default)
+Explanation: The inheritance type depends on the class hierarchy; one parent with multiple child classes is hierarchical inheritance.
+Q106. MCQ: How is the accessibility of `protected` variables different from `protected` methods in Java?
+A. `protected` variables are accessible from any package, while `protected` methods are not.
+B. `protected` methods are accessible from any package, while `protected` variables are not.
+C. There is no difference; both `protected` variables and methods are accessible from any package.
+D. `protected` variables and methods have the same accessibility within the same package but are
+Correct Answer: D — same access rules
+Explanation: Protected fields and protected methods follow the same access-control rules. Within a package they are accessible; across packages access is available to subclasses subject to Java's protected-access restrictions.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q107. MCQ: Can a `protected` member of a superclass be accessed from a subclass in a different package?
+A. Yes, always.
+B. No, `protected` members are accessible only within the same package.
+C. Yes, but only if the subclass is in the same package as the superclass.
+D. Yes, but only if the subclass is in a subclassing relationship with the superclass.
+Correct Answer: D — only through subclass access rules
+Explanation: A subclass in another package can access an inherited protected member through the subclass context, not as an unrestricted public member.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q108. MCQ: If no package is specified at the beginning of a Java file, which package does it belong to?
+A. `java.lang`
+B. `java.util`
+C. The file won't compile without a package declaration.
+D. The default package (no package).
+Correct Answer: D — The default package (no package).
+Explanation: Runnable represents a task whose run() method can be executed by a Thread or an Executor.
+Q109. MCQ: Can a `protected` method in a superclass be accessed from a subclass in a different package?
+A. Yes, always.
+B. No, `protected` methods can only be accessed within the same package.
+C. Yes, but only if the subclass is in the same package as the superclass.
+D. Yes, but only if the subclass is in a subclassing relationship with the superclass.
+Correct Answer: D — only through subclass access rules
+Explanation: Protected access across packages is restricted to subclass code and qualifying subclass references; it is not generally available to unrelated classes.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q110. In Java, can a subclass inherit private members (data members and methods) from the superclass?
+A. Yes, a subclass can inherit private members.
+B. No, private members are not inherited by subclasses.
+C. It depends on the access modifier used for the private members.
+D. It depends on whether the superclass is abstract.
+Correct Answer: B — No, private members are not inherited by subclasses.
+Explanation: A functional interface has one abstract method; an interface may also contain default and static methods.
+Q111. Which access specifier is commonly used for the getter and setter methods in encapsulation?
+A. private
+B. protected
+C. public
+D. default (package-private)
+Correct Answer: C — public
+Explanation: Object.equals(Object) is the standard equality method; compareTo belongs to Comparable and compares ordering.
+Q112. Which of the following is a valid example of upcasting?
+A. Dog d = new Animal();
+B. Animal a = new Dog();
+C. Dog d = (Dog) new Animal();
+D. Animal a = (Animal) new Object();
+Correct Answer: B — Animal a = new Dog();
+Explanation: Set is the collection interface that disallows duplicate elements.
+Q113. Which of the following is a benefit of inheritance?
+A. Code reusability
+B. Code duplication
+C. Data deletion
+D. Memory wastage
+Correct Answer: A — Code reusability
+Explanation: Map stores key-value associations; it is not a subtype of Collection.
+Q114. Which access modifier allows a member to be accessed from classes in the same package and subclasses in other packages?
+A. private
+B. protected
+C. default
+D. final
+Correct Answer: B — protected
+Explanation: Comparator defines an external/custom ordering through compare(a, b).
+Q115. Which type of inheritance occurs when multiple subclasses inherit from the same superclass?
+A. Single inheritance
+B. Multilevel inheritance
+C. Hierarchical inheritance
+D. Multiple inheritance
+Correct Answer: C — Hierarchical inheritance
+Explanation: Collections.sort(list, comparator) sorts a list according to the supplied Comparator.
+Abstract Classes, Interfaces & Java 17 Features
+Q116. MCQ: Which of the following statements is true about the `Runnable` interface in Java?
+A. It is a class that represents a thread.
+B. It is an interface that allows a class to be executed as a thread.
+C. It is a method that starts a thread.
+D. It is a package that contains thread-related classes.
+Correct Answer: B — It is an interface that allows a class to be executed as a thread.
+Explanation: Comparator is used to define an ordering independently of the class's natural ordering.
+Q117. MCQ: Which of the following is a valid example of a functional interface?
+A. `public interface MyInterface { void method1(); void method2(); }`
+B. `public interface MyInterface { void method1() { } }`
+C. `public interface MyInterface { int method1(int a, int b); }`
+D. `public interface MyInterface { default void method1() { } }`
+Correct Answer: C — `public interface MyInterface { int method1(int a, int b); }`
+Explanation: Before Java 8, interface methods were abstract by default unless otherwise specified; Java 8 added default and static methods.
+Q118. Which of the following methods are present in comparator interface?
+A. compare()
+B. equate()
+C. isEqual()
+D. All of these
+Correct Answer: A — compare()
+Explanation: A class implements an interface with the implements keyword; interfaces are not instantiated directly.
+Q119. MCQ: Which Java interface is used to represent a collection that maintains an ordered sequence of elements with no duplicates allowed?
+A. `List`
+B. `Queue`
+C. `Set`
+D. `Map`
+Correct Answer: C — Set
+Explanation: A Set collection does not permit duplicate elements. Note that not every Set implementation preserves insertion order; LinkedHashSet does, while HashSet does not guarantee it.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q120. MCQ: Which Java interface is used to represent a collection that maintains an ordered sequence of elements with duplicates allowed?
+A. `List`
+B. `Queue`
+C. `Set`
+D. `Map`
+Correct Answer: A — `List`
+Explanation: Interface fields are public, static and final implicitly.
+Q121. MCQ: Which interface in Java is used to represent a collection that stores elements in a queue (first- in, first-out) manner?
+A. `List`
+B. `Queue`
+C. `Set`
+D. `Map`
+Correct Answer: B — `Queue`
+Explanation: Interface fields are constants: public static final.
+Q122. MCQ: In Java, which interface is used to define custom sorting of objects based on different criteria?
+A. `Comparable`
+B. `Comparator`
+C. `Sorting`
+D. `Orderable`
+Correct Answer: B — `Comparator`
+Explanation: Set prevents duplicate elements according to its equality rules.
+Q123. MCQ: Which method is used to sort a collection of objects that implement the `Comparable` interface?
+A. `sort()`
+B. `Collections.sort()`
+C. `sorted()`
+D. `Collections.sorted()`
+Correct Answer: B — `Collections.sort()`
+Explanation: Map stores key-value pairs and maps each key to at most one value.
+Q124. MCQ: Which interface is used to define custom sorting of objects based on different criteria?
+A. `Comparable`
+B. `Comparator`
+C. `Sorting`
+D. `Orderable`
+Correct Answer: B — `Comparator`
+Explanation: Map is the interface for key-value mappings.
+Q125. Which of the following is true about interface methods before Java 8?
+A. They could have method implementations
+B. They were abstract by default
+C. They were private by default
+D. They were protected by default
+Correct Answer: B — They were abstract by default
+Explanation: @FunctionalInterface marks an interface intended to have one abstract method and enables compiler checking.
+Q126. Which of the following statements about an interface is correct?
+A. An interface can be instantiated directly
+B. A class uses the implements keyword to implement an interface
+C. An interface must always contain a constructor
+D. An interface cannot contain any methods
+Correct Answer: B — A class uses the implements keyword to implement an interface
+Explanation: Supplier<T> provides a value through get() and takes no input.
+Q127. Which of the following is a property of an interface in Java?
+A. Interface can be instantiated directly
+B. Interface variables are public, static, and final by default
+C. Interface can contain constructors
+D. Interface variables are private by default
+Correct Answer: B — Interface variables are public, static, and final by default
+Explanation: Collection is the root interface for List, Set and Queue; Map is separate.
+Q128. Which of the following is a property of interface variables?
+A. They are private and non-final
+B. They are public, static, and final by default
+C. They are protected and static
+D. They are local variables
+Correct Answer: B — They are public, static, and final by default
+Explanation: A default method provides an implementation that implementing classes may inherit or override.
+Q129. MCQ: Which interface in the Java Collections Framework does not allow duplicate elements?
+A. `Collection`
+B. `List`
+C. `Set`
+D. `Map`
+Correct Answer: C — `Set`
+Explanation: A functional interface has exactly one abstract method, ignoring public methods matching Object signatures.
+Q130. MCQ: Which interface in the Java Collections Framework is used to store key-value pairs?
+A. `Collection`
+B. `List`
+C. `Set`
+D. `Map`
+Correct Answer: D — `Map`
+Explanation: A lambda can target a functional interface and supplies an implementation of its single abstract method.
+Q131. MCQ: Which Java interface is used to represent a collection that stores key-value pairs?
+A. `List`
+B. `Queue`
+C. `Set`
+D. `Map`
+Correct Answer: D — `Map`
+Explanation: Interfaces can include default/static concrete methods as well as abstract methods.
+Q132. MCQ: Which annotation is used to indicate that an interface is a functional interface?
+A. @Functional
+B. @FunctionalInterface
+C. @FunctionalOnly
+D. @SingleAbstractMethod
+Correct Answer: B — @FunctionalInterface
+Explanation: Java passes all arguments by value. For objects, the copied value is the reference.
+Q133. MCQ: Which functional interface is provided by Java to represent a supplier of values?
+A. `Consumer<T>`
+B. `Predicate<T>`
+C. `Supplier<T>`
+D. `Function<T, R>`
+Correct Answer: C — `Supplier<T>`
+Explanation: The interface keyword declares an interface type.
+Q134. MCQ: In Java, which interface is the root interface of the Java Collections Framework?
+A. `Collection`
+B. `List`
+C. `Set`
+D. `Map`
+Correct Answer: A — `Collection`
+Explanation: An interface can have multiple default methods while remaining functional, provided it has only one abstract method.
+Q135. What is the purpose of declaring a method in an interface as "default" in Java?
+A. To specify that the method must be implemented in all classes that implement the interface.
+B. To provide a default implementation for the method in case a class does not override it.
+C. To prevent any class from implementing the interface.
+D. To make the method accessible only within the package.
+Correct Answer: B — To provide a default implementation for the method in case a class does not override it.
+Explanation: An interface may contain default/static methods; Java 9+ also permits private methods.
+Q136. MCQ: How many abstract methods are allowed in a functional interface?
+A. None
+B. One
+C. Two
+D. As many as needed
+Correct Answer: B — One
+Explanation: A lambda expression's parameter list is inferred from its target functional-interface method.
+Q137. MCQ: Can a functional interface have more than one default method?
+A. Yes, as many as needed.
+B. No, it can have only one default method.
+C. Yes, but only if they are marked with the `@Default` annotation.
+D. No, functional interfaces cannot have default methods.
+Correct Answer: A — yes
+Explanation: A functional interface is defined by having one abstract method. It may also declare multiple default methods and static methods.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q138. Can an interface contain concrete (non-abstract) methods in Java?
+A. Yes, an interface can only contain concrete methods.
+B. No, an interface can only contain abstract methods.
+C. Yes, an interface can have both abstract and concrete methods.
+D. No, an interface cannot have any methods.
+Correct Answer: C — yes
+Explanation: Interfaces can contain abstract methods and concrete methods, including default and static methods. Java 9+ also permits private helper methods.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q139. What is the default method of passing parameters in Java?
+A. Pass by value.
+B. Pass by reference.
+C. Pass by object.
+D. Pass by memory address.
+Correct Answer: A — Pass by value.
+Explanation: Java uses pass-by-value; object references are copied by value, not passed by reference.
+Q140. Which keyword is used to define an interface in Java?
+A. interface
+B. abstract
+C. class
+D. implements
+Correct Answer: A — interface
+Explanation: The interface keyword introduces an interface declaration.
+Strings, Wrappers & Object Utilities
+Q141. MCQ (Coding): Which of the following statements correctly demonstrates an unchecked exception in Java? ```java // Option 1 int result = 10 / 0; // Option 2 String str = null; int length = str.length(); // Option 3 int[] arr = { 1, 2, 3 }; int value = arr[5]; ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 3
+Correct Answer: A, B and C — relevant listed choice(s): Both Option 1 and Option 3
+Explanation: Division by zero for integers throws ArithmeticException; dereferencing null throws NullPointerException; accessing an invalid array index throws ArrayIndexOutOfBoundsException. All are unchecked exceptions.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q142. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Hello, World!"; boolean startsWithHello = str.startsWith("Hello"); boolean startsWithHi = str.startsWith("Hi"); System.out.println(startsWithHello); System.out.println(startsWithHi); ```
+A. true, false
+B. false, true
+C. true, true
+D. false, false
+Correct Answer: A — true, false
+Explanation: startsWith checks whether the string begins with the supplied prefix; Hello matches, Hi does not.
+Q143. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Hello, World!"; boolean endsWithWorld = str.endsWith("World!"); boolean endsWithJava = str.endsWith("Java"); System.out.println(endsWithWorld); System.out.println(endsWithJava); ```
+A. true, false
+B. false, true
+C. true, true
+D. false, false
+Correct Answer: A — true, false
+Explanation: endsWith checks the suffix; the text ends in World!, not Java.
+Q144. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Hello, World!"; boolean containsHello = str.contains("Hello"); boolean containsHi = str.contains("Hi"); System.out.println(containsHello); System.out.println(containsHi); ```
+A. true, false
+B. false, true
+C. true, true
+D. false, false
+Correct Answer: A — true, false
+Explanation: contains checks for a substring; Hello is present and Hi is not.
+Q145. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = "Java"; String str2 = "Java"; String str3 = new String("Java"); System.out .println(str1 == str2); System.out.println(str1 == str3); ```
+A. true, true
+B. true, false
+C. false, true
+D. false, false
+Correct Answer: B — true, false
+Explanation: String literals with the same contents refer to the pooled literal. new String("Java") creates a distinct String object, so == is false for that comparison.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q146. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = new String("Hello").intern(); String str2 = new String("Hello").intern(); System.out.println(str1 == str2); ```
+A. true
+B. false
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — true
+Explanation: intern() returns the canonical pooled String for that content, so both references are identical.
+Q147. MCQ (Coding): What is the output of the following Java code snippet? ```java StringBuffer sb = new StringBuffer("Hello"); sb.append(" World"); System.out.println(sb); ```
+A. "Hello World"
+B. "World Hello"
+C. "Hello"
+D. Compilation error
+Correct Answer: A — "Hello World"
+Explanation: StringBuffer.append mutates the buffer by adding the supplied text at the end.
+Q148. MCQ (Coding): Which of the following statements correctly demonstrates appending a string in `StringBuffer` and `StringBuilder`? ```java // Option 1 StringBuffer sb = new StringBuffer(); sb.append("Hello"); // Option 2 StringBuilder sb = new StringBuilder(); sb.append("Hello"); // Option 3 StringBuffer sb = new StringBuffer("Hello"); ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: D — Both Option 1 and Option 2
+Explanation: Both StringBuffer and StringBuilder support append(String).
+Q149. Which of the following methods is used to extract the length of a string in Java?
+A. length()
+B. len()
+C. sizeof()
+D. size()
+Correct Answer: A — length()
+Explanation: String.length() returns the number of UTF-16 code units in the string.
+Q150. MCQ: Which of the following statements about the string pool is true?
+A. Strings created using the `new` keyword are stored in the string pool.
+B. Strings created using the `new` keyword are not stored in the string pool.
+C. The string pool is a separate memory area reserved for long strings.
+D. The string pool is a part of the heap memory.
+Correct Answer: B — Strings created using the `new` keyword are not stored in the string pool.
+Explanation: The string pool is part of heap storage; new String creates a distinct object, although its literal argument may itself be pooled.
+Q151. What happens when the same String literal is used multiple times?
+A. A new object is always created
+B. The same String Pool object can be reused
+C. Compilation fails
+D. The previous String is deleted
+Correct Answer: B — The same String Pool object can be reused
+Explanation: Repeated identical string literals can refer to the same pooled String object.
+Q152. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Java Programming"; String upperCaseStr = str.toUpperCase(); System.out.println(upperCaseStr); ```
+A. "java programming"
+B. "JAVA PROGRAMMING"
+C. "Java Programming"
+D. "Java programming"
+Correct Answer: B — "JAVA PROGRAMMING"
+Explanation: toUpperCase returns a new string with letters converted to uppercase.
+Q153. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Hello, World!"; String replacedStr = str.replace("l", "X"); System.out.println(replacedStr); ```
+A. "HexXo, WorXd!"
+B. "Hello, World!"
+C. "HeXXo, WorXd!"
+D. "HeXXo, WorXd!X"
+Correct Answer: C — HeXXo, WorXd!
+Explanation: String.replace("l", "X") replaces every lowercase l. In 'Hello, World!' there are three lowercase l characters, producing HeXXo, WorXd!.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q154. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = "Hello, World!"; String lowerCaseStr = str.toLowerCase(); System.out.println(lowerCaseStr); ```
+A. "HELLO, WORLD!"
+B. "hello, world!"
+C. "Hello, World!"
+D. "hello, world!"
+Correct Answer: B — "hello, world!"
+Explanation: toLowerCase returns a new string with letters converted to lowercase.
+Q155. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = " Hello, World! "; String trimmedStr = str.trim(); System.out.println(trimmedStr); ```
+A. "Hello, World!"
+B. "Hello, World! "
+C. " Hello, World!"
+D. " Hello, World! "
+Correct Answer: A — "Hello, World!"
+Explanation: trim removes leading and trailing characters whose code points are <= U+0020; it does not remove internal spaces.
+Q156. MCQ (Coding): What is the output of the following Java code snippet? ```java boolean flag = true; String str = Boolean.toString(flag); System.out.println(str); ```
+A. true
+B. "true"
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — true
+Explanation: Boolean.toString(true) returns the String containing the characters true. println prints those characters without quotation marks; quotation marks in an option are explanatory notation, not output.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q157. MCQ (Coding): What is the output of the following Java code snippet? ```java int num = Integer.parseInt("42"); System.out.println(num); ```
+A. 42
+B. "42"
+C. Compilation error
+D. Runtime exception
+Correct Answer: A — 42
+Explanation: Integer.parseInt converts the numeric text '42' to primitive int 42.
+Q158. MCQ: How can you explicitly add a string to the string pool in Java?
+A. By calling the `addToPool()` method provided by the `String` class.
+B. By calling the `intern()` method on the string object.
+C. By converting the string to uppercase and then assigning it to a reference variable.
+D. By appending the string with another string and then assigning it to a reference variable.
+Correct Answer: B — By calling the `intern()` method on the string object.
+Explanation: String.intern returns the canonical pooled representation of a string.
+Q159. MCQ: What is the benefit of using the string pool in Java?
+A. It allows string objects to be garbage collected more efficiently.
+B. It prevents the creation of duplicate string objects with the same content.
+C. It allows strings to be compared using the `==` operator instead of the `equals()` method.
+D. It prevents string objects from being modified.
+Correct Answer: B — It prevents the creation of duplicate string objects with the same content.
+Explanation: Pooling can allow equal literals to share one canonical object and reduce duplicate literal objects.
+Q160. MCQ: What is the purpose of the string pool in Java?
+A. To store string objects that are created using the `new` keyword.
+B. To store frequently used strings to conserve memory and improve performance.
+C. To store strings with a specific length.
+D. To store strings used in multi-threaded applications.
+Correct Answer: B — To store frequently used strings to conserve memory and improve performance.
+Explanation: The string pool stores canonical strings, particularly literals and interned strings.
+Q161. Method used to take a string as input in Java?
+A. next()
+B. nextLine()
+C. Both A. and B.
+D. None of these
+Correct Answer: C — both A and B
+Explanation: Scanner.next() reads the next token; Scanner.nextLine() reads the remainder of the current line. Both can return String input.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q162. MCQ: What is the main difference between `StringBuffer` and `StringBuilder` in Java?
+A. `StringBuffer` is mutable, while `StringBuilder` is immutable.
+B. `StringBuffer` is faster than `StringBuilder`.
+C. `StringBuffer` is synchronized, while `StringBuilder` is not.
+D. `StringBuffer` is used for single-threaded applications, while `StringBuilder` is used for multi-
+Correct Answer: C — `StringBuffer` is synchronized, while `StringBuilder` is not.
+Explanation: StringBuffer's methods are synchronized; StringBuilder's methods are not.
+Q163. Which method is used to add a String to the String Pool explicitly?
+A. addPool()
+B. intern()
+C. pool()
+D. store()
+Correct Answer: B — intern()
+Explanation: intern() obtains the canonical string from the string pool.
+Q164. Which method is used to convert a String into an int value?
+A. Integer.parseInt()
+B. Integer.toString()
+C. String.valueOf()
+D. Integer.convert()
+Correct Answer: A — Integer.parseInt()
+Explanation: Integer.parseInt(String) converts numeric text into a primitive int.
+Q165. Where are String literals generally stored in Java?
+A. Stack
+B. String Pool
+C. CPU Cache
+D. Method Area only
+Correct Answer: B — String Pool
+Explanation: String literals are represented by canonical String objects in the string pool, which is heap-managed in modern Java.
+Exception Handling
+Q166. MCQ (Coding): Which of the following code snippets will cause a compilation error? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (Exception e1 | RuntimeException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (NullPointerException e) { // Exception handling } catch (IOException e) { // Exception handling } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: B — Option 2
+Explanation: A multi-catch cannot combine Exception with RuntimeException because RuntimeException is a subclass of Exception. Option 1's IOException and NullPointerException are unrelated types; Option 3 is valid if the try can throw IOException.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q167. MCQ (Coding): Which of the following code snippets correctly uses a multi-catch block? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (IOException e1 | NullPointerException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (Exception e) { // Exception handling } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: A — Option 1
+Explanation: A multi-catch uses one exception parameter after the alternatives, for example catch (IOException | NullPointerException e). Option 2 is invalid because it declares two variables.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q168. MCQ (Coding): Which of the following code snippets demonstrates the correct way to throw a user- defined exception? ```java // Option 1 throw new MyCheckedException("This is a checked exception."); // Option 2 throw new MyUncheckedException("This is an unchecked exception."); ```
+A. Option 1
+B. Option 2
+C. Both Option 1 and Option 2
+D. Neither Option 1 nor Option 2
+Correct Answer: C — Both Option 1 and Option 2
+Explanation: Both checked and unchecked exception instances can be thrown with throw; checked exceptions must also be caught or declared.
+Q169. MCQ (Coding): What is the output of the following Java code snippet? ```java try { int[] arr = { 1, 2, 3 }; int value = arr[5]; } catch (ArrayIndexOutOfBoundsException | ArithmeticException e) { System.out.println("Caught: " + e.getClass().getSimpleName()); } ```
+A. Caught: ArrayIndexOutOfBoundsException
+B. Caught: ArithmeticException
+C. Caught: Exception
+D. Caught: RuntimeException
+Correct Answer: A — Caught: ArrayIndexOutOfBoundsException
+Explanation: arr[5] is outside the valid indexes 0, 1 and 2, so ArrayIndexOutOfBoundsException is caught and its simple name printed.
+Q170. MCQ (Coding): Which of the following method declarations correctly indicates that the method may throw multiple exceptions? ```java // Option 1 public void myMethod() throws IOException, NullPointerException { // Method implementation } // Option 2 public void myMethod() throws Exception { // Method implementation } // Option 3 public void myMethod() { try { // Method implementation } catch (IOException | NullPointerException e) { // Exception handling } } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: D — Both Option 1 and Option 2
+Explanation: Option 1 lists two exception types in the throws clause. Option 2 declares the broader Exception type, which can also cover multiple possible exceptions. Option 3 uses try/catch rather than a throws clause.
+Q171. MCQ (Coding): Which of the following method declarations is correctly using the `throws` clause? ```java // Option 1 public void myMethod() throws IOException { // Method implementation } // Option 2 public void myMethod() throws Exception { // Method implementation } // Option 3 public void myMethod() { try { // Method implementation } catch (IOException e) { // Exception handling } } ```
+A. Option 1
+B. Option 2
+C. Option 3
+D. Both Option 1 and Option 2
+Correct Answer: D — Both Option 1 and Option 2
+Explanation: Both declarations are valid uses of throws: a method may declare IOException specifically or the broader Exception type. Option 3 handles IOException inside the method with try/catch; it does not use a throws clause.
+Q172. MCQ (Coding): What will happen if an exception is thrown from a method, and the method does not have a try-catch block to handle it? ```java public void methodA() { throw new RuntimeException("Exception in methodA"); } public void methodB() { methodA(); } ```
+A. The program will terminate abruptly with an error message.
+B. The exception will be caught and handled by the JVM.
+C. The exception will be caught and handled by methodB.
+D. The exception will propagate up the call stack until it is caught or the program terminates.
+Correct Answer: D — The exception will propagate up the call stack until it is caught or the program terminates.
+Explanation: An unchecked RuntimeException propagates up the call stack until a matching catch handles it or the thread's uncaught-exception handler is invoked.
+Q173. MCQ (Coding): What is the purpose of the `catch` block in a try-catch-finally statement? ```java try { // Code that may throw an exception } catch (ExceptionType e) { // Code to handle the exception } ```
+A. To define the code that will be executed if an exception of type `ExceptionType` occurs.
+B. To define the code that will be executed whether an exception occurs or not.
+C. To define the code that will be executed if no exception occurs.
+D. To define the code that will be executed if an exception occurs, regardless of its type.
+Correct Answer: A
+Explanation: A catch block handles an exception compatible with the catch parameter's type. It does not run for every exception regardless of type.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q174. MCQ: What is the benefit of using a multi-catch block over separate catch blocks for each exception type?
+A. It reduces the number of catch blocks required in the code.
+B. It improves the performance of exception handling.
+C. It simplifies the error-handling process and makes the code more concise.
+D. It allows the program to recover from any type of exception thrown.
+Correct Answer: C — It simplifies the error-handling process and makes the code more concise.
+Explanation: Multi-catch reduces duplicated handling code when several unrelated exception types need the same response.
+Q175. MCQ: Which keyword is used to specify a block of code where an exception may occur in Java?
+A. `try`
+B. `catch`
+C. `finally`
+D. `throws`
+Correct Answer: A — `try`
+Explanation: The try keyword marks the block whose execution may throw exceptions.
+Q176. MCQ: What is the key difference between a checked and an unchecked user-defined exception?
+A. Checked exceptions must be explicitly caught or declared with `throws`, while unchecked
+B. Unchecked exceptions must be explicitly caught or declared with `throws`, while checked
+C. Checked exceptions are always related to syntax or compilation errors, while unchecked
+D. Checked exceptions are subclasses of `RuntimeException`, while unchecked exceptions are
+Correct Answer: A — Checked exceptions must be explicitly caught or declared with `throws`, while unchecked
+Explanation: Checked exceptions are subclasses of Exception other than RuntimeException and must be caught or declared; unchecked exceptions derive from RuntimeException or Error.
+Q177. MCQ: Which of the following keywords can be used to propagate an exception explicitly?
+A. `catch`
+B. `throws`
+C. `try`
+D. `finally`
+Correct Answer: B — `throws`
+Explanation: The throws clause declares that a method may pass exceptions to its caller; throw actually throws an exception object.
+Q178. MCQ: What happens if an uncaught exception is thrown inside the `finalize()` method?
+A. The JVM will automatically handle the exception and continue garbage collection.
+B. The exception will be propagated to the calling code that triggered garbage collection.
+C. The JVM will skip the `finalize()` method and proceed with garbage collection.
+D. The JVM will terminate the application.
+Correct Answer: A — closest / JVM ignores it
+Explanation: An uncaught exception thrown by a finalizer is ignored by the JVM; it does not propagate to the code that triggered garbage collection. Finalization is deprecated for removal and should not be relied upon.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q179. MCQ: What is the key difference between checked and unchecked exceptions in Java?
+A. Checked exceptions are explicitly handled by the programmer, while unchecked exceptions are
+B. Checked exceptions are always related to syntax or compilation errors, while unchecked
+C. Checked exceptions are subclasses of `Exception`, while unchecked exceptions are subclasses of
+D. Checked exceptions require explicit handling using try-catch or throws, while unchecked
+Correct Answer: D — Checked exceptions require explicit handling using try-catch or throws, while unchecked
+Explanation: Checked exceptions must be caught or declared; unchecked exceptions do not have that compile-time requirement.
+Q180. MCQ: What happens if an exception is not caught by any method in the call stack?
+A. The program will continue to execute normally without any impact.
+B. The program will terminate abruptly with an error message.
+C. The JVM will handle the exception automatically.
+D. The method where the exception occurred will retry the operation.
+Correct Answer: B — The program will terminate abruptly with an error message.
+Explanation: If no handler is found, the thread terminates after the uncaught-exception handler is invoked; the JVM prints a stack trace by default.
+Q181. MCQ: What is the purpose of creating a user-defined unchecked exception?
+A. To indicate exceptional conditions that may occur during the execution of the code.
+B. To handle a critical error that cannot be recovered and requires the application to terminate.
+C. To create an exception that does not require explicit handling.
+D. To demonstrate the use of inheritance in exception classes.
+Correct Answer: A — To indicate exceptional conditions that may occur during the execution of the code.
+Explanation: Unchecked custom exceptions are useful for programming errors or conditions callers are not required to handle at compile time.
+Q182. What happens if you try to use an uninitialized local variable in Java?
+A. The program will compile and run without any issues.
+B. The program will throw a compilation error.
+C. The program will throw a runtime exception.
+D. The variable will automatically be initialized to its default value.
+Correct Answer: B — The program will throw a compilation error.
+Explanation: A local variable must be definitely assigned before use; otherwise compilation fails.
+Q183. MCQ: What is the purpose of creating a user-defined checked exception?
+A. To indicate exceptional conditions that may occur during the execution of the code.
+B. To handle a critical error that cannot be recovered and requires the application to terminate.
+C. To create an exception that does not require explicit handling.
+D. To demonstrate the use of inheritance in exception classes.
+Correct Answer: A — To indicate exceptional conditions that may occur during the execution of the code.
+Explanation: A custom checked exception represents a recoverable/expected exceptional condition that callers should be required to handle or declare.
+Q184. MCQ: When should you create a user-defined checked exception in Java?
+A. When you want to handle a critical error that cannot be recovered and requires the application to
+B. When you want to indicate exceptional conditions that may occur during the execution of your
+C. When you want to handle exceptions that can be easily recovered and do not impact the normal
+D. When you want to create an exception that does not require explicit handling.
+Correct Answer: B — When you want to indicate exceptional conditions that may occur during the execution of your
+Explanation: Use a checked exception when callers are reasonably expected to recover and should explicitly handle the condition.
+Q185. MCQ: What is the advantage of using exception propagation in Java?
+A. It allows the program to recover from unexpected errors and continue execution.
+B. It simplifies the error-handling process by automatically catching all exceptions.
+C. It helps in minimizing code duplication by reusing existing exception-handling logic.
+D. It
+Correct Answer: Cannot verify the marked D — option D is incomplete
+Explanation: Exception propagation lets an exception move up the call stack until a matching handler is found or the thread terminates. The source's final option is truncated, so a letter cannot be confirmed.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Collections, Generics & Lambda/Streams
+Q186. MCQ: What is the main difference between `ArrayList` and `LinkedList` in Java?
+A. `ArrayList` is a resizable array-based implementation, while `LinkedList` is a doubly-linked list-
+B. `ArrayList` allows null elements, while `LinkedList` does not allow null elements.
+C. `ArrayList` is a thread-safe collection, while `LinkedList` is not thread-safe.
+D. `ArrayList` allows constant-time insertion and deletion, while `LinkedList` allows constant-time
+Correct Answer: A — `ArrayList` is a resizable array-based implementation, while `LinkedList` is a doubly-linked list-
+Explanation: ArrayList is backed by a resizable array; LinkedList is a doubly linked list. Their access and insertion costs differ.
+Q187. MCQ: What is the purpose of the "Island of Isolation" in the context of garbage collection?
+A. It refers to a group of objects with circular references that cannot be garbage collected.
+B. It is a term used to describe objects that are not eligible for garbage collection.
+C. It is a garbage collection algorithm used by the JVM.
+D. It refers to a group of objects with strong references that can be garbage collected together.
+Correct Answer: D — closest
+Explanation: An island of isolation is a group of objects that reference one another but are unreachable from GC roots. The garbage collector can reclaim them despite their circular references.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q188. Which Java method is used to add all of the specified elements to the specified collection?
+A. addValue()
+B. copy()
+C. cpy()
+D. addAll()
+Correct Answer: D — addAll()
+Explanation: Collection.addAll(Collection) adds all elements from the supplied collection to the receiver.
+Q189. MCQ: Which method is used to sort a collection of objects using a custom `Comparator`?
+A. `sort()`
+B. `Collections.sort()`
+C. `sorted()`
+D. `Collections.sorted()`
+Correct Answer: A and B / ambiguous wording — relevant listed choice(s): `sort()`
+Explanation: A List has a sort(Comparator) method, and Collections.sort(list, comparator) is also available. Both APIs can sort with a custom Comparator; the question does not specify which API it means.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q190. MCQ: What is the return type of a lambda expression that represents a void method?
+A. `void`
+B. `null`
+C. `None`
+D. It is inferred by the compiler.
+Correct Answer: D — It is inferred by the compiler.
+Explanation: A void-compatible lambda targets a functional method whose return type is void; the lambda does not return a value.
+Q191. MCQ: What is the main advantage of using `LinkedList` over `ArrayList` in Java?
+A. `LinkedList` allows constant-time access to elements by index.
+B. `LinkedList` allows constant-time insertion and deletion.
+C. `LinkedList` uses less memory compared to `ArrayList`.
+D. `LinkedList` allows duplicate elements.
+Correct Answer: B — only when node/position is already known
+Explanation: LinkedList can insert or remove a node in constant time once the node/position is reached. Finding an element by index is linear, so it is not generally faster than ArrayList for arbitrary indexed operations.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q192. MCQ: How does the lambda expression in Java relate to functional interfaces?
+A. Lambda expressions can only be used with functional interfaces.
+B. Lambda expressions are used to define abstract classes in Java.
+C. Lambda expressions are a replacement for constructors in functional interfaces.
+D. Lambda expressions can be used with any Java class or interface.
+Correct Answer: A — Lambda expressions can only be used with functional interfaces.
+Explanation: Lambda expressions are target-typed and used to implement functional interfaces.
+Q193. MCQ: What is the primary purpose of using lambda expressions in Java?
+A. To create new instances of classes.
+B. To implement abstract methods in interfaces.
+C. To create anonymous inner classes.
+D. To improve the performance of the code.
+Correct Answer: B — To implement abstract methods in interfaces.
+Explanation: Lambdas provide concise implementations of functional-interface methods, commonly for callbacks and collection operations.
+Q194. MCQ: What is the purpose of requesting garbage collection in Java?
+A. To force the JVM to immediately free up memory.
+B. To clean up unused objects and reclaim memory.
+C. To automatically optimize memory usage in the application.
+D. To stop the execution of the Java program.
+Correct Answer: B — To clean up unused objects and reclaim memory.
+Explanation: System.gc() requests garbage collection but does not force immediate memory reclamation.
+Q195. MCQ: When would you use a concurrent collection in Java?
+A. When you need to perform complex mathematical operations on collection elements.
+B. When you need to enforce a specific order of elements in the collection.
+C. When you need to ensure thread safety for accessing and modifying collections from multiple
+D. When you need to store elements in a sorted order.
+Correct Answer: C — When you need to ensure thread safety for accessing and modifying collections from multiple
+Explanation: Concurrent collections are designed for safe concurrent access and updates by multiple threads.
+Q196. Which Java method is used to clear element of ArrayList?
+A. deleteAll()
+B. delete()
+C. clearAll()
+D. clear()
+Correct Answer: D — clear()
+Explanation: ArrayList.clear() removes all elements from the list.
+Q197. What is garbage collection in java?
+A. Method to manage memory in java
+B. Create new garbage values
+C. Delete all values
+D. All of these
+Correct Answer: A — Method to manage memory in java
+Explanation: Garbage collection reclaims heap memory occupied by objects that are no longer reachable.
+Q198. What is a comparator in Java?
+A. Interface to compare integer
+B. Comparison method for lists
+C. Interface to compare two objects in java
+D. All of these
+Correct Answer: C — Interface to compare two objects in java
+Explanation: Comparator<T> is an interface that defines compare(T o1, T o2) for ordering two objects.
+Q199. MCQ: In lambda expressions, how do you represent a single parameter?
+A. (param)
+B. (param1, param2)
+C. param
+D. [param]
+Correct Answer: C — param
+Explanation: A single lambda parameter may be written without parentheses when its type is inferred, e.g. x -> x * 2.
+Multithreading & Concurrency
+Q200. MCQ (Coding): Which of the following is a common cause of deadlock in multi-threading?
+A. Lack of synchronization in critical sections.
+B. Excessive use of `sleep()` method.
+C. Excessive use of `yield()` method.
+D. Lack of thread priority settings.
+Correct Answer: No correct option
+Explanation: Lack of synchronization is commonly associated with race conditions, not by itself a defining cause of deadlock. Deadlock involves threads waiting cyclically for locks/resources.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q201. MCQ: Which of the following interfaces in Java is used for creating a thread?
+A. `Runnable`
+B. `Thread`
+C. `Executor`
+D. `Timer`
+Correct Answer: A — `Runnable`
+Explanation: Runnable is a functional interface representing a task with a run() method; Thread can execute it.
+Q202. MCQ: What happens when a thread calls the `wait()` method in Java?
+A. The thread releases the lock on the object's monitor and waits until another thread notifies it.
+B. The thread continues its execution without any delay.
+C. The thread enters a waiting state for a specified duration.
+D. The thread terminates its execution.
+Correct Answer: A — The thread releases the lock on the object's monitor and waits until another thread notifies it.
+Explanation: wait() releases the object's monitor and places the calling thread in that object's wait set until notification/interruption/timeout.
+Q203. MCQ: Which method is used to temporarily pause the execution of a thread to give other threads a chance to run in Java?
+A. `sleep()`
+B. `join()`
+C. `yield()`
+D. `pause()`
+Correct Answer: C — yield(), but only as a hint
+Explanation: Thread.yield() is a scheduler hint that the current thread is willing to yield. The JVM/OS is not required to schedule another thread immediately.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q204. MCQ: Which method is used to pause the execution of a thread for a specific amount of time in Java?
+A. `sleep()`
+B. `join()`
+C. `yield()`
+D. `pause()`
+Correct Answer: A — `sleep()`
+Explanation: Thread.sleep(ms) pauses the current thread for at least the requested duration, subject to scheduling.
+Q205. MCQ: What is the role of the `wait()` and `notify()` methods in the producer-consumer problem?
+A. The `wait()` method is used by the producer to wait for the consumer to consume data, and the
+B. The `wait()` method is used by the consumer to wait for the producer to produce data, and the
+C. Both the `wait()` and `notify()` methods are used by the producer to wait for the consumer to
+D. Both the `wait()` and `notify()` methods are used by the consumer to wait for the producer to
+Correct Answer: B — The `wait()` method is used by the consumer to wait for the producer to produce data, and the
+Explanation: In producer-consumer coordination, the consumer waits while the buffer is empty; the producer notifies after producing data (and vice versa for a full buffer).
+Q206. MCQ (Coding): When do you typically use the `wait()`, `notify()`, and `notifyAll()` methods?
+A. When you want to pause a thread for a specific duration.
+B. When you want to stop the execution of a thread.
+C. When you want to synchronize access to shared resources.
+D. When you want to wait for a specific condition to be met.
+Correct Answer: D — When you want to wait for a specific condition to be met.
+Explanation: wait/notify/notifyAll coordinate threads around a condition guarded by an object's monitor; wait must be called while owning that monitor.
+Q207. MCQ (Coding): Which method is used to notify a waiting thread to resume execution in Java?
+A. `notify()`
+B. `notifyAll()`
+C. `resume()`
+D. `awake()`
+Correct Answer: A — `notify()`
+Explanation: notify() wakes one thread waiting on that object's monitor; it does not immediately transfer the lock.
+Q208. MCQ: Which method is used to check if a thread is still alive and running in Java?
+A. `isRunning()`
+B. `isAlive()`
+C. `isExecuting()`
+D. `isWorking()`
+Correct Answer: B — `isAlive()`
+Explanation: isAlive() reports whether a thread has been started and has not yet terminated.
+Q209. MCQ: Which method is used to wait for a thread to finish its execution in Java?
+A. `sleep()`
+B. `join()`
+C. `yield()`
+D. `wait()`
+Correct Answer: B — `join()`
+Explanation: join() makes the calling thread wait for the target thread to terminate.
+Q210. MCQ: In a deadlock situation, how can you identify which threads are involved?
+A. By using the `Thread.getAllStackTraces()` method.
+B. By analyzing the CPU utilization of each thread.
+C. By using the `Thread.dumpStack()` method.
+D. By checking the thread states using the `getState()` method.
+Correct Answer: A — possible diagnostic; not the dedicated API
+Explanation: Thread.getAllStackTraces() can enumerate threads and their stack traces. For programmatic deadlock detection, ManagementFactory.getThreadMXBean() provides findDeadlockedThreads() and related methods.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q211. MCQ: What is a resource acquisition hierarchy in the context of deadlock?
+A. It is a way to prioritize threads based on their resource requirements.
+B. It is a strategy to break the circular wait condition among threads.
+C. It is a technique to avoid priority inversion.
+D. It is a way to grant exclusive access to a resource for only one thread at a time.
+Correct Answer: B — It is a strategy to break the circular wait condition among threads.
+Explanation: A consistent global lock/resource ordering prevents circular wait, one of the necessary deadlock conditions.
+Q212. MCQ: Which method is used to start the execution of a thread in Java?
+A. `start()`
+B. `run()`
+C. `execute()`
+D. `begin()`
+Correct Answer: A — `start()`
+Explanation: start() schedules a new thread of execution and the JVM invokes run() on that new thread.
+Q213. MCQ: Which method is used to set the priority of a thread in Java?
+A. `setPriority()`
+B. `priority()`
+C. `assignPriority()`
+D. `setThreadPriority()`
+Correct Answer: A — `setPriority()`
+Explanation: setPriority(int) sets a thread's priority hint; scheduling behaviour is JVM/OS dependent.
+Q214. MCQ: Which method is used to get the priority of a thread in Java?
+A. `getPriority()`
+B. `priority()`
+C. `retrievePriority()`
+D. `getThreadPriority()`
+Correct Answer: A — `getPriority()`
+Explanation: getPriority() returns the thread's current priority value.
+Q215. MCQ: What is the purpose of concurrent collections in Java?
+A. Concurrent collections ensure that elements are stored in sorted order.
+B. Concurrent collections provide a way to perform mathematical operations on numeric data types
+C. Concurrent collections allow multiple threads to access and modify collections safely without
+D. Concurrent collections allow collections to be resized dynamically based on the number of
+Correct Answer: C — Concurrent collections allow multiple threads to access and modify collections safely without
+Explanation: Concurrent collections provide thread-safe operations for concurrent access without requiring callers to externally synchronize every operation.
+Q216. MCQ: What is the purpose of the `run()` method in a thread?
+A. It is called when the thread is created.
+B. It is used to start the execution of a thread.
+C. It contains the code that will be executed by the thread.
+D. It is used to pause the execution of a thread.
+Correct Answer: C — It contains the code that will be executed by the thread.
+Explanation: run() contains the task body. Calling run() directly does not create a new thread; start() does.
+Q217. MCQ: What is the purpose of the `wait()` method in Java?
+A. It is used to put a thread to sleep for a specific duration.
+B. It is used to pause the execution of a thread indefinitely.
+C. It is used to wait for a specific condition to be met before resuming execution.
+D. It is used to terminate a thread's execution.
+Correct Answer: C — It is used to wait for a specific condition to be met before resuming execution.
+Explanation: wait() is used for condition-based coordination and releases the object's monitor while waiting.
+Q218. MCQ: Concurrent collections achieve thread-safety by:
+A. Restricting access to the collections to a single thread at a time.
+B. Using explicit synchronization on collection methods.
+C. Allowing only read operations on the collections.
+D. Implementing internal mechanisms to handle concurrent access and modifications.
+Correct Answer: D — Implementing internal mechanisms to handle concurrent access and modifications.
+Explanation: Concurrent collections use implementation-specific mechanisms such as fine-grained locking, lock-free algorithms or concurrent data structures.
+Q219. MCQ (Coding): How can you break a deadlock in Java?
+A. By forcibly terminating one of the threads involved in the deadlock.
+B. By increasing the thread priorities of the deadlock threads.
+C. By using the `interrupt()` method on one of the deadlock threads.
+D. By releasing the resources held by one of the deadlock threads.
+Correct Answer: D — conceptually, but not a Java operation you can force safely
+Explanation: Deadlock recovery requires changing the locking/resource protocol or arranging for a participant to release resources. Java has no safe general-purpose API to forcibly release another thread's intrinsic monitor; interrupt() does not automatically break monitor deadlocks.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+File I/O, Serialization & Networking
+Q220. MCQ: What is the purpose of using the `BufferedReader` and `BufferedWriter` classes in Java?
+A. They are used for reading and writing character data from and to files.
+B. They are used for reading and writing binary data from and to files.
+C. They are used for reading and writing data over the network.
+D. They are used for creating new files in the file system.
+Correct Answer: A — They are used for reading and writing character data from and to files.
+Explanation: BufferedReader and BufferedWriter buffer character I/O, reducing underlying read/write operations; they can be used with files or other character streams.
+Q221. MCQ: Which method is used to read a line of text from a file using `BufferedReader` in Java?
+A. `readLine()`
+B. `read()`
+C. `readChar()`
+D. `readText()`
+Correct Answer: A — `readLine()`
+Explanation: BufferedReader.readLine() reads one line and returns null at end of stream.
+Q222. MCQ: Which method is used to write a line of text to a file using `BufferedWriter` in Java?
+A. `writeLine()`
+B. `write()`
+C. `writeChar()`
+D. `writeText()`
+Correct Answer: B — write(), followed by newLine()
+Explanation: BufferedWriter has write() and newLine(); it does not define writeLine(). To write a line, call write(text) and then newLine().
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q223. MCQ: What is the purpose of the `transient` keyword in Java serialization?
+A. The `transient` keyword indicates that a variable should not be serialized.
+B. The `transient` keyword indicates that a variable should be given higher priority during
+C. The `transient` keyword indicates that a variable should be serialized twice for redundancy.
+D. The `transient` keyword indicates that a variable should be serialized with a delay.
+Correct Answer: A — The `transient` keyword indicates that a variable should not be serialized.
+Explanation: transient marks an instance field to be skipped by default Java serialization.
+Q224. To access manipulators the file ____ should be included in the program.
+A. iomanip
+B. ios
+C. #include
+D. None
+Correct Answer: Out of scope — C++ question
+Explanation: iomanip is a C++ header, not a Java package or file. This question does not belong in a Java OOP question bank.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q225. Which method is used to add a new line to file in Java?
+A. file.addLine()
+B. file.nextLine()
+C. file.write()
+D. file.line()
+Correct Answer: No universally correct option
+Explanation: Java has no general file.write() method. For BufferedWriter, use write(text) and newLine(); for Files, use Files.write or a suitable writer API.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q226. MCQ: What is the purpose of de-serialization in Java?
+A. De-serialization is used to convert a Java object into a byte stream to store it in a file or send it
+B. De-serialization is used to convert a byte stream into a Java object for processing.
+C. De-serialization is used to convert a Java object into a character stream for reading.
+D. De-serialization is used to convert a character stream into a Java object for writing.
+Correct Answer: B — De-serialization is used to convert a byte stream into a Java object for processing.
+Explanation: Deserialization reconstructs an object from a serialized byte stream.
+Q227. Which is the correct absolute path of a file in Java?
+A. C:\Program Files\Java\jdk1.8.0_131\bin\file_name.txt
+B. C:\Program Files\Java\file_name.txt
+C. C:\Program Files\Java\jdk1.8.0_131\file_name.txt
+D. C:\Program Files\Java\jdk1.8.0_131\bin\File Handling\file_name.txt
+Correct Answer: No universally correct option
+Explanation: An absolute path depends on the machine, operating system, installation directory and file location. None of the hard-coded paths can be universally correct.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q228. Which method in java is used to read lines from file?
+A. file.read()
+B. file.nextLine()
+C. file.getLine()
+D. All of these
+Correct Answer: No correct option
+Explanation: File itself has no getLine() method. Use BufferedReader.readLine() or Scanner.nextLine(), depending on the API.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q229. How can we access methods for file handling in java?
+A. Java.files
+B. Java.io
+C. Java.io.File
+D. Java.FileHandling
+Correct Answer: B — java.io
+Explanation: File-handling classes such as File, FileReader, FileWriter, BufferedReader and BufferedWriter are in the java.io package. java.io.File is one class, not the package.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q230. MCQ: What is the purpose of serialization in Java?
+A. Serialization is used to convert a Java object into a byte stream to store it in a file or send it over
+B. Serialization is used to convert a byte stream into a Java object for processing.
+C. Serialization is used to convert a Java object into a character stream for reading.
+D. Serialization is used to convert a character stream into a Java object for writing.
+Correct Answer: A — Serialization is used to convert a Java object into a byte stream to store it in a file or send it over
+Explanation: Serialization converts an object graph into a byte stream, typically via ObjectOutputStream.
+Q231. Which method deletes a file in Java?
+A. file.delete()
+B. file.remove()
+C. file.garbage()
+D. file.dump()
+Correct Answer: A — file.delete()
+Explanation: File.delete() attempts to delete the filesystem entry represented by that File; it returns a boolean result.
+Q232. What is file handling in java?
+A. It is creating, deleting, and modifying files using a java program.
+B. Creating new method
+C. Filing method to different file to extract them better
+D. All of these
+Correct Answer: A — It is creating, deleting, and modifying files using a java program.
+Explanation: File handling means creating, reading, writing, updating and deleting files using Java APIs.
+JDBC & Database Connectivity
+Q233. Which statement is correct about re-assigning reference variables?
+A. It is done using the '->' operator.
+B. It can only be done in the main method.
+C. It changes the object's value, not the reference.
+D. It can lead to memory leaks if not done properly.
+Correct Answer: No correct option
+Explanation: Reference reassignment uses '='. It changes which object a variable refers to; it does not directly change the object's fields. Reassignment alone does not inherently cause a memory leak.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q234. Which statement is correct for private member in Java?
+A. Access outside the class is allowed
+B. Any class can access
+C. Declared using private keyword
+D. All of these
+Correct Answer: C — Declared using private keyword
+Explanation: private is an access modifier that restricts direct access to members to the declaring top-level class (including its nested classes).
+Q235. Which of the following statement is not true for virtual functions?
+A. The virtual function must be members of some class
+B. The virtual function can be a static member
+C. Virtual functions are accessed by using an object pointer
+D. The virtual function can be a friend of another class
+Correct Answer: Out of scope — C++ question
+Explanation: Virtual functions are a C++ language feature. Java uses virtual dispatch for overridable instance methods but has no 'virtual' keyword. The question is framed as C++ and should be removed from a Java bank.
+Review note: Correction / ambiguity / incomplete item — do not memorise the original marked key.
+Q236. Which statement demonstrates dynamic method dispatch?
+A. Animal a = new Dog(); a.sound();
+B. Dog d = new Dog();
+C. int x = 10;
+D. Animal a = new Animal();
+Correct Answer: A — Animal a = new Dog(); a.sound();
+Explanation: An Animal reference points to a Dog object; overridden instance method dispatch selects Dog.sound() at runtime.
+Q237. In the context of the `if-else-if` statement, which condition is evaluated if all preceding conditions are false?
+A. First `if` condition
+B. Last `if` condition
+C. First `else` condition
+D. First `else if` condition
+Correct Answer: D — First `else if` condition
+Explanation: In an if/else-if chain, conditions are tested in order; each else-if is considered only if earlier conditions are false.
+Q238. The `if-else-if` statement can be used to handle ___________.
+A. Multiple conditions, one after the other
+B. Only two mutually exclusive conditions
+C. Recursive function calls
+D. Switch-case scenarios
+Correct Answer: A — Multiple conditions, one after the other
+Explanation: An if/else-if chain evaluates multiple conditions in sequence and executes the first matching branch.
+Q239. The break statement in Java is used to ___.
+A. Terminates from the loop immediately
+B. Terminates from the program immediately
+C. Skips the current iteration
+D. All of these
+Correct Answer: A — Terminates from the loop immediately
+Explanation: break exits the nearest enclosing loop or switch; it does not terminate the whole program.
+Q240. The `if` statement is used to ___________.
+A. Execute a block of code repeatedly
+B. Make a decision based on a condition
+C. Declare variables and methods
+D. Perform arithmetic operations
+Correct Answer: B — Make a decision based on a condition
+Explanation: if evaluates a boolean condition and executes its block when the condition is true.

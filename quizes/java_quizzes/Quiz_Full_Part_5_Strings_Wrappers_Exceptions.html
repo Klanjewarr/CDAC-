@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Bank Part 5: Strings, Wrappers & Exception Handling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Full Bank Part 5: Strings, Wrappers & Exception Handling</div>
+            <div class="quiz-subtitle">Questions Q141 to Q185 (All 45 bank questions)</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 141, "question": "Q141. MCQ (Coding): Which of the following statements correctly demonstrates an unchecked exception in Java? ```java // Option 1 int result = 10 / 0; // Option 2 String str = null; int length = str.length(); // Option 3 int[] arr = { 1, 2, 3 }; int value = arr[5]; ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 3"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Division by zero for integers throws ArithmeticException; dereferencing null throws NullPointerException; accessing an invalid array index throws ArrayIndexOutOfBoundsException. All are unchecked exceptions.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Division by zero for integers throws ArithmeticException; dereferencing null throws NullPointerException; accessing an invalid array index throws ArrayIndexOutOfBoundsException. All are unchecked exceptions.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 142, "question": "Q142. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Hello, World!\"; boolean startsWithHello = str.startsWith(\"Hello\"); boolean startsWithHi = str.startsWith(\"Hi\"); System.out.println(startsWithHello); System.out.println(startsWithHi); ```", "options": ["true, false", "false, true", "true, true", "false, false"], "correctIndex": 0, "hint": "", "correctExplanation": "startsWith checks whether the string begins with the supplied prefix; Hello matches, Hi does not.", "wrongExplanation": "startsWith checks whether the string begins with the supplied prefix; Hello matches, Hi does not."}, {"num": 143, "question": "Q143. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Hello, World!\"; boolean endsWithWorld = str.endsWith(\"World!\"); boolean endsWithJava = str.endsWith(\"Java\"); System.out.println(endsWithWorld); System.out.println(endsWithJava); ```", "options": ["true, false", "false, true", "true, true", "false, false"], "correctIndex": 0, "hint": "", "correctExplanation": "endsWith checks the suffix; the text ends in World!, not Java.", "wrongExplanation": "endsWith checks the suffix; the text ends in World!, not Java."}, {"num": 144, "question": "Q144. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Hello, World!\"; boolean containsHello = str.contains(\"Hello\"); boolean containsHi = str.contains(\"Hi\"); System.out.println(containsHello); System.out.println(containsHi); ```", "options": ["true, false", "false, true", "true, true", "false, false"], "correctIndex": 0, "hint": "", "correctExplanation": "contains checks for a substring; Hello is present and Hi is not.", "wrongExplanation": "contains checks for a substring; Hello is present and Hi is not."}, {"num": 145, "question": "Q145. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = \"Java\"; String str2 = \"Java\"; String str3 = new String(\"Java\"); System.out .println(str1 == str2); System.out.println(str1 == str3); ```", "options": ["true, true", "true, false", "false, true", "false, false"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "String literals with the same contents refer to the pooled literal. new String(\"Java\") creates a distinct String object, so == is false for that comparison.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "String literals with the same contents refer to the pooled literal. new String(\"Java\") creates a distinct String object, so == is false for that comparison.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 146, "question": "Q146. MCQ (Coding): What is the output of the following Java code snippet? ```java String str1 = new String(\"Hello\").intern(); String str2 = new String(\"Hello\").intern(); System.out.println(str1 == str2); ```", "options": ["true", "false", "Compilation error", "Runtime exception"], "correctIndex": 0, "hint": "", "correctExplanation": "intern() returns the canonical pooled String for that content, so both references are identical.", "wrongExplanation": "intern() returns the canonical pooled String for that content, so both references are identical."}, {"num": 147, "question": "Q147. MCQ (Coding): What is the output of the following Java code snippet? ```java StringBuffer sb = new StringBuffer(\"Hello\"); sb.append(\" World\"); System.out.println(sb); ```", "options": ["\"Hello World\"", "\"World Hello\"", "\"Hello\"", "Compilation error"], "correctIndex": 0, "hint": "", "correctExplanation": "StringBuffer.append mutates the buffer by adding the supplied text at the end.", "wrongExplanation": "StringBuffer.append mutates the buffer by adding the supplied text at the end."}, {"num": 148, "question": "Q148. MCQ (Coding): Which of the following statements correctly demonstrates appending a string in `StringBuffer` and `StringBuilder`? ```java // Option 1 StringBuffer sb = new StringBuffer(); sb.append(\"Hello\"); // Option 2 StringBuilder sb = new StringBuilder(); sb.append(\"Hello\"); // Option 3 StringBuffer sb = new StringBuffer(\"Hello\"); ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "", "correctExplanation": "Both StringBuffer and StringBuilder support append(String).", "wrongExplanation": "Both StringBuffer and StringBuilder support append(String)."}, {"num": 149, "question": "Q149. Which of the following methods is used to extract the length of a string in Java?", "options": ["length()", "len()", "sizeof()", "size()"], "correctIndex": 0, "hint": "", "correctExplanation": "String.length() returns the number of UTF-16 code units in the string.", "wrongExplanation": "String.length() returns the number of UTF-16 code units in the string."}, {"num": 150, "question": "Q150. MCQ: Which of the following statements about the string pool is true?", "options": ["Strings created using the `new` keyword are stored in the string pool.", "Strings created using the `new` keyword are not stored in the string pool.", "The string pool is a separate memory area reserved for long strings.", "The string pool is a part of the heap memory."], "correctIndex": 1, "hint": "", "correctExplanation": "The string pool is part of heap storage; new String creates a distinct object, although its literal argument may itself be pooled.", "wrongExplanation": "The string pool is part of heap storage; new String creates a distinct object, although its literal argument may itself be pooled."}, {"num": 151, "question": "Q151. What happens when the same String literal is used multiple times?", "options": ["A new object is always created", "The same String Pool object can be reused", "Compilation fails", "The previous String is deleted"], "correctIndex": 1, "hint": "", "correctExplanation": "Repeated identical string literals can refer to the same pooled String object.", "wrongExplanation": "Repeated identical string literals can refer to the same pooled String object."}, {"num": 152, "question": "Q152. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Java Programming\"; String upperCaseStr = str.toUpperCase(); System.out.println(upperCaseStr); ```", "options": ["\"java programming\"", "\"JAVA PROGRAMMING\"", "\"Java Programming\"", "\"Java programming\""], "correctIndex": 1, "hint": "", "correctExplanation": "toUpperCase returns a new string with letters converted to uppercase.", "wrongExplanation": "toUpperCase returns a new string with letters converted to uppercase."}, {"num": 153, "question": "Q153. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Hello, World!\"; String replacedStr = str.replace(\"l\", \"X\"); System.out.println(replacedStr); ```", "options": ["\"HexXo, WorXd!\"", "\"Hello, World!\"", "\"HeXXo, WorXd!\"", "\"HeXXo, WorXd!X\""], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "String.replace(\"l\", \"X\") replaces every lowercase l. In 'Hello, World!' there are three lowercase l characters, producing HeXXo, WorXd!.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "String.replace(\"l\", \"X\") replaces every lowercase l. In 'Hello, World!' there are three lowercase l characters, producing HeXXo, WorXd!.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 154, "question": "Q154. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \"Hello, World!\"; String lowerCaseStr = str.toLowerCase(); System.out.println(lowerCaseStr); ```", "options": ["\"HELLO, WORLD!\"", "\"hello, world!\"", "\"Hello, World!\"", "\"hello, world!\""], "correctIndex": 1, "hint": "", "correctExplanation": "toLowerCase returns a new string with letters converted to lowercase.", "wrongExplanation": "toLowerCase returns a new string with letters converted to lowercase."}, {"num": 155, "question": "Q155. MCQ (Coding): What is the output of the following Java code snippet? ```java String str = \" Hello, World! \"; String trimmedStr = str.trim(); System.out.println(trimmedStr); ```", "options": ["\"Hello, World!\"", "\"Hello, World! \"", "\" Hello, World!\"", "\" Hello, World! \""], "correctIndex": 0, "hint": "", "correctExplanation": "trim removes leading and trailing characters whose code points are <= U+0020; it does not remove internal spaces.", "wrongExplanation": "trim removes leading and trailing characters whose code points are <= U+0020; it does not remove internal spaces."}, {"num": 156, "question": "Q156. MCQ (Coding): What is the output of the following Java code snippet? ```java boolean flag = true; String str = Boolean.toString(flag); System.out.println(str); ```", "options": ["true", "\"true\"", "Compilation error", "Runtime exception"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Boolean.toString(true) returns the String containing the characters true. println prints those characters without quotation marks; quotation marks in an option are explanatory notation, not output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Boolean.toString(true) returns the String containing the characters true. println prints those characters without quotation marks; quotation marks in an option are explanatory notation, not output.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 157, "question": "Q157. MCQ (Coding): What is the output of the following Java code snippet? ```java int num = Integer.parseInt(\"42\"); System.out.println(num); ```", "options": ["42", "\"42\"", "Compilation error", "Runtime exception"], "correctIndex": 0, "hint": "", "correctExplanation": "Integer.parseInt converts the numeric text '42' to primitive int 42.", "wrongExplanation": "Integer.parseInt converts the numeric text '42' to primitive int 42."}, {"num": 158, "question": "Q158. MCQ: How can you explicitly add a string to the string pool in Java?", "options": ["By calling the `addToPool()` method provided by the `String` class.", "By calling the `intern()` method on the string object.", "By converting the string to uppercase and then assigning it to a reference variable.", "By appending the string with another string and then assigning it to a reference variable."], "correctIndex": 1, "hint": "", "correctExplanation": "String.intern returns the canonical pooled representation of a string.", "wrongExplanation": "String.intern returns the canonical pooled representation of a string."}, {"num": 159, "question": "Q159. MCQ: What is the benefit of using the string pool in Java?", "options": ["It allows string objects to be garbage collected more efficiently.", "It prevents the creation of duplicate string objects with the same content.", "It allows strings to be compared using the `==` operator instead of the `equals()` method.", "It prevents string objects from being modified."], "correctIndex": 1, "hint": "", "correctExplanation": "Pooling can allow equal literals to share one canonical object and reduce duplicate literal objects.", "wrongExplanation": "Pooling can allow equal literals to share one canonical object and reduce duplicate literal objects."}, {"num": 160, "question": "Q160. MCQ: What is the purpose of the string pool in Java?", "options": ["To store string objects that are created using the `new` keyword.", "To store frequently used strings to conserve memory and improve performance.", "To store strings with a specific length.", "To store strings used in multi-threaded applications."], "correctIndex": 1, "hint": "", "correctExplanation": "The string pool stores canonical strings, particularly literals and interned strings.", "wrongExplanation": "The string pool stores canonical strings, particularly literals and interned strings."}, {"num": 161, "question": "Q161. Method used to take a string as input in Java?", "options": ["next()", "nextLine()", "Both A. and B.", "None of these"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Scanner.next() reads the next token; Scanner.nextLine() reads the remainder of the current line. Both can return String input.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Scanner.next() reads the next token; Scanner.nextLine() reads the remainder of the current line. Both can return String input.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 162, "question": "Q162. MCQ: What is the main difference between `StringBuffer` and `StringBuilder` in Java?", "options": ["`StringBuffer` is mutable, while `StringBuilder` is immutable.", "`StringBuffer` is faster than `StringBuilder`.", "`StringBuffer` is synchronized, while `StringBuilder` is not.", "`StringBuffer` is used for single-threaded applications, while `StringBuilder` is used for multi-"], "correctIndex": 2, "hint": "", "correctExplanation": "StringBuffer's methods are synchronized; StringBuilder's methods are not.", "wrongExplanation": "StringBuffer's methods are synchronized; StringBuilder's methods are not."}, {"num": 163, "question": "Q163. Which method is used to add a String to the String Pool explicitly?", "options": ["addPool()", "intern()", "pool()", "store()"], "correctIndex": 1, "hint": "", "correctExplanation": "intern() obtains the canonical string from the string pool.", "wrongExplanation": "intern() obtains the canonical string from the string pool."}, {"num": 164, "question": "Q164. Which method is used to convert a String into an int value?", "options": ["Integer.parseInt()", "Integer.toString()", "String.valueOf()", "Integer.convert()"], "correctIndex": 0, "hint": "", "correctExplanation": "Integer.parseInt(String) converts numeric text into a primitive int.", "wrongExplanation": "Integer.parseInt(String) converts numeric text into a primitive int."}, {"num": 165, "question": "Q165. Where are String literals generally stored in Java?", "options": ["Stack", "String Pool", "CPU Cache", "Method Area only"], "correctIndex": 1, "hint": "", "correctExplanation": "String literals are represented by canonical String objects in the string pool, which is heap-managed in modern Java.\nException Handling", "wrongExplanation": "String literals are represented by canonical String objects in the string pool, which is heap-managed in modern Java.\nException Handling"}, {"num": 166, "question": "Q166. MCQ (Coding): Which of the following code snippets will cause a compilation error? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (Exception e1 | RuntimeException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (NullPointerException e) { // Exception handling } catch (IOException e) { // Exception handling } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A multi-catch cannot combine Exception with RuntimeException because RuntimeException is a subclass of Exception. Option 1's IOException and NullPointerException are unrelated types; Option 3 is valid if the try can throw IOException.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A multi-catch cannot combine Exception with RuntimeException because RuntimeException is a subclass of Exception. Option 1's IOException and NullPointerException are unrelated types; Option 3 is valid if the try can throw IOException.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 167, "question": "Q167. MCQ (Coding): Which of the following code snippets correctly uses a multi-catch block? ```java // Option 1 try { // Some code that may throw exceptions } catch (IOException | NullPointerException e) { // Exception handling } // Option 2 try { // Some code that may throw exceptions } catch (IOException e1 | NullPointerException e2) { // Exception handling } // Option 3 try { // Some code that may throw exceptions } catch (Exception e) { // Exception handling } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A multi-catch uses one exception parameter after the alternatives, for example catch (IOException | NullPointerException e). Option 2 is invalid because it declares two variables.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A multi-catch uses one exception parameter after the alternatives, for example catch (IOException | NullPointerException e). Option 2 is invalid because it declares two variables.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 168, "question": "Q168. MCQ (Coding): Which of the following code snippets demonstrates the correct way to throw a user- defined exception? ```java // Option 1 throw new MyCheckedException(\"This is a checked exception.\"); // Option 2 throw new MyUncheckedException(\"This is an unchecked exception.\"); ```", "options": ["Option 1", "Option 2", "Both Option 1 and Option 2", "Neither Option 1 nor Option 2"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Both checked and unchecked exception instances can be thrown with throw; checked exceptions must also be caught or declared.", "wrongExplanation": "Both checked and unchecked exception instances can be thrown with throw; checked exceptions must also be caught or declared."}, {"num": 169, "question": "Q169. MCQ (Coding): What is the output of the following Java code snippet? ```java try { int[] arr = { 1, 2, 3 }; int value = arr[5]; } catch (ArrayIndexOutOfBoundsException | ArithmeticException e) { System.out.println(\"Caught: \" + e.getClass().getSimpleName()); } ```", "options": ["Caught: ArrayIndexOutOfBoundsException", "Caught: ArithmeticException", "Caught: Exception", "Caught: RuntimeException"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "arr[5] is outside the valid indexes 0, 1 and 2, so ArrayIndexOutOfBoundsException is caught and its simple name printed.", "wrongExplanation": "arr[5] is outside the valid indexes 0, 1 and 2, so ArrayIndexOutOfBoundsException is caught and its simple name printed."}, {"num": 170, "question": "Q170. MCQ (Coding): Which of the following method declarations correctly indicates that the method may throw multiple exceptions? ```java // Option 1 public void myMethod() throws IOException, NullPointerException { // Method implementation } // Option 2 public void myMethod() throws Exception { // Method implementation } // Option 3 public void myMethod() { try { // Method implementation } catch (IOException | NullPointerException e) { // Exception handling } } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Option 1 lists two exception types in the throws clause. Option 2 declares the broader Exception type, which can also cover multiple possible exceptions. Option 3 uses try/catch rather than a throws clause.", "wrongExplanation": "Option 1 lists two exception types in the throws clause. Option 2 declares the broader Exception type, which can also cover multiple possible exceptions. Option 3 uses try/catch rather than a throws clause."}, {"num": 171, "question": "Q171. MCQ (Coding): Which of the following method declarations is correctly using the `throws` clause? ```java // Option 1 public void myMethod() throws IOException { // Method implementation } // Option 2 public void myMethod() throws Exception { // Method implementation } // Option 3 public void myMethod() { try { // Method implementation } catch (IOException e) { // Exception handling } } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Both declarations are valid uses of throws: a method may declare IOException specifically or the broader Exception type. Option 3 handles IOException inside the method with try/catch; it does not use a throws clause.", "wrongExplanation": "Both declarations are valid uses of throws: a method may declare IOException specifically or the broader Exception type. Option 3 handles IOException inside the method with try/catch; it does not use a throws clause."}, {"num": 172, "question": "Q172. MCQ (Coding): What will happen if an exception is thrown from a method, and the method does not have a try-catch block to handle it? ```java public void methodA() { throw new RuntimeException(\"Exception in methodA\"); } public void methodB() { methodA(); } ```", "options": ["The program will terminate abruptly with an error message.", "The exception will be caught and handled by the JVM.", "The exception will be caught and handled by methodB.", "The exception will propagate up the call stack until it is caught or the program terminates."], "correctIndex": 3, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "An unchecked RuntimeException propagates up the call stack until a matching catch handles it or the thread's uncaught-exception handler is invoked.", "wrongExplanation": "An unchecked RuntimeException propagates up the call stack until a matching catch handles it or the thread's uncaught-exception handler is invoked."}, {"num": 173, "question": "Q173. MCQ (Coding): What is the purpose of the `catch` block in a try-catch-finally statement? ```java try { // Code that may throw an exception } catch (ExceptionType e) { // Code to handle the exception } ```", "options": ["To define the code that will be executed if an exception of type `ExceptionType` occurs.", "To define the code that will be executed whether an exception occurs or not.", "To define the code that will be executed if no exception occurs.", "To define the code that will be executed if an exception occurs, regardless of its type."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A catch block handles an exception compatible with the catch parameter's type. It does not run for every exception regardless of type.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A catch block handles an exception compatible with the catch parameter's type. It does not run for every exception regardless of type.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 174, "question": "Q174. MCQ: What is the benefit of using a multi-catch block over separate catch blocks for each exception type?", "options": ["It reduces the number of catch blocks required in the code.", "It improves the performance of exception handling.", "It simplifies the error-handling process and makes the code more concise.", "It allows the program to recover from any type of exception thrown."], "correctIndex": 2, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Multi-catch reduces duplicated handling code when several unrelated exception types need the same response.", "wrongExplanation": "Multi-catch reduces duplicated handling code when several unrelated exception types need the same response."}, {"num": 175, "question": "Q175. MCQ: Which keyword is used to specify a block of code where an exception may occur in Java?", "options": ["`try`", "`catch`", "`finally`", "`throws`"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "The try keyword marks the block whose execution may throw exceptions.", "wrongExplanation": "The try keyword marks the block whose execution may throw exceptions."}, {"num": 176, "question": "Q176. MCQ: What is the key difference between a checked and an unchecked user-defined exception?", "options": ["Checked exceptions must be explicitly caught or declared with `throws`, while unchecked", "Unchecked exceptions must be explicitly caught or declared with `throws`, while checked", "Checked exceptions are always related to syntax or compilation errors, while unchecked", "Checked exceptions are subclasses of `RuntimeException`, while unchecked exceptions are"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Checked exceptions are subclasses of Exception other than RuntimeException and must be caught or declared; unchecked exceptions derive from RuntimeException or Error.", "wrongExplanation": "Checked exceptions are subclasses of Exception other than RuntimeException and must be caught or declared; unchecked exceptions derive from RuntimeException or Error."}, {"num": 177, "question": "Q177. MCQ: Which of the following keywords can be used to propagate an exception explicitly?", "options": ["`catch`", "`throws`", "`try`", "`finally`"], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "The throws clause declares that a method may pass exceptions to its caller; throw actually throws an exception object.", "wrongExplanation": "The throws clause declares that a method may pass exceptions to its caller; throw actually throws an exception object."}, {"num": 178, "question": "Q178. MCQ: What happens if an uncaught exception is thrown inside the `finalize()` method?", "options": ["The JVM will automatically handle the exception and continue garbage collection.", "The exception will be propagated to the calling code that triggered garbage collection.", "The JVM will skip the `finalize()` method and proceed with garbage collection.", "The JVM will terminate the application."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "An uncaught exception thrown by a finalizer is ignored by the JVM; it does not propagate to the code that triggered garbage collection. Finalization is deprecated for removal and should not be relied upon.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "An uncaught exception thrown by a finalizer is ignored by the JVM; it does not propagate to the code that triggered garbage collection. Finalization is deprecated for removal and should not be relied upon.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 179, "question": "Q179. MCQ: What is the key difference between checked and unchecked exceptions in Java?", "options": ["Checked exceptions are explicitly handled by the programmer, while unchecked exceptions are", "Checked exceptions are always related to syntax or compilation errors, while unchecked", "Checked exceptions are subclasses of `Exception`, while unchecked exceptions are subclasses of", "Checked exceptions require explicit handling using try-catch or throws, while unchecked"], "correctIndex": 3, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Checked exceptions must be caught or declared; unchecked exceptions do not have that compile-time requirement.", "wrongExplanation": "Checked exceptions must be caught or declared; unchecked exceptions do not have that compile-time requirement."}, {"num": 180, "question": "Q180. MCQ: What happens if an exception is not caught by any method in the call stack?", "options": ["The program will continue to execute normally without any impact.", "The program will terminate abruptly with an error message.", "The JVM will handle the exception automatically.", "The method where the exception occurred will retry the operation."], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "If no handler is found, the thread terminates after the uncaught-exception handler is invoked; the JVM prints a stack trace by default.", "wrongExplanation": "If no handler is found, the thread terminates after the uncaught-exception handler is invoked; the JVM prints a stack trace by default."}, {"num": 181, "question": "Q181. MCQ: What is the purpose of creating a user-defined unchecked exception?", "options": ["To indicate exceptional conditions that may occur during the execution of the code.", "To handle a critical error that cannot be recovered and requires the application to terminate.", "To create an exception that does not require explicit handling.", "To demonstrate the use of inheritance in exception classes."], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Unchecked custom exceptions are useful for programming errors or conditions callers are not required to handle at compile time.", "wrongExplanation": "Unchecked custom exceptions are useful for programming errors or conditions callers are not required to handle at compile time."}, {"num": 182, "question": "Q182. What happens if you try to use an uninitialized local variable in Java?", "options": ["The program will compile and run without any issues.", "The program will throw a compilation error.", "The program will throw a runtime exception.", "The variable will automatically be initialized to its default value."], "correctIndex": 1, "hint": "", "correctExplanation": "A local variable must be definitely assigned before use; otherwise compilation fails.", "wrongExplanation": "A local variable must be definitely assigned before use; otherwise compilation fails."}, {"num": 183, "question": "Q183. MCQ: What is the purpose of creating a user-defined checked exception?", "options": ["To indicate exceptional conditions that may occur during the execution of the code.", "To handle a critical error that cannot be recovered and requires the application to terminate.", "To create an exception that does not require explicit handling.", "To demonstrate the use of inheritance in exception classes."], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "A custom checked exception represents a recoverable/expected exceptional condition that callers should be required to handle or declare.", "wrongExplanation": "A custom checked exception represents a recoverable/expected exceptional condition that callers should be required to handle or declare."}, {"num": 184, "question": "Q184. MCQ: When should you create a user-defined checked exception in Java?", "options": ["When you want to handle a critical error that cannot be recovered and requires the application to", "When you want to indicate exceptional conditions that may occur during the execution of your", "When you want to handle exceptions that can be easily recovered and do not impact the normal", "When you want to create an exception that does not require explicit handling."], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Use a checked exception when callers are reasonably expected to recover and should explicitly handle the condition.", "wrongExplanation": "Use a checked exception when callers are reasonably expected to recover and should explicitly handle the condition."}, {"num": 185, "question": "Q185. MCQ: What is the advantage of using exception propagation in Java?", "options": ["It allows the program to recover from unexpected errors and continue execution.", "It simplifies the error-handling process by automatically catching all exceptions.", "It helps in minimizing code duplication by reusing existing exception-handling logic.", "It"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nCollections, Generics & Lambda/Strea", "correctExplanation": "Exception propagation lets an exception move up the call stack until a matching handler is found or the thread terminates. The source's final option is truncated, so a letter cannot be confirmed.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nCollections, Generics & Lambda/Streams", "wrongExplanation": "Exception propagation lets an exception move up the call stack until a matching handler is found or the thread terminates. The source's final option is truncated, so a letter cannot be confirmed.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.\nCollections, Generics & Lambda/Streams"}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

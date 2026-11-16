@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Bank Part 2: Classes, Objects, Constructors & Static</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 32px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: none;
+            max-width: 520px;
+            width: 100%;
+            padding: 18px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+        }
+
+        .quiz-header {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .quiz-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #232323;
+            margin-bottom: 4px;
+        }
+
+        .quiz-subtitle {
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .progress-text {
+            text-align: left;
+            font-size: 13px;
+            color: #9d9d9d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            white-space: pre-wrap;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 3px;
+        }
+
+        .options::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover:not(.selected):not(.disabled) {
+            border-color: #e6e6e6;
+            background: #f6f6f6;
+        }
+
+        .option.selected {
+            border-color: #d0d0d0;
+            background: #dedede;
+        }
+
+        .option.correct,
+        .option.wrong {
+            border-color: #f0f0f0;
+            background: #f8f8f8;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #9d9d9d;
+            width: 22px;
+        }
+
+        .option.selected .option-label {
+            color: #3a3a3a;
+        }
+
+        .option.disabled .option-text {
+            color: #bdbdbd;
+        }
+
+        .option.disabled .option-label {
+            color: #bdbdbd;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #3a3a3a;
+        }
+
+
+        .feedback-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .feedback-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feedback-card.correct {
+            background: #bfeacb;
+        }
+
+        .feedback-card.wrong {
+            background: #fff7f7;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback-header.correct {
+            color: #697b6e;
+        }
+
+        .feedback-header.wrong {
+            color: #a42d22;
+        }
+
+        .feedback-icon {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feedback-answer {
+            font-size: 15px;
+            color: #2a2a2a;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-card.correct .feedback-text {
+            color: #444443;
+        }
+
+        .feedback-card.wrong .feedback-text {
+            color: #2e2e2f;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            min-height: 52px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #6b7280;
+            border: 1px solid #e2e2e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e5e5;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #424cf7;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 76, 247, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+
+        .completion-container {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-container.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-card.score {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card.score .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.score .stat-value {
+            color: white;
+        }
+
+        .completion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hint-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4e4e4e;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hint-toggle .chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .hint-toggle.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .hint-panel {
+            padding: 12px 14px;
+            background: #ebecf8;
+            border-radius: 12px;
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hint-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4e4e4e;
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #474749;
+            line-height: 1.5;
+        }
+
+        .hint-slot {
+            min-height: 72px;
+        }
+
+        .quiz-footer {
+            margin-top: auto;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Full Bank Part 2: Classes, Objects, Constructors & Static</div>
+            <div class="quiz-subtitle">Questions Q31 to Q75 (All 44 bank questions)</div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Questions will be rendered here -->
+        </div>
+
+        <div id="completion-screen" class="completion-container">
+            <div class="completion-icon">🎉</div>
+            <div class="completion-title">You did it! Quiz Complete.</div>
+            <div class="completion-subtitle">Here's how you performed</div>
+
+            <div class="stats-grid">
+                <div class="stat-card score">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score-value">0/15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Right</div>
+                    <div class="stat-value" id="right-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong</div>
+                    <div class="stat-value" id="wrong-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Skipped</div>
+                    <div class="stat-value" id="skipped-value">0</div>
+                </div>
+            </div>
+
+            <div class="completion-buttons">
+                <button class="btn btn-secondary" onclick="reviewQuiz()">Review Quiz</button>
+                <button class="btn btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const questions = [{"num": 31, "question": "Q31. MCQ (Coding): What will be the output of the following Java code snippet? ```java public void methodA() { throw new ArithmeticException(\"Exception in methodA\"); } public void methodB() { methodA(); } public void methodC() { try { methodB(); } catch (RuntimeException e) { System.out.println(\"Caught: \" + e.getMessage()); } } public static void main(String[] args) { new ExceptionPropagationDemo().methodC(); } ```", "options": ["The program will terminate abruptly with an error message.", "The output will be \"Caught: Exception in methodA\".", "The output will be \"Caught: Exception in methodB\".", "The output will be \"Caught: Exception in methodC\"."], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "ArithmeticException is a RuntimeException. It propagates through methodB to methodC, where the catch handles it.", "wrongExplanation": "ArithmeticException is a RuntimeException. It propagates through methodB to methodC, where the catch handles it."}, {"num": 32, "question": "Q32. MCQ (Coding): Which of the following code snippets correctly defines a user-defined unchecked exception? ```java // Option 1 class MyUncheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyUncheckedException extends Exception { // Constructor and other methods } // Option 3 class MyUncheckedException extends Error { // Constructor and other methods } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 0, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "A user-defined unchecked exception extends RuntimeException (or a subclass of it).", "wrongExplanation": "A user-defined unchecked exception extends RuntimeException (or a subclass of it)."}, {"num": 33, "question": "Q33. MCQ (Coding): Which of the following code snippets correctly defines a user-defined checked exception? ```java // Option 1 class MyCheckedException extends RuntimeException { // Constructor and other methods } // Option 2 class MyCheckedException extends Exception { // Constructor and other methods } // Option 3 class MyCheckedException extends Error { // Constructor and other methods } ```", "options": ["Option 1", "Option 2", "Option 3", "Both Option 1 and Option 2"], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "A user-defined checked exception normally extends Exception but not RuntimeException.", "wrongExplanation": "A user-defined checked exception normally extends Exception but not RuntimeException."}, {"num": 34, "question": "Q34. MCQ (Coding): Which of the following code snippets correctly demonstrates the use of the `finalize()` method? ```java // Option 1 public class MyClass { // ... class code ... public void finalize() { // clean up resources here } } // Option 2 public class MyClass { // ... class code ... public void finalize(Object obj) { // clean up resources here } } // Option 3 public class MyClass { // ... class code ... public void finalizing() { // clean up resources here } } ```", "options": ["Option 1", "Option 2", "Option 3", "None of the above"], "correctIndex": 0, "hint": "", "correctExplanation": "Option 1 is the best-supported choice for the stated Java concept. The rule follows from Java's type, access, inheritance or API contract described in the question.", "wrongExplanation": "Option 1 is the best-supported choice for the stated Java concept. The rule follows from Java's type, access, inheritance or API contract described in the question."}, {"num": 35, "question": "Q35. MCQ (Coding): Which of the following code snippets correctly makes an object eligible for garbage collection? ```java // Option 1 Object obj = new Object(); obj = null; // Option 2 Object obj = new Object(); Object obj2 = obj; obj = null; // Option 3 Object obj = new Object(); obj = new Object(); ```", "options": ["Option 1", "Option 2", "Option 3", "None of the above"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "Option 1 removes the only reference by assigning null. In Option 2, obj2 still refers to the original object, so it is not eligible. In Option 3, the original object loses its last reference when obj is reassigned, so it becomes eligible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "Option 1 removes the only reference by assigning null. In Option 2, obj2 still refers to the original object, so it is not eligible. In Option 3, the original object loses its last reference when obj is reassigned, so it becomes eligible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 36, "question": "Q36. MCQ (Coding): Given the following Java classes in different packages, what is the output of the demo application? ```java // File: Package1/Grandparent.java package Package1; public class Grandparent { protected void display() { System.out.println(\"This is the Grandparent class.\"); } } // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { protected void display() { System.out.println(\"This is the Parent class.\"); } } // File: Main.java import Package2.Parent; public class Main { public static void main(String[] args) { Parent obj = new Parent(); obj.display(); } } ```", "options": ["The code will not compile due to package-private access conflicts.", "The code will compile, but the output will be \"This is the Parent class.\"", "The code will compile, but the output will be \"This is the Grandparent class.\"", "The code will compile, but there will be a runtime exception."], "correctIndex": 1, "hint": "", "correctExplanation": "Parent overrides the protected display method, and dynamic dispatch invokes Parent.display() for a Parent object.", "wrongExplanation": "Parent overrides the protected display method, and dynamic dispatch invokes Parent.display() for a Parent object."}, {"num": 37, "question": "Q37. MCQ (Coding): Given the following Java classes, what will be the output of the demo application? ```java // File: MyClass.java public class MyClass { public int publicVar = 10; private int privateVar = 20; protected int protectedVar = 30; int defaultVar = 40; public void display() { System.out.println(\"Public: \" + publicVar); System.out.println(\"Private: \" + privateVar); System.out.println(\"Protected: \" + protectedVar); System.out.println(\"Default: \" + defaultVar); } } // File: Main.java public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); obj.display(); } } ```", "options": ["The code will not compile due to access modifier conflicts.", "The code will compile, and all variables will be accessible and displayed.", "The code will compile, but only public variables will be accessible and displayed.", "The code will compile, but only protected and public variables will be accessible and displayed."], "correctIndex": 1, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The display() method is declared inside MyClass, so it can access that class's public, private, protected and package-private fields.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The display() method is declared inside MyClass, so it can access that class's public, private, protected and package-private fields.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 38, "question": "Q38. Consider the following code: ```java class Animal { void makeSound() { System.out.println(\"Animal makes a sound\"); } } class Dog extends Animal { void makeSound() { System.out.println(\"Dog barks\"); } } class Cat extends Animal { void makeSound() { System.out.println(\"Cat meows\"); } } ``` What will happen when you try to compile and run the following code snippet? ```java Animal animal = new Dog(); Cat cat = (Cat) animal; cat.makeSound(); ```", "options": ["It will print \"Animal makes a sound.\"", "It will print \"Dog barks.\"", "It will print \"Cat meows.\"", "It will result in a compilation error or a ClassCastException at runtime."], "correctIndex": 3, "hint": "", "correctExplanation": "The cast is permitted by the compiler because Cat and Dog share Animal, but the actual object is Dog; the cast throws ClassCastException.", "wrongExplanation": "The cast is permitted by the compiler because Cat and Dog share Animal, but the actual object is Dog; the cast throws ClassCastException."}, {"num": 39, "question": "Q39. What will be the output of the following code? ```java abstract class Animal { abstract void makeSound(); } class Dog extends Animal { void makeSound() { System.out.println(\"Dog barks.\"); } } class Cat extends Animal { void makeSound() { System.out.println(\"Cat meows.\"); } } public class Main { public static void main(String[] args) { Animal dog = new Dog(); Animal cat = new Cat(); dog.makeSound(); cat.makeSound(); } } ```", "options": ["\"Dog barks. Cat meows.\"", "\"Dog barks. Dog barks.\"", "\"Cat meows. Cat meows.\"", "Compilation error due to abstract methods in the Animal class."], "correctIndex": 0, "hint": "", "correctExplanation": "The actual objects are Dog and Cat, so overridden makeSound methods print their respective messages.", "wrongExplanation": "The actual objects are Dog and Cat, so overridden makeSound methods print their respective messages."}, {"num": 40, "question": "Q40. Consider the following code: ```java abstract class Vehicle { abstract void start(); } class Car extends Vehicle { void start() { System.out.println(\"Car started.\"); } } class Bike extends Vehicle { void start() { System.out.println(\"Bike started.\"); } } public class Main { public static void main(String[] args) { Vehicle vehicle = new Car(); vehicle.start(); } } ``` What will be the output when the Main class is executed?", "options": ["\"Car started.\"", "\"Bike started.\"", "Compilation error due to abstract methods in the Vehicle class.", "Runtime error due to the abstract start() method not being implemented."], "correctIndex": 0, "hint": "", "correctExplanation": "vehicle refers to a Car object. Dynamic dispatch invokes Car.start().", "wrongExplanation": "vehicle refers to a Car object. Dynamic dispatch invokes Car.start()."}, {"num": 41, "question": "Q41. MCQ (Coding): What is the output of the following Java code snippet? ```java public void divide(int num1, int num2) { try { int result = num1 / num2; System.out.println(\"Result: \" + result); } catch (ArithmeticException e) { System.out.println(\"Error: \" + e.getMessage()); } finally { System.out.println(\"Finally block executed.\"); } } public static void main(String[] args) { new ExceptionHandlingDemo().divide(10, 0); } ```", "options": ["Result: Infinity", "Error: / by zero", "Compilation error", "Runtime exception"], "correctIndex": 1, "hint": "Check compile-time access rules or exception propagation hierarchy.", "correctExplanation": "Integer division by zero throws ArithmeticException, which is caught; the finally block also executes.", "wrongExplanation": "Integer division by zero throws ArithmeticException, which is caught; the finally block also executes."}, {"num": 42, "question": "Q42. MCQ (Coding): Given the following Java classes, what is the output of the demo application? ```java // File: Package1/MyClass.java package Package1; public class MyClass { protected void display() { System.out.println(\"This is a protected method.\"); } } // File: Main.java import Package1.MyClass; public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); obj.display (); } } ```", "options": ["The code will not compile because the `display()` method is not accessible.", "The code will compile, and \"This is a protected method.\" will be printed.", "The code will compile, but there will be a runtime exception.", "The code will compile, but the `display()` method will not be invoked."], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A protected member in another package is not accessible through an ordinary superclass instance from an unrelated class. Main is not a subclass, so obj.display() is inaccessible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A protected member in another package is not accessible through an ordinary superclass instance from an unrelated class. Main is not a subclass, so obj.display() is inaccessible.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 43, "question": "Q43. MCQ (Coding): What is the output of the following Java code snippet? ```java public void performOperation() throws IOException { // Some code that may throw an IOException } public static void main(String[] args) { try { performOperation(); System.out.println(\"Operation successful.\"); } catch (IOException e) { System.out.println(\"An error occurred: \" + e.getMessage()); } } ```", "options": ["Operation successful.", "An error occurred: (the error message)", "Compilation error", "Runtime exception"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The snippet invokes a non-static method from a static context without an instance. A non-static method must be called on an object, unless the shown code is inside an instance method.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The snippet invokes a non-static method from a static context without an instance. A non-static method must be called on an object, unless the shown code is inside an instance method.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 44, "question": "Q44. MCQ (Coding): What is the output of the demo application if `MyClass` is modified as follows? ```java // File: MyClass.java public class MyClass { protected void finalize() { System.out.println(\"The object is being garbage collected.\"); } public static void main(String[] args) { MyClass obj1 = new MyClass(); MyClass obj2 = new MyClass(); obj1 = null; System.gc(); } } ```", "options": ["The code will not compile because of multiple instances of `MyClass`.", "The code will compile, but the `finalize()` method will not be invoked.", "The code will compile, and \"The object is being garbage collected.\" will be printed twice.", "The code will compile, and \"The object is being garbage collected.\" will be printed once."], "correctIndex": 3, "hint": "", "correctExplanation": "finalize() was historically the finalization hook, but it is deprecated for removal and execution is not guaranteed. Avoid relying on it.", "wrongExplanation": "finalize() was historically the finalization hook, but it is deprecated for removal and execution is not guaranteed. Avoid relying on it."}, {"num": 45, "question": "Q45. Consider the following code: ```java abstract class Shape { abstract void draw(); void display() { System.out.println(\"Displaying shape.\"); } } class Circle extends Shape { void draw() { System.out.println(\"Drawing a circle.\"); } } ``` What will be the output of the following code? ```java Shape shape = new Circle(); shape.draw(); shape.display(); ```", "options": ["\"Drawing a circle. Displaying shape.\"", "\"Displaying shape. Drawing a circle.\"", "Compilation error due to the abstract methods in the Shape class.", "Runtime error due to the abstract draw() method not being implemented."], "correctIndex": 0, "hint": "", "correctExplanation": "`Shape shape = new Circle(); shape.draw(); shape.display();`\n1. `shape.draw()` invokes `Circle.draw()` via dynamic method dispatch (runtime polymorphism), printing 'Drawing a circle.'.\n2. `shape.display()` is an inherited concrete method from `Shape`, printing 'Displaying shape.'.\nTogether they output: 'Drawing a circle. Displaying shape.'.", "wrongExplanation": "`Shape shape = new Circle(); shape.draw(); shape.display();`\n1. `shape.draw()` invokes `Circle.draw()` via dynamic method dispatch (runtime polymorphism), printing 'Drawing a circle.'.\n2. `shape.display()` is an inherited concrete method from `Shape`, printing 'Displaying shape.'.\nTogether they output: 'Drawing a circle. Displaying shape.'."}, {"num": 46, "question": "Q46. MCQ (Coding): Given the following Java class, what will be the output of the demo application? ```java // File: MyClass.java public class MyClass { protected void finalize() { System.out.println(\"The object is being garbage collected.\"); } public static void main(String[] args) { MyClass obj = new MyClass(); obj = null; System.gc(); } } ```", "options": ["The code will not compile because of the call to `System.gc()`.", "The code will compile, but the `finalize()` method will not be invoked.", "The code will compile, and \"The object is being garbage collected.\" will be printed.", "The code will compile, but the output will be \"null.\""], "correctIndex": 2, "hint": "", "correctExplanation": "System.gc() is only a request/hint; it does not guarantee immediate collection or finalization.", "wrongExplanation": "System.gc() is only a request/hint; it does not guarantee immediate collection or finalization."}, {"num": 47, "question": "Q47. What will be the output of following Java code? import java.util.Scanner; class ThisKeyword { private int a = 4; private int b = 1; void getSum(int a, int b) { this.a = a; this.b = b; System.out.println(this.a + this.b); } } public class Main { public static void main(String args[]) { ThisKeyword T = new ThisKeyword(); T.getSum(3, 5); } }", "options": ["5", "9", "8", "4"], "correctIndex": 2, "hint": "", "correctExplanation": "In `ThisKeyword`, `this.a = a;` and `this.b = b;` assign the method parameters (3 and 5) to the instance variables.\n`System.out.println(this.a + this.b);` computes `3 + 5 = 8` and prints 8.", "wrongExplanation": "In `ThisKeyword`, `this.a = a;` and `this.b = b;` assign the method parameters (3 and 5) to the instance variables.\n`System.out.println(this.a + this.b);` computes `3 + 5 = 8` and prints 8."}, {"num": 48, "question": "Q48. MCQ (Coding): What is the output of the demo application if `Parent.java` is modified as follows? ```java // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { protected void display() { System.out.println(\"This is the Parent class.\"); super.display(); } } ```", "options": ["The code will not compile due to package-private access conflicts.", "The code will compile, but there will be a runtime exception.", "The code will compile, but the output will be \"This is the Grandparent class.\"", "The code will compile, and the output will be \"This is the Parent class. This is the Grandparent"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The protected member is being accessed from a different package by a class that is not a qualifying subclass. Protected access across packages is restricted.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The protected member is being accessed from a different package by a class that is not a qualifying subclass. Protected access across packages is restricted.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 49, "question": "Q49. What is the result of the following code snippet? ```java class Person { String name; Person(String n) { name = n; } } public class Main { public static void main(String[] args) { Person person1 = new Person(\"Alice\"); Person person2 = new Person(\"Bob\"); person2 = person1; System.out.println(person2.name); } } ```", "options": ["Alice", "Bob", "null", "The code will not compile"], "correctIndex": 0, "hint": "", "correctExplanation": "`person2 = person1;` copies the object reference of `person1` (\"Alice\") into `person2`.\nBoth reference variables now point to the exact same `Person` object on the heap, so `person2.name` prints 'Alice'.", "wrongExplanation": "`person2 = person1;` copies the object reference of `person1` (\"Alice\") into `person2`.\nBoth reference variables now point to the exact same `Person` object on the heap, so `person2.name` prints 'Alice'."}, {"num": 50, "question": "Q50. Consider the following code: ```java class Animal { void makeSound() { System.out.println(\"Animal makes a sound\"); } } class Dog extends Animal { void makeSound() { System.out.println(\"Dog barks\"); } } ``` What is the result of the following code snippet? ```java Animal animal = new Dog(); animal.makeSound(); ```", "options": ["It will print \"Animal makes a sound.\"", "It will print \"Dog barks.\"", "It will result in a compilation error.", "It will throw a runtime exception."], "correctIndex": 1, "hint": "", "correctExplanation": "`Animal animal = new Dog(); animal.makeSound();`\nThrough dynamic method dispatch, the JVM executes the overridden method `makeSound()` belonging to the actual runtime object `Dog` on the heap, printing 'Dog barks.'.", "wrongExplanation": "`Animal animal = new Dog(); animal.makeSound();`\nThrough dynamic method dispatch, the JVM executes the overridden method `makeSound()` belonging to the actual runtime object `Dog` on the heap, printing 'Dog barks.'."}, {"num": 51, "question": "Q51. MCQ (Coding): What is the output of the demo application if `Parent.java` is modified as follows? ```java // File: Package2/Parent.java package Package2; import Package1.Grandparent; public class Parent extends Grandparent { public void display() { System.out.println(\"This is the Parent class.\"); } } ```", "options": ["The code will not compile due to package-private access conflicts.", "The code will compile, but there will be a runtime exception.", "The code will compile, but the output will be \"This is the Grandparent class.\"", "The code will compile, but the output will be \"This is the Parent class.\""], "correctIndex": 3, "hint": "", "correctExplanation": "An array of primitive values is copied element by element; object-array clone/copy operations copy references, not nested objects.", "wrongExplanation": "An array of primitive values is copied element by element; object-array clone/copy operations copy references, not nested objects."}, {"num": 52, "question": "Q52. Consider the following code: ```java class Animal { public void makeSound() { System.out.println(\"Animal makes a sound\"); } } class Dog extends Animal { public void makeSound() { System.out.println(\"Dog barks\"); } } ``` What is the result of calling `makeSound()` on an object of the `Dog` class?", "options": ["It will print \"Animal makes a sound.\"", "It will print \"Dog barks.\"", "It will print both \"Animal makes a sound\" and \"Dog barks.\"", "It will result in a compilation error."], "correctIndex": 1, "hint": "", "correctExplanation": "Calling `makeSound()` on an object of `Dog` directly invokes `Dog.makeSound()`, which prints 'Dog barks.'.", "wrongExplanation": "Calling `makeSound()` on an object of `Dog` directly invokes `Dog.makeSound()`, which prints 'Dog barks.'."}, {"num": 53, "question": "Q53. What is the result of the following code snippet? ```java class MyClass { static int count = 0; MyClass() { count++; } } public class Main { public static void main(String[] args) { MyClass obj1 = new MyClass(); MyClass obj2 = new MyClass(); System.out.println(MyClass.count); } } ```", "options": ["0", "1", "2", "The code will not compile"], "correctIndex": 2, "hint": "", "correctExplanation": "`count` is declared as a `static int` variable inside `MyClass`, meaning there is only one shared copy of `count` in memory across all instances of `MyClass`.\n1. Initially, `count = 0`.\n2. `new MyClass()` (first instance) executes the constructor `count++`, incrementing `count` to 1.\n3. `new MyClass()` (second instance) executes the constructor again, incrementing `count` to 2.\n4. `System.out.println(MyClass.count)` accesses the shared static member and prints 2.", "wrongExplanation": "`count` is declared as a `static int` variable inside `MyClass`, meaning there is only one shared copy of `count` in memory across all instances of `MyClass`.\n1. Initially, `count = 0`.\n2. `new MyClass()` (first instance) executes the constructor `count++`, incrementing `count` to 1.\n3. `new MyClass()` (second instance) executes the constructor again, incrementing `count` to 2.\n4. `System.out.println(MyClass.count)` accesses the shared static member and prints 2."}, {"num": 54, "question": "Q54. MCQ (Coding): What is the output of the demo application if `Main.java` is modified as follows? ```java // File: Main.java import Package1.MyClass; public class Main extends MyClass { public static void main(String[] args) { Main obj = new Main(); obj.display(); } } ```", "options": ["The code will not compile due to access modifier conflicts.", "The code will compile, but \"This is a protected method.\" will not be printed.", "The code will compile, and \"This is a protected method.\" will be printed.", "The code will compile, but there will be a runtime exception."], "correctIndex": 2, "hint": "", "correctExplanation": "System.gc() does not cause a compile error; it merely requests garbage collection, which may or may not happen.", "wrongExplanation": "System.gc() does not cause a compile error; it merely requests garbage collection, which may or may not happen."}, {"num": 55, "question": "Q55. MCQ (Coding): What is the output of the demo application if `Main.java` is modified as follows? ```java // File: Main.java import Package1.MyClass; public class Main { public static void main(String[] args) { MyClass obj = new MyClass(); ((Main)obj).display(); } } ```", "options": ["The code will not compile due to an invalid cast.", "The code will compile, but there will be a runtime exception.", "The code will compile, and \"This is a protected method.\" will be printed.", "The code will compile, but the `display()` method will not be invoked."], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The cast attempts to convert an instance to an unrelated class type. Java rejects an impossible cast at compile time when the types are unrelated.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The cast attempts to convert an instance to an unrelated class type. Java rejects an impossible cast at compile time when the types are unrelated.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 56, "question": "Q56. Consider the following code snippet: ```java class Parent { int x; Parent(int x) { this.x = x; } } class Child extends Parent { int y; Child(int x, int y) { super(x); this.y = y; } } ``` What is the purpose of the \"super(x)\" statement in the Child class constructor?", "options": ["It calls the default constructor of the Parent class.", "It sets the value of x in the Parent class to the value passed in the Child class constructor.", "It creates a new object of the Parent class.", "It is not a valid statement in Java."], "correctIndex": 1, "hint": "", "correctExplanation": "In subclass constructors, `super(...)` is used to explicitly invoke the parameterized constructor of the immediate superclass (`Parent(int x)`).\nHere, `super(x)` passes the argument `x` from `Child(int x, int y)` up to `Parent(int x)`, initializing the inherited instance variable `x` of the `Parent` class.", "wrongExplanation": "In subclass constructors, `super(...)` is used to explicitly invoke the parameterized constructor of the immediate superclass (`Parent(int x)`).\nHere, `super(x)` passes the argument `x` from `Child(int x, int y)` up to `Parent(int x)`, initializing the inherited instance variable `x` of the `Parent` class."}, {"num": 57, "question": "Q57. MCQ (Coding): What is the output of the following code snippet? ```java public class GarbageCollectionDemo { public static void main(String[] args) { Object obj1 = new Object(); Object obj2 = new Object(); obj1 = obj2; obj2 = null; System.gc(); } } ```", "options": ["The code will not compile because of the call to `System.gc()`.", "The code will compile, but it will throw a runtime exception.", "The code will compile, and the objects will be eligible for garbage collection.", "The code will compile, but it will have no effect on garbage collection."], "correctIndex": 2, "hint": "", "correctExplanation": "The code's comparison and concatenation operators are evaluated according to Java precedence; read the expression left-to-right using the specified precedence.", "wrongExplanation": "The code's comparison and concatenation operators are evaluated according to Java precedence; read the expression left-to-right using the specified precedence."}, {"num": 58, "question": "Q58. What will be the output of following Java code? public class Main { public static void main(String[] args) { StringBuffer sb = new StringBuffer(\"include\"); sb.append(\"help\"); System.out.println(sb); } }", "options": ["Error", "include", "help", "Includehelp"], "correctIndex": 0, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The output is lowercase 'includehelp'. The supplied option uses a capital I ('Includehelp'), so it does not exactly match.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The output is lowercase 'includehelp'. The supplied option uses a capital I ('Includehelp'), so it does not exactly match.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 59, "question": "Q59. What will be the output of following Java code? public class ConcatNull { public static void main(String[] args) { String str1 = \"include\"; String str2 = \"help\"; System.out.println(str1 + str2); } }", "options": ["includehelp", "include", "help", "None of these"], "correctIndex": 0, "hint": "", "correctExplanation": "The String method replace is case-sensitive and replaces each matching occurrence.", "wrongExplanation": "The String method replace is case-sensitive and replaces each matching occurrence."}, {"num": 60, "question": "Q60. What will be the output of following Java code? public class Main { public static void main(String arg[]) { int i; for (i = 1; i <= 12; i += 2) { if (i == 8) { System.out.println(i); break; } } } }", "options": ["1", "No output", "8", "1357911"], "correctIndex": 1, "hint": "", "correctExplanation": "StringBuilder and StringBuffer are mutable character sequences; StringBuffer synchronizes its methods, whereas StringBuilder does not.", "wrongExplanation": "StringBuilder and StringBuffer are mutable character sequences; StringBuffer synchronizes its methods, whereas StringBuilder does not."}, {"num": 61, "question": "Q61. What will be the output of following Java code? public class Main { public static void main(String[] args) { String str = \"Hello\"; str = \"Bye\"; System.out.println(str); } }", "options": ["Hello", "Bye", "Error", "All of these"], "correctIndex": 1, "hint": "", "correctExplanation": "The String pool allows identical string literals to share a canonical String object.", "wrongExplanation": "The String pool allows identical string literals to share a canonical String object."}, {"num": 62, "question": "Q62. Which type of inheritance is represented by the following code snippet? ```java class A { // ... } class B extends A { // ... } class C extends A { // ... } ```", "options": ["Single inheritance", "Hierarchical inheritance", "Multiple inheritance", "Multilevel inheritance"], "correctIndex": 0, "hint": "", "correctExplanation": "String.equals compares contents; == compares object references.\nA. Option 1\nB. Option 2\nC. Both Option 1 and Option 2\nD. Neither Option 1 nor Option 2\nCorrect Answer: OptionC", "wrongExplanation": "String.equals compares contents; == compares object references.\nA. Option 1\nB. Option 2\nC. Both Option 1 and Option 2\nD. Neither Option 1 nor Option 2\nCorrect Answer: OptionC"}, {"num": 64, "question": "Q64. Consider the following code: ```java abstract class Fruit { String color; Fruit(String color) { this.color = color; } abstract void eat(); } class Apple extends Fruit { Apple(String color) { super(color); } void eat() { System.out.println(\"Eating an apple.\"); } } ``` Which of the following is the correct way to create an instance of the Apple class?", "options": ["```java", "```java", "```java", "```java"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 65, "question": "Q65. MCQ: Which wrapper class provides the `valueOf()` method to convert a string to an object of the corresponding wrapper class?", "options": ["`Integer`", "`Double`", "`Character`", "`Boolean`"], "correctIndex": 1, "hint": "", "correctExplanation": "Wrapper classes provide valueOf methods to convert primitive values or strings into wrapper objects.", "wrongExplanation": "Wrapper classes provide valueOf methods to convert primitive values or strings into wrapper objects."}, {"num": 66, "question": "Q66. MCQ: Which Java class is used to represent a point in time and provides methods to manipulate dates and times?", "options": ["`SimpleDateFormat`", "`DateFormatter`", "`DateTime`", "`Calendar`"], "correctIndex": 3, "hint": "", "correctExplanation": "The Date/Time API uses parsing to convert text into a temporal object and formatting to convert a temporal object into text.", "wrongExplanation": "The Date/Time API uses parsing to convert text into a temporal object and formatting to convert a temporal object into text."}, {"num": 67, "question": "Q67. MCQ: Which method is used to convert a string into a `Date` object using `SimpleDateFormat` in Java?", "options": ["`parse()`", "`format()`", "`convert()`", "`toDate()`"], "correctIndex": 0, "hint": "", "correctExplanation": "A formatter's format method produces text from a date/time value.", "wrongExplanation": "A formatter's format method produces text from a date/time value."}, {"num": 68, "question": "Q68. MCQ: Which method is used to convert a `Date` object into a string using `SimpleDateFormat` in Java?", "options": ["`parse()`", "`format()`", "`convert()`", "`toString()`"], "correctIndex": 1, "hint": "", "correctExplanation": "A parser's parse method reads text and creates a date/time value.", "wrongExplanation": "A parser's parse method reads text and creates a date/time value."}, {"num": 69, "question": "Q69. Consider the following code: ```java abstract class Bird { abstract void fly(); void makeSound() { System.out.println(\"Chirp Chirp\"); } } class Sparrow extends Bird { void fly() { System.out.println(\"Sparrow flies.\"); } } class Penguin extends Bird { void fly() { System.out.println(\"Penguins cannot fly.\"); } void makeSound() { System.out.println(\"Penguin sound.\"); } } ``` What will be the output when the Main class is executed? ```java public class Main { public static void main(String[] args) { Bird sparrow = new Sparrow(); Bird penguin = new Penguin(); sparrow.fly(); penguin.fly(); sparrow.makeSound(); penguin.makeSound(); } } ```", "options": ["```", "```", "```", "```"], "correctIndex": 2, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "The source question does not provide enough complete code or answer choices to verify a unique output. Do not memorize the marked key.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 70, "question": "Q70. What will be the output of following Java code? public class Main { public static void main(String[] args) { System.out.println(Math.copySign(100.6, -200.6)); } }", "options": ["100.6", "-100.6", "-200.6", "200.6"], "correctIndex": 1, "hint": "", "correctExplanation": "Math.copySign returns the magnitude of the first argument with the sign of the second.", "wrongExplanation": "Math.copySign returns the magnitude of the first argument with the sign of the second."}, {"num": 71, "question": "Q71. What happens if a class implements an interface but fails to implement all the abstract methods defined in that interface?", "options": ["The class will be considered an abstract class and cannot be instantiated.", "The class will automatically inherit the implementation of the missing methods from the Object", "The code will not compile, resulting in a compilation error.", "The abstract methods will be implemented using default values defined in the interface."], "correctIndex": 2, "hint": "", "correctExplanation": "In Java, when a concrete (non-abstract) class implements an interface, it contracts to provide complete method bodies (implementations) for all abstract methods declared in that interface.\nIf it fails to implement even one abstract method, the compiler flags an error unless the class itself is declared `abstract`.", "wrongExplanation": "In Java, when a concrete (non-abstract) class implements an interface, it contracts to provide complete method bodies (implementations) for all abstract methods declared in that interface.\nIf it fails to implement even one abstract method, the compiler flags an error unless the class itself is declared `abstract`."}, {"num": 72, "question": "Q72. What happens if you try to invoke a non-static method on a reference variable before initializing it with an object?", "options": ["The program will compile, but the method will not be executed.", "The program will throw a compilation error.", "The program will throw a runtime exception.", "The method will be executed, but it will return a null reference."], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "If the reference is an uninitialized local variable, the code does not compile. If it is initialized to null, calling an instance method throws NullPointerException. The question needs to state which case applies.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "If the reference is an uninitialized local variable, the code does not compile. If it is initialized to null, calling an instance method throws NullPointerException. The question needs to state which case applies.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 73, "question": "Q73. MCQ: In the context of shallow copy and deep copy, what happens to the internal objects of the original object?", "options": ["Shallow copy creates new instances of the internal objects, while deep copy uses the same", "Shallow copy and deep copy both create new instances of the internal objects.", "Shallow copy and deep copy both use the same instances of the internal objects.", "Shallow copy creates references to the internal objects, while deep copy creates new instances of"], "correctIndex": 3, "hint": "⚠️ CDAC Exam Note: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "correctExplanation": "A shallow copy duplicates the outer object but shares references to its nested objects. A deep copy recursively creates independent nested objects.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key.", "wrongExplanation": "A shallow copy duplicates the outer object but shares references to its nested objects. A deep copy recursively creates independent nested objects.\n\n[CDAC Review Note]: Correction / ambiguity / incomplete item — do not memorise the original marked key."}, {"num": 74, "question": "Q74. Which access modifier is commonly used for the methods in a base class to allow subclasses to override them?", "options": ["private", "protected", "public", "default (package-private)"], "correctIndex": 1, "hint": "", "correctExplanation": "The `protected` access specifier allows members (methods and fields) to be accessible:\n1. Within all classes in the same package.\n2. Within subclasses (derived classes) even if they reside in different packages.\nThis makes `protected` the standard access modifier for base-class methods designed to be inherited and optionally overridden by subclasses.", "wrongExplanation": "The `protected` access specifier allows members (methods and fields) to be accessible:\n1. Within all classes in the same package.\n2. Within subclasses (derived classes) even if they reside in different packages.\nThis makes `protected` the standard access modifier for base-class methods designed to be inherited and optionally overridden by subclasses."}, {"num": 75, "question": "Q75. In Java, when you re-assign a reference variable to another object, what happens to the original object?", "options": ["The original object is deleted from memory.", "The original object remains unchanged.", "The original object becomes null.", "The original object becomes a copy of the new object."], "correctIndex": 1, "hint": "", "correctExplanation": "Reassigning a reference changes that variable's target. It does not mutate or immediately delete the original object.\nOOP Principles, Inheritance & Relationships", "wrongExplanation": "Reassigning a reference changes that variable's target. It does not mutate or immediately delete the original object.\nOOP Principles, Inheritance & Relationships"}];
+const totalQuestions = questions.length;
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Store user's answers {questionIndex, selectedIndex, isCorrect}
+        let isReviewMode = false;
+
+        function renderMath(target) {
+            if (!target || typeof renderMathInElement !== 'function') return;
+            renderMathInElement(target, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+
+            const isAnswered = userAnswer !== undefined;
+
+            // Determine button states
+            const showPrevious = currentQuestionIndex > 0;
+            const showNext = isAnswered && currentQuestionIndex < totalQuestions - 1;
+            const showFinish = isAnswered && currentQuestionIndex === totalQuestions - 1 && !isReviewMode;
+            const showFinishReview = isReviewMode && currentQuestionIndex === totalQuestions - 1;
+            const showHint = !!question.hint;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+
+                if (isAnswered) {
+                    if (index === question.correctIndex) {
+                        const correctExplain = question.correctExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card correct show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header correct">
+                                    <span class="feedback-icon">✓</span>
+                                    <span>Right answer</span>
+                                </div>
+                                <div class="feedback-text">${correctExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    if (!userAnswer.isCorrect && index === userAnswer.selectedIndex) {
+                        const wrongExplain = question.wrongExplanation || question.explanation || '';
+                        optionsHtml += `
+                            <div class="feedback-card wrong show">
+                                <div class="feedback-answer">${letter}. ${option}</div>
+                                <div class="feedback-header wrong">
+                                    <span class="feedback-icon">✕</span>
+                                    <span>Not quite</span>
+                                </div>
+                                <div class="feedback-text">${wrongExplain}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    optionsHtml += `
+                        <div class="option disabled" data-index="${index}">
+                            <span class="option-label">${letter}.</span>
+                            <span class="option-text">${option}</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const optionClass = index === (userAnswer ? userAnswer.selectedIndex : -1) ? 'option selected' : 'option';
+                optionsHtml += `
+                    <div class="${optionClass}" onclick="selectAnswer(${index})" data-index="${index}">
+                        <span class="option-label">${letter}.</span>
+                        <span class="option-text">${option}</span>
+                    </div>
+                `;
+            });
+
+            let hintHtml = '';
+            if (showHint) {
+                hintHtml = `
+                    <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()">
+                        <span>Hint</span>
+                        <span class="chevron">⌃</span>
+                    </button>
+                    <div id="hint-panel" class="hint-panel">
+                        <div class="hint-title">Hint</div>
+                        <div class="hint-text">${question.hint}</div>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="quiz-footer">
+                    <div class="buttons">
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="previousQuestion()" ${showPrevious ? '' : 'disabled'}>
+                                Previous
+                            </button>
+                        </div>
+                        <div>
+                            ${showNext ? '<button class="btn btn-primary" onclick="nextQuestion()">Next</button>' : ''}
+                            ${showFinish ? '<button class="btn btn-primary" onclick="finishQuiz()">Finish Quiz</button>' : ''}
+                            ${showFinishReview ? '<button class="btn btn-primary" onclick="finishReview()">Finish Review</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            quizContent.innerHTML = `
+                <div class="progress-text">${currentQuestionIndex + 1} / ${totalQuestions}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div class="hint-slot">
+                    ${hintHtml}
+                </div>
+                ${buttonsHtml}
+            `;
+            renderMath(quizContent);
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            // Store the answer
+            userAnswers[currentQuestionIndex] = {
+                questionIndex: currentQuestionIndex,
+                selectedIndex: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Re-render to show feedback
+            renderQuestion();
+        }
+
+        function toggleHint() {
+            const hintPanel = document.getElementById('hint-panel');
+            const hintToggle = document.getElementById('hint-toggle');
+            if (hintPanel) {
+                hintPanel.classList.toggle('show');
+            }
+            if (hintToggle) {
+                hintToggle.classList.toggle('open');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            showCompletionScreen();
+        }
+
+        function showCompletionScreen() {
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            // Calculate stats
+            const answeredQuestions = userAnswers.filter(a => a !== undefined);
+            const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+            const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+            const skipped = totalQuestions - answeredQuestions.length;
+            const accuracy = answeredQuestions.length > 0
+                ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+                : 0;
+
+            // Update stats
+            document.getElementById('score-value').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('accuracy-value').textContent = `${accuracy}%`;
+            document.getElementById('right-value').textContent = correctAnswers;
+            document.getElementById('wrong-value').textContent = wrongAnswers;
+            document.getElementById('skipped-value').textContent = skipped;
+
+            // Show completion screen
+            quizContent.style.display = 'none';
+            completionScreen.classList.add('show');
+        }
+
+        function reviewQuiz() {
+            isReviewMode = true;
+            currentQuestionIndex = 0;
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        function finishReview() {
+            showCompletionScreen();
+        }
+
+        function retakeQuiz() {
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            const quizContent = document.getElementById('quiz-content');
+            const completionScreen = document.getElementById('completion-screen');
+
+            quizContent.style.display = 'block';
+            completionScreen.classList.remove('show');
+            renderQuestion();
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>
