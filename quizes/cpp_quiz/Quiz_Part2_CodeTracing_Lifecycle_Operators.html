@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 2: Code Tracing, Lifecycle & Operator Overloading | CDAC CCME C++ Programming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning-light: #fffbeb;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding-bottom: 80px;
+        }
+
+        /* Header Bar */
+        .top-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .back-link:hover {
+            background: #dbeafe;
+        }
+
+        .quiz-title-nav {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .badge-nav {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            background: var(--primary-light); color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .score-pill {
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .score-val {
+            color: var(--primary);
+        }
+
+        /* Container Layout */
+        .main-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 310px;
+            gap: 24px;
+        }
+
+        /* Header Info Card */
+        .info-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            color: white;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-card h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            font-size: 14px;
+            color: #dbeafe;
+        }
+
+        .stats-strip {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .stat-num {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            color: #dbeafe;
+            text-transform: uppercase;
+        }
+
+        /* Question Cards Area */
+        .questions-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .q-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .q-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .q-card.flagged {
+            border-left: 5px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .q-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-number {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-section-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .diff-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .diff-Easy { background: #dcfce7; color: #15803d; }
+        .diff-Moderate { background: #fef3c7; color: #b45309; }
+        .diff-Hard { background: #fee2e2; color: #b91c1c; }
+        .diff-Advanced { background: #f3e8ff; color: #7e22ce; }
+        .diff-Expert { background: #ffe4e6; color: #be123c; }
+
+        .q-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flag-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #cbd5e1;
+            transition: color 0.2s;
+        }
+
+        .flag-btn.active {
+            color: var(--accent);
+        }
+
+        .q-text {
+            font-size: 15.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Code Block Styling */
+        .code-box {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-lang-tag {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .code-snippet {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13.5px;
+            color: #e6edf3;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        /* Options Grid */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .opt-item:hover:not(.locked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12.5px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-text {
+            font-size: 14.5px;
+            font-weight: 500;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+
+        /* Correct / Wrong States */
+        .opt-item.correct {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-item.correct .opt-letter {
+            background: var(--success) !important;
+            color: white !important;
+        }
+
+        .opt-item.wrong {
+            background: var(--danger-light) !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-item.wrong .opt-letter {
+            background: var(--danger) !important;
+            color: white !important;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-top: 14px;
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .exp-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .concept-tag {
+            font-size: 11px;
+            font-weight: 700;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .exp-text {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.65;
+            white-space: pre-line;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: sticky;
+            top: 86px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: fit-content;
+        }
+
+        .side-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .side-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .q-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-num {
+            width: 100%;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .grid-num:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .grid-num.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .grid-num.wrong {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .grid-num.flagged {
+            border: 2px solid var(--accent);
+        }
+
+        .side-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="index.html" class="back-link">← Hub Dashboard</a>
+            <span class="quiz-title-nav">Part 2: Code Tracing, Lifecycle & Operator Overloading</span>
+            <span class="badge-nav">Module 2 · Q21-30</span>
+        </div>
+        <div class="nav-controls">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="btnModeInstant" onclick="setMode('instant')">⚡ Instant Feedback</button>
+                <button class="mode-btn" id="btnModeExam" onclick="setMode('exam')">⏱️ Exam Simulation</button>
+            </div>
+            <div class="score-pill">
+                <span>Score:</span>
+                <span class="score-val" id="scoreDisplay">0 / 10</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Header Banner -->
+        <div class="info-card">
+            <div>
+                <h1>Part 2: Code Tracing, Lifecycle & Operator Overloading</h1>
+                <p>Questions 21 to 30: Code tracing, default arguments, LIFO destructor order, pointer pass-by-value vs dereference, operator+, and static vs dynamic binding.</p>
+            </div>
+            <div class="stats-strip">
+                <div class="stat-box">
+                    <div class="stat-num">10</div>
+                    <div class="stat-lbl">Questions</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">10</div>
+                    <div class="stat-lbl">Code Tracing</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">60m</div>
+                    <div class="stat-lbl">Target Time</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Cards Column -->
+        <div class="questions-area" id="questionsContainer">
+            <!-- Questions rendered via JS -->
+        </div>
+
+        <!-- Sticky Sidebar Navigation & Analytics -->
+        <div class="sidebar">
+            <div class="side-card">
+                <h3>
+                    <span>Question Navigator</span>
+                    <span id="answeredCount" style="font-size: 11px; color: var(--text-muted);">0 Answered</span>
+                </h3>
+                <div class="q-grid" id="questionGrid">
+                    <!-- Nav pills rendered via JS -->
+                </div>
+            </div>
+
+            <div class="side-card">
+                <h3>Quick Actions</h3>
+                <div class="side-actions">
+                    <button class="btn btn-secondary" onclick="toggleAllExplanations()">💡 Toggle All Explanations</button>
+                    <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset My Answers</button>
+                    <button class="btn btn-primary" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">⬆️ Back to Top</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [{"num": 21, "section": "Code Tracing & Lifecycle", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass Box {\n    int w, h;\npublic:\n    Box(int w, int h) : w(w), h(h) {}\n    int area() const { return w * h; }\n};\nint main() {\n    Box b1(3, 4);\n    Box b2 = b1;\n    b2 = Box(5, 6);\n    std::cout << b1.area() << \" \" << b2.area() << std::endl;\n}", "options": {"A": "12 12", "B": "12 30", "C": "Compile error", "D": "30 30"}, "answer": "B", "highYield": true, "concept": "Copy Construction vs Copy Assignment", "explanation": "Tracing the execution:\n1. `Box b1(3, 4);` creates `b1` with `w=3, h=4`. Area = 12.\n2. `Box b2 = b1;` calls the compiler-generated default copy constructor. `b2` is an independent object with copies of `w=3, h=4`.\n3. `b2 = Box(5, 6);` creates a temporary Box with `w=5, h=6` (area=30) and copy-assigns it into `b2`. `b1` remains completely untouched!\n4. `b1.area()` is 12, and `b2.area()` is 30. Result: `12 30`."}, {"num": 22, "section": "Static Members & Memory", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass Counter {\n    static int count;\npublic:\n    Counter() { ++count; }\n    ~Counter() { --count; }\n    static int getCount() { return count; }\n};\nint Counter::count = 0;\nint main() {\n    Counter a, b;\n    {\n        Counter c;\n        std::cout << Counter::getCount() << \" \";\n    }\n    std::cout << Counter::getCount() << std::endl;\n}", "options": {"A": "3 2", "B": "2 2", "C": "3 3", "D": "2 3"}, "answer": "A", "highYield": true, "concept": "Static Counter & Nested Block Scope", "explanation": "Step-by-step trace:\n1. `Counter a, b;` instantiates two objects in `main()`. Constructor executes twice -> `count` becomes 2.\n2. An inner block `{ ... }` begins. `Counter c;` is instantiated on the stack -> Constructor executes -> `count` becomes 3.\n3. `std::cout << Counter::getCount() << \" \";` outputs `3 `.\n4. Closing brace `}` of the inner block is hit. The local object `c` goes out of scope -> `~Counter()` destructor runs -> `count` decrements to 2.\n5. Outside the block, `std::cout << Counter::getCount();` prints `2`. Final output: `3 2`."}, {"num": 23, "section": "Pointers & References", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nvoid swap(int& a, int& b) {\n    int temp = a;\n    a = b;\n    b = temp;\n}\nint main() {\n    int x = 10, y = 20;\n    swap(x, y);\n    std::cout << x << \" \" << y << std::endl;\n}", "options": {"A": "10 20", "B": "10 10", "C": "20 10", "D": "20 20"}, "answer": "C", "highYield": false, "concept": "Pass-by-Reference Swapping", "explanation": "Because `swap(int& a, int& b)` takes parameters by reference, `a` is an alias for `x` and `b` is an alias for `y`. Inside `swap`, swapping `a` and `b` directly modifies the memory locations of `x` and `y`. Therefore, `x` becomes 20 and `y` becomes 10. Output is `20 10`."}, {"num": 24, "section": "Constructors & Lifecycle", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass Rectangle {\n    double w, h;\npublic:\n    Rectangle(double w = 1.0, double h = 1.0) : w(w), h(h) {}\n    double area() { return w * h; }\n};\nint main() {\n    Rectangle r1;\n    Rectangle r2(5.0);\n    Rectangle r3(3.0, 4.0);\n    std::cout << r1.area() << \" \" << r2.area() << \" \" << r3.area() << std::endl;\n}", "options": {"A": "1 5 12", "B": "0 0 12", "C": "Compile error — default and non-default constructors conflict", "D": "1 1 12"}, "answer": "A", "highYield": true, "concept": "Constructors with Default Arguments", "explanation": "A constructor where ALL parameters have default values serves simultaneously as a default (0-argument) constructor, a 1-argument constructor, and a 2-argument constructor:\n1. `r1;` uses defaults `w=1.0, h=1.0` -> `area = 1.0 * 1.0 = 1`.\n2. `r2(5.0);` supplies `w=5.0`, uses default `h=1.0` -> `area = 5.0 * 1.0 = 5`.\n3. `r3(3.0, 4.0);` supplies both -> `area = 3.0 * 4.0 = 12`.\nOutput: `1 5 12`."}, {"num": 25, "section": "Constructors & Lifecycle", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass MyClass {\n    int val;\npublic:\n    MyClass(int v) : val(v) { std::cout << \"C\" << v << \" \"; }\n    ~MyClass() { std::cout << \"D\" << val << \" \"; }\n};\nint main() {\n    MyClass a(1);\n    MyClass b(2);\n    MyClass c(3);\n    std::cout << \"end \";\n}", "options": {"A": "C1 C2 C3 end D3 D2 D1", "B": "C1 C2 C3 D1 D2 D3 end", "C": "C1 C2 C3 end D1 D2 D3", "D": "D3 D2 D1 C1 C2 C3 end"}, "answer": "A", "highYield": true, "concept": "LIFO Construction and Destruction Order", "explanation": "Golden Rule of C++ Object Lifecycle on the Stack:\n1. Objects are constructed in the exact order of declaration: `a(1)` prints `C1 `, then `b(2)` prints `C2 `, then `c(3)` prints `C3 `.\n2. The statement `std::cout << \"end \";` prints `end `.\n3. At function exit, objects on the stack are destroyed in **exact reverse order of construction (LIFO - Last In, First Out)**! Hence `c` is destroyed first (`D3 `), then `b` (`D2 `), then `a` (`D1 `).\nFinal output: `C1 C2 C3 end D3 D2 D1`."}, {"num": 26, "section": "Pointers & References", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nint global = 10;\nvoid modify(int* p) { *p = 20; }\nvoid noModify(int* p) { p = nullptr; }\nint main() {\n    int x = 5;\n    modify(&x);\n    std::cout << x << \" \";\n    noModify(&x);\n    std::cout << x << \" \" << global << std::endl;\n}", "options": {"A": "5 20 10", "B": "20 20 10", "C": "20 20 10", "D": "20 20 0"}, "answer": "C", "highYield": true, "concept": "Pointer Dereference vs Pointer Reassignment", "explanation": "• `modify(&x)` receives the address of `x`. Dereferencing `*p = 20;` alters the memory location of `x`. So `x` becomes 20. Prints `20 `.\n• `noModify(&x)` receives a copy of the pointer address in local parameter `p`. Setting `p = nullptr;` only modifies the local parameter copy `p`, leaving original `x` and caller's pointers completely unchanged!\n• Output continues: `20` and `global` (which is 10). Output: `20 20 10`."}, {"num": 27, "section": "Operator Overloading", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass Point {\npublic:\n    int x, y;\n    Point(int x, int y) : x(x), y(y) {}\n    Point operator+(const Point& other) const {\n        return Point(x + other.x, y + other.y);\n    }\n};\nint main() {\n    Point p1(1, 2), p2(3, 4);\n    Point p3 = p1 + p2;\n    std::cout << p3.x << \" \" << p3.y << std::endl;\n}", "options": {"A": "4 6", "B": "1 2", "C": "3 4", "D": "Compile error"}, "answer": "A", "highYield": false, "concept": "Binary Operator Overloading (+)", "explanation": "The expression `p1 + p2` translates to the member function invocation `p1.operator+(p2)`. In `operator+`, `x + other.x = 1 + 3 = 4` and `y + other.y = 2 + 4 = 6`. A new `Point(4, 6)` is returned and assigned to `p3`. Prints `4 6`."}, {"num": 28, "section": "Syntax & Scoping", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nnamespace A {\n    int x = 10;\n    namespace B {\n        int x = 20;\n        void show() { std::cout << x << \" \" << A::x << std::endl; }\n    }\n}\nint main() {\n    A::B::show();\n    std::cout << A::x << std::endl;\n}", "options": {"A": "10 20, 10", "B": "10 10, 20", "C": "20 20, 10", "D": "20 10, 10"}, "answer": "D", "highYield": false, "concept": "Nested Namespaces & Scope Resolution", "explanation": "Inside `A::B::show()`:\n1. Plain `x` refers to `B`'s innermost enclosed `x = 20`.\n2. `A::x` explicitly qualifies and accesses outer namespace `A`'s `x = 10`.\n3. Hence `show()` prints `20 10`.\n4. In `main()`, `A::x` accesses `10`. Total output: `20 10` followed by `10`."}, {"num": 29, "section": "Polymorphism & Virtual Functions", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nclass Animal {\npublic:\n    void speak() { std::cout << \"Animal \"; }\n};\nclass Dog : public Animal {\npublic:\n    void speak() { std::cout << \"Dog \"; }\n};\nint main() {\n    Animal* a = new Dog();\n    a->speak();\n    Dog* d = (Dog*)a;\n    d->speak();\n    delete a;\n}", "options": {"A": "Animal Dog", "B": "Dog Animal", "C": "Dog Dog", "D": "Animal Animal"}, "answer": "A", "highYield": true, "concept": "Non-Virtual Early / Static Binding", "explanation": "Because `speak()` is NOT declared `virtual` in `Animal`, late binding / dynamic dispatch is disabled. The compiler binds method calls statically based purely on the **pointer's declared compile-time type**:\n• `a` is of type `Animal*` -> `a->speak()` calls `Animal::speak()`, printing `Animal `.\n• `d` is cast to `Dog*` -> `d->speak()` calls `Dog::speak()`, printing `Dog `.\nIf `virtual` had been present on `Animal::speak()`, both calls would have dispatched dynamically to `Dog::speak()`."}, {"num": 30, "section": "Recursion & Algorithms", "difficulty": "Hard", "question": "What does this code print?", "code": "#include <iostream>\nvoid process(int n, int result = 1) {\n    if (n <= 1) { std::cout << result; return; }\n    process(n - 1, n * result);\n}\nint main() {\n    process(5);\n}", "options": {"A": "5", "B": "120", "C": "1", "D": "Compile error — recursion with default args not allowed"}, "answer": "B", "highYield": false, "concept": "Tail-Recursive Factorial with Accumulator", "explanation": "This is tail-recursive factorial computation using an accumulator parameter (`result`):\n• `process(5, 1)` calls `process(4, 5 * 1 = 5)`\n• calls `process(3, 4 * 5 = 20)`\n• calls `process(2, 3 * 20 = 60)`\n• calls `process(1, 2 * 60 = 120)`\n• Base condition `n <= 1` is reached; prints `result`, which is 120."}];
+        const STORAGE_KEY = "cdac_cpp_Quiz_Part2_CodeTracing_Lifecycle_Operators";
+        let currentMode = "instant"; // 'instant' or 'exam'
+        let userState = {
+            answers: {},
+            flagged: {}
+        };
+
+        // Initialize from localStorage if exists
+        function loadState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    userState = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Failed to load saved state", e);
+                }
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(userState));
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById("questionsContainer");
+            const grid = document.getElementById("questionGrid");
+            container.innerHTML = "";
+            grid.innerHTML = "";
+
+            let answered = 0;
+            let correctCount = 0;
+
+            QUESTIONS.forEach((q, idx) => {
+                const qNum = idx + 1;
+                const userAnswer = userState.answers[qNum];
+                const isAnswered = userAnswer !== undefined;
+                const isFlagged = !!userState.flagged[qNum];
+                if (isAnswered) answered++;
+                if (isAnswered && userAnswer === q.answer) correctCount++;
+
+                // Build Card
+                const card = document.createElement("div");
+                card.className = `q-card ${isFlagged ? "flagged" : ""}`;
+                card.id = `q_${qNum}`;
+
+                let codeHtml = "";
+                if (q.code && q.code.trim().length > 0) {
+                    codeHtml = `
+                    <div class="code-box">
+                        <span class="code-lang-tag">C++17</span>
+                        <pre class="code-snippet">${escapeHtml(q.code)}</pre>
+                    </div>`;
+                }
+
+                let optionsHtml = "";
+                for (const [key, val] of Object.entries(q.options)) {
+                    let optClass = "opt-item";
+                    let suffixIcon = "";
+                    if (isAnswered) {
+                        optClass += " locked";
+                        if (currentMode === "instant") {
+                            if (key === q.answer) {
+                                optClass += " correct";
+                                suffixIcon = ' <span style="margin-left:auto; font-weight:700; color:var(--success);">✓ Correct</span>';
+                            } else if (key === userAnswer) {
+                                optClass += " wrong";
+                                suffixIcon = ' <span style="margin-left:auto; font-weight:700; color:var(--danger);">✗ Your Choice</span>';
+                            }
+                        } else {
+                            if (key === userAnswer) optClass += " selected";
+                        }
+                    }
+
+                    optionsHtml += `
+                    <div class="${optClass}" onclick="selectOption(${qNum}, '${key}')">
+                        <div class="opt-letter">${key}</div>
+                        <div class="opt-text">${escapeHtml(val)}</div>
+                        ${suffixIcon}
+                    </div>`;
+                }
+
+                const showExp = (isAnswered && currentMode === "instant") || card.getAttribute("data-force-exp") === "true";
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta">
+                            <span class="q-number">Q${qNum}</span>
+                            <span class="q-section-tag">${q.section}</span>
+                            <span class="diff-badge diff-${q.difficulty}">${q.difficulty}</span>
+                        </div>
+                        <div class="q-actions">
+                            <button class="flag-btn ${isFlagged ? "active" : ""}" onclick="toggleFlag(${qNum})" title="Flag for Review">★</button>
+                        </div>
+                    </div>
+                    <div class="q-text">${escapeHtml(q.question)}</div>
+                    ${codeHtml}
+                    <div class="options-list">${optionsHtml}</div>
+                    <div class="explanation-box ${showExp ? "show" : ""}" id="exp_${qNum}">
+                        <div class="exp-header">
+                            <div class="exp-title">
+                                <span>💡 Concept Deep Dive:</span>
+                                <span class="concept-tag">${q.concept || "Core Mechanism"}</span>
+                            </div>
+                            <span style="font-size:12px; font-weight:700; color:var(--success);">Correct Key: Option ${q.answer}</span>
+                        </div>
+                        <div class="exp-text">${escapeHtml(q.explanation)}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                // Grid Pill
+                const pill = document.createElement("a");
+                pill.className = `grid-num ${isFlagged ? "flagged" : ""}`;
+                pill.href = `#q_${qNum}`;
+                pill.innerText = qNum;
+                if (isAnswered && currentMode === "instant") {
+                    if (userAnswer === q.answer) pill.classList.add("correct");
+                    else pill.classList.add("wrong");
+                }
+                grid.appendChild(pill);
+            });
+
+            document.getElementById("scoreDisplay").innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById("answeredCount").innerText = `${answered} / ${QUESTIONS.length} Done`;
+        }
+
+        function selectOption(qNum, selectedKey) {
+            if (userState.answers[qNum]) return; // locked once clicked in instant mode
+            userState.answers[qNum] = selectedKey;
+            saveState();
+            renderQuiz();
+        }
+
+        function toggleFlag(qNum) {
+            userState.flagged[qNum] = !userState.flagged[qNum];
+            saveState();
+            renderQuiz();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById("btnModeInstant").classList.toggle("active", mode === "instant");
+            document.getElementById("btnModeExam").classList.toggle("active", mode === "exam");
+            renderQuiz();
+        }
+
+        let allExpanded = false;
+        function toggleAllExplanations() {
+            allExpanded = !allExpanded;
+            document.querySelectorAll(".explanation-box").forEach(el => {
+                if (allExpanded) el.classList.add("show");
+                else if (currentMode !== "instant") el.classList.remove("show");
+            });
+        }
+
+        function resetQuiz() {
+            if (confirm("Reset all your answers and progress for this quiz?")) {
+                userState = { answers: {}, flagged: {} };
+                localStorage.removeItem(STORAGE_KEY);
+                renderQuiz();
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        loadState();
+        renderQuiz();
+    </script>
+</body>
+</html>

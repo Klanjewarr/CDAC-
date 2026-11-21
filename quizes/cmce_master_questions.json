@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 1,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed CDAC Core Concept",
+    "concept": "Class vs Struct Default Access & Inheritance",
+    "question": "Which statement best describes a class in C++ and how does it fundamentally differ from a struct?",
+    "code": "",
+    "options": {
+      "A": "Structs cannot have member functions or constructors; classes can",
+      "B": "Classes support inheritance and polymorphism; structs do not",
+      "C": "Classes allocate memory on the heap; structs allocate memory strictly on the stack",
+      "D": "They have the exact same runtime capabilities; only default member access and default base inheritance differ (private in class vs public in struct)"
+    },
+    "answer": "D",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nIn C++, `class` and `struct` are completely identical in language features, memory layout, and runtime capabilities. Both can have constructors, destructors, member functions, virtual functions, templates, and inheritance.\n\n### ⚙️ The Only Two Differences:\n1. **Default Member Access**: Members of a `class` default to `private`, while members of a `struct` default to `public`.\n2. **Default Base Inheritance**: Inheritance defaults to `private` in `class Derived : Base`, whereas it defaults to `public` in `struct Derived : Base`.\n\n### ❌ Why Distractors Fail:\n• **A & B** are false: Structs in C++ can have constructors, destructors, member methods, and virtual functions.\n• **C** is false: Memory location (stack vs heap) depends purely on how an instance is declared (`MyClass obj;` on stack vs `new MyClass();` on heap), not whether it is a struct or class."
+  },
+  {
+    "id": 2,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC Exam Code Tracing Question",
+    "concept": "LIFO Stack Construction & Destruction Order",
+    "question": "What is the exact console output of this C++ program?",
+    "code": "#include <iostream>\n\nclass Entity {\n    int id;\npublic:\n    Entity(int i) : id(i) { std::cout << \"C\" << id << \" \"; }\n    ~Entity() { std::cout << \"D\" << id << \" \"; }\n};\n\nint main() {\n    Entity a(1);\n    Entity b(2);\n    Entity c(3);\n    std::cout << \"run \";\n}",
+    "options": {
+      "A": "C1 C2 C3 run D1 D2 D3",
+      "B": "C1 C2 C3 run D3 D2 D1",
+      "C": "C3 C2 C1 run D1 D2 D3",
+      "D": "run C1 C2 C3 D3 D2 D1"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n**LIFO (Last In, First Out) Object Destruction on the Stack**.\n1. **Construction Order**: Local stack objects are constructed in the exact forward order of their declaration: `Entity a(1)` prints `C1 `, `Entity b(2)` prints `C2 `, and `Entity c(3)` prints `C3 `.\n2. **Execution**: The statement `std::cout << \"run \";` executes, printing `run `.\n3. **Destruction Order**: When `main()` scope terminates, stack unwinding destroys objects in **exact reverse order of construction**: `c` is destroyed first (`D3 `), then `b` (`D2 `), then `a` (`D1 `).\n\n### 🎯 Result String:\n`C1 C2 C3 run D3 D2 D1`"
+  },
+  {
+    "id": 3,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "95% High-Yield Conceptual Trap",
+    "concept": "The this Pointer & Static Member Functions",
+    "question": "What is the nature of the this pointer in C++, and why can it NOT be accessed inside a static member function?",
+    "code": "",
+    "options": {
+      "A": "It is an implicit pointer passed to every function; static functions cannot use it because static functions are executed on the GPU",
+      "B": "It is an implicit pointer holding the memory address of the calling instance; static functions cannot access it because they belong to the class itself and execute without an object instance context",
+      "C": "It points to the base class vtable; static functions cannot use it because static functions cannot be overloaded",
+      "D": "It is a reference variable pointing to the parent class; static functions cannot access it to prevent memory leaks"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nInside any non-static member function of class `T`, `this` is an implicit pointer of type `T* const` (or `const T* const` inside a `const` member function) holding the address of the invoking instance.\n\n### ⚠️ Why Static Functions Lack `this`:\nStatic member functions are bound to the class type itself (`ClassName::func()`), not to any specific object instance. Because static functions can be invoked even when zero objects of the class exist, there is no instance address for `this` to point to. Hence, referring to `this` inside a static member function produces a compile-time error."
+  },
+  {
+    "id": 4,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "94% High-Yield Const Correctness",
+    "concept": "Const Member Functions & Mutable Specifier",
+    "question": "What guarantee does appending const to a member function declaration (e.g., int getVal() const;) provide, and what is the ONLY keyword that allows a member variable to still be modified within it?",
+    "code": "",
+    "options": {
+      "A": "Guarantees the return value is constant; volatile allows modification",
+      "B": "Guarantees the function cannot call other functions; register allows modification",
+      "C": "Guarantees the function will not modify any non-static data members of the calling object; mutable allows modification",
+      "D": "Guarantees the function executes at compile time (constexpr); static allows modification"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nWhen a member function is qualified with `const`, the compiler treats the implicit `this` pointer as `const ClassName* const`. This prohibits modifying any member variable or calling any non-const member functions on the instance.\n\n### 🔑 The `mutable` Exception:\nA data member marked with the `mutable` storage class specifier (e.g., `mutable int cacheHits;`) can be legally modified inside a `const` member function. This is standard idiom for internal locks (mutexes) or cache counters that do not affect the visible logical state of the object."
+  },
+  {
+    "id": 5,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "100% CDAC Repeat Classic",
+    "concept": "Operator Overloading Constraints",
+    "question": "Which of the following groups contains ONLY operators that CANNOT be overloaded in C++?",
+    "code": "",
+    "options": {
+      "A": ":: (scope resolution), . (member access), .* (pointer-to-member), ?: (ternary conditional), sizeof, typeid",
+      "B": "= (assignment), [] (subscript), () (function call), -> (member access via pointer)",
+      "C": "++ (increment), -- (decrement), << (stream insertion), >> (stream extraction)",
+      "D": "new, delete, new[], delete[], ->*"
+    },
+    "answer": "A",
+    "explanation": "### 📌 Guaranteed CDAC Exam Question:\nThe following C++ operators **CANNOT** be overloaded:\n1. `::` (Scope resolution)\n2. `.` (Member selection / dot operator)\n3. `.*` (Pointer-to-member selector)\n4. `?:` (Ternary conditional operator)\n5. `sizeof` (Size evaluation)\n6. `typeid` (RTTI type identification)\n\n### 💡 Counter-Exam Rule:\nThe operators in **B** (`=`, `[]`, `()`, `->`) CAN be overloaded, but MUST be overloaded as non-static member functions only!"
+  },
+  {
+    "id": 6,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "99% High-Yield Pointer & Memory Trap",
+    "concept": "Rule of Three & Shallow Copy Double-Free Vulnerability",
+    "question": "Analyze this C++ code. What severe bug occurs at runtime upon exiting main(), and how is it resolved?",
+    "code": "#include <iostream>\n\nclass IntArray {\n    int* data;\npublic:\n    IntArray(int size) { data = new int[size]; }\n    ~IntArray() { delete[] data; }\n    // No copy constructor or copy assignment defined\n};\n\nint main() {\n    IntArray arr1(10);\n    IntArray arr2 = arr1;\n    return 0;\n}",
+    "options": {
+      "A": "Memory leak because only one delete[] is invoked; resolved by using malloc instead of new",
+      "B": "Double-free undefined behavior / abort crash because the compiler-generated copy constructor performs a shallow copy of data; resolved by implementing the Rule of Three (custom copy constructor and copy assignment operator for deep copying)",
+      "C": "Compile error because objects with raw pointers cannot be assigned in C++",
+      "D": "Works safely because modern C++ automatically shares pointer ownership across copies"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Diagnostic:\n1. `IntArray arr2 = arr1;` invokes the **compiler-synthesized default copy constructor**, which performs memberwise copy (shallow copy). Hence, `arr2.data` holds the exact same pointer address as `arr1.data`.\n2. When `main()` scope exits, `arr2` is destroyed first and its destructor successfully calls `delete[] data`.\n3. Next, `arr1` is destroyed and attempts to call `delete[] data` on the *already deallocated memory block*!\n4. This triggers a **Double-Free Error** (`SIGABRT` / crash).\n\n### 🛡️ The Rule of Three:\nIf a class requires a user-defined Destructor, it almost certainly requires a user-defined **Copy Constructor** and **Copy Assignment Operator** to perform deep memory duplication."
+  },
+  {
+    "id": 7,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "96% CDAC Code Tracing Classic",
+    "concept": "Static Variables Across Recursive Calls",
+    "question": "What is the exact output of this C++ code?",
+    "code": "#include <iostream>\n\nint compute(int n) {\n    static int count = 0;\n    count++;\n    if (n <= 0) return count;\n    return compute(n - 1);\n}\n\nint main() {\n    std::cout << compute(3) << \" \";\n    std::cout << compute(2) << std::endl;\n}",
+    "options": {
+      "A": "4 3",
+      "B": "3 2",
+      "C": "4 7",
+      "D": "1 1"
+    },
+    "answer": "C",
+    "explanation": "### 🔍 Step-by-Step Code Trace:\nA `static` local variable inside a function is initialized **only once** (stored in data segment) and retains its state across all subsequent calls.\n\n1. **First Call `compute(3)`**:\n   • `compute(3)`: `count` becomes 1\n   • `compute(2)`: `count` becomes 2\n   • `compute(1)`: `count` becomes 3\n   • `compute(0)`: `count` becomes 4. Base condition `n <= 0` hits, returns `count = 4`.\n   • Prints `4 `.\n\n2. **Second Call `compute(2)`** (Starts with `count = 4`!):\n   • `compute(2)`: `count` becomes 5\n   • `compute(1)`: `count` becomes 6\n   • `compute(0)`: `count` becomes 7. Returns `count = 7`.\n   • Prints `7`.\n\n### 🎯 Combined Output:\n`4 7`"
+  },
+  {
+    "id": 8,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC Exam Polymorphism Core",
+    "concept": "Non-Virtual Early Binding vs Virtual Dynamic Dispatch",
+    "question": "What does this C++ program print?",
+    "code": "#include <iostream>\n\nclass Base {\npublic:\n    void show() { std::cout << \"Base \"; }\n};\n\nclass Derived : public Base {\npublic:\n    void show() { std::cout << \"Derived \"; }\n};\n\nint main() {\n    Base* ptr = new Derived();\n    ptr->show();\n    Derived* d = (Derived*)ptr;\n    d->show();\n    delete ptr;\n}",
+    "options": {
+      "A": "Derived Derived",
+      "B": "Base Derived",
+      "C": "Derived Base",
+      "D": "Base Base"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nBecause `show()` is **NOT** declared `virtual` in `Base`, there is no dynamic dispatch (no vtable/vptr lookup). The call is resolved at **compile-time (early/static binding)** based purely on the **declared type of the pointer**:\n\n1. `ptr` is declared as `Base*` -> `ptr->show()` invokes `Base::show()`, printing `Base `.\n2. `d` is declared as `Derived*` -> `d->show()` invokes `Derived::show()`, printing `Derived `.\n\n### 💡 Key Takeaway:\nDynamic polymorphism in C++ requires the `virtual` keyword on the base class function. Without `virtual`, you get static method shadowing."
+  },
+  {
+    "id": 9,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "99% High-Yield Polymorphism Mandate",
+    "concept": "Virtual Destructor Mandate in Base Classes",
+    "question": "What happens when executing delete ptr in this code, and why is declaring virtual ~Base() mandatory?",
+    "code": "#include <iostream>\n\nclass Base {\npublic:\n    ~Base() { std::cout << \"~Base \"; }\n};\n\nclass Derived : public Base {\n    int* buffer;\npublic:\n    Derived() { buffer = new int[50]; }\n    ~Derived() { delete[] buffer; std::cout << \"~Derived \"; }\n};\n\nint main() {\n    Base* ptr = new Derived();\n    delete ptr;\n}",
+    "options": {
+      "A": "Prints ~Derived ~Base; cleanup is fully automatic",
+      "B": "Compile error: cannot delete an object through a base pointer",
+      "C": "Only ~Base runs; Derived destructor is never invoked, leaking buffer memory and causing undefined behavior",
+      "D": "Derived destructor runs twice, leading to double-free abort"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Mandatory CDAC Exam Rule:\nWhen deleting a derived object through a base class pointer (`Base* ptr = new Derived(); delete ptr;`):\n• If the base class destructor is **non-virtual**, C++ uses static binding: the compiler calls **only** `Base::~Base()`.\n• `Derived::~Derived()` is bypassed completely, so `delete[] buffer` never runs, resulting in resource leaks and undefined behavior.\n• Declaring `virtual ~Base() {}` ensures dynamic dispatch so `Derived`'s destructor runs first, followed by `Base`'s destructor."
+  },
+  {
+    "id": 10,
+    "section": "Section 1 · C++ Programming",
+    "subjectCode": "AC01",
+    "subjectName": "C++ Programming",
+    "difficulty": "Advanced",
+    "highYield": true,
+    "probability": "92% CDAC Modern C++ Question",
+    "concept": "Return Value Optimization (RVO) & Copy Elision",
+    "question": "Which compiler mechanism in C++ allows a function returning an object by value to construct it directly in the caller's target variable, eliminating both copy and move constructor overhead?",
+    "code": "",
+    "options": {
+      "A": "Virtual Table Optimization (VTO)",
+      "B": "Return Value Optimization (RVO) / Copy Elision",
+      "C": "Dynamic Link Optimization (DLO)",
+      "D": "Stack Unwinding Elimination (SUE)"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n**Return Value Optimization (RVO)** is a compiler optimization technique where a temporary object returned by value is constructed directly in the memory storage reserved for the caller's variable.\n\nIn **C++17**, Copy Elision for prvalues is **mandated by standard specification (Guaranteed Copy Elision)**, meaning intermediate copies or moves do not even need to be accessible."
+  },
+  {
+    "id": 11,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Repeat in CDAC DBT",
+    "concept": "Primary Key vs Unique Key Constraints",
+    "question": "Which statement best characterizes the exact difference between a PRIMARY KEY and a UNIQUE KEY constraint in relational databases (SQL)?",
+    "code": "",
+    "options": {
+      "A": "Primary key can accept multiple NULLs; unique key strictly forbids NULL values",
+      "B": "A table can have only one PRIMARY KEY which strictly disallows NULLs; a table can have multiple UNIQUE keys which permit NULL values",
+      "C": "Unique keys automatically create clustered indexes; primary keys always create non-clustered indexes",
+      "D": "Primary keys are enforced at runtime; unique keys are checked only during table compilation"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC DBT Rule:\n• **PRIMARY KEY**:\n  1. Exactly ONE primary key per table.\n  2. Implicitly and strictly enforces `NOT NULL` on all constituent columns.\n  3. Typically creates the default clustered index on storage engines like InnoDB.\n\n• **UNIQUE KEY**:\n  1. Multiple unique constraints can exist on a single table.\n  2. Permits `NULL` values (in SQL standard and MySQL, multiple rows can have `NULL` since `NULL != NULL` in three-valued logic).\n  3. Typically creates a non-clustered B-tree index."
+  },
+  {
+    "id": 12,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC Normalization Core",
+    "concept": "Database Normalization (1NF, 2NF, 3NF, BCNF)",
+    "question": "A relational relation R(A, B, C, D) is currently in Third Normal Form (3NF). Under which exact condition does it FAIL to be in Boyce-Codd Normal Form (BCNF)?",
+    "code": "",
+    "options": {
+      "A": "When it contains non-atomic multi-valued attributes",
+      "B": "When a non-prime attribute depends on a proper subset of a composite candidate key",
+      "C": "When there exists a non-trivial functional dependency X -> Y where X is NOT a superkey, even though Y is a prime attribute",
+      "D": "When all functional dependencies have candidate keys on the right-hand side"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC Normalization Breakdown:\n• **1NF**: Atomic values, no repeating groups.\n• **2NF**: In 1NF + No **partial dependencies** (no non-prime attribute depends on a proper subset of a composite key).\n• **3NF**: In 2NF + No **transitive dependencies** (for every $X \\to Y$, either $X$ is a superkey OR $Y$ is a prime attribute).\n• **BCNF (Strict 3NF)**: For EVERY non-trivial functional dependency $X \\to Y$, **$X$ MUST be a superkey**.\n\nHence, if $X \\to Y$ has a prime attribute $Y$ but $X$ is not a superkey, it satisfies 3NF but **violates BCNF**!"
+  },
+  {
+    "id": 13,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Transaction Concept",
+    "concept": "ACID Properties & Durability Guarantee",
+    "question": "In transaction management, which ACID property guarantees that once a transaction has successfully executed COMMIT, its data modifications survive even a catastrophic operating system crash or hardware power outage?",
+    "code": "",
+    "options": {
+      "A": "Atomicity",
+      "B": "Consistency",
+      "C": "Isolation",
+      "D": "Durability"
+    },
+    "answer": "D",
+    "explanation": "### 📌 The ACID Guarantees in CDAC Exams:\n• **Atomicity**: 'All-or-Nothing' — if any operation fails, the transaction is rolled back.\n• **Consistency**: Database transitions strictly from one valid state satisfying all schema constraints to another.\n• **Isolation**: Concurrent transactions execute as if they were running serially without interference.\n• **Durability**: Once a transaction commits, its modifications are permanently recorded in non-volatile storage (via redo logs / Write-Ahead Logging / WAL) and survive system crashes."
+  },
+  {
+    "id": 14,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% High-Yield SQL Mechanics",
+    "concept": "SQL Joins & Cartesian Products",
+    "question": "Table Customers has 10 rows and Table Orders has 5 rows. How many rows are returned by SELECT * FROM Customers CROSS JOIN Orders, and what occurs if an INNER JOIN lacks an ON condition?",
+    "code": "",
+    "options": {
+      "A": "15 rows; INNER JOIN without ON throws a syntax error in all DBMS",
+      "B": "50 rows; an unconditional INNER JOIN (or ON 1=1) produces the exact same Cartesian product of 50 rows",
+      "C": "10 rows; only matching customer IDs are returned",
+      "D": "5 rows; rows are limited by the smaller table"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n• A `CROSS JOIN` computes the mathematical Cartesian product of two relations: $R \\times S$.\n• Number of rows = $|Customers| \\times |Orders| = 10 \\times 5 = 50$ rows.\n• In standard SQL (and specifically MySQL), an `INNER JOIN` without an `ON` clause or with `ON 1=1` produces the identical Cartesian product (50 rows)."
+  },
+  {
+    "id": 15,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed CDAC SQL Trap",
+    "concept": "WHERE vs HAVING Clause Mechanics",
+    "question": "What is the precise operational difference between the WHERE clause and the HAVING clause in an SQL SELECT query?",
+    "code": "",
+    "options": {
+      "A": "WHERE can use aggregate functions like COUNT(); HAVING can only filter primary keys",
+      "B": "WHERE filters individual rows before grouping and aggregation occur; HAVING filters grouped rows after GROUP BY aggregation is computed",
+      "C": "WHERE applies to subqueries only; HAVING applies to the outer query only",
+      "D": "They are completely interchangeable syntactically"
+    },
+    "answer": "B",
+    "explanation": "### 📌 SQL Query Processing Order:\n`FROM` -> `WHERE` -> `GROUP BY` -> `HAVING` -> `SELECT` -> `ORDER BY`\n\n1. `WHERE`: Filters raw candidate rows **before** groups are formed. Therefore, aggregate functions (`AVG()`, `SUM()`, `COUNT()`) are **illegal** in the `WHERE` clause.\n2. `HAVING`: Filters aggregated summary rows **after** `GROUP BY` has evaluated aggregate values (e.g., `HAVING COUNT(*) > 5`)."
+  },
+  {
+    "id": 16,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "94% CDAC Query Optimization Core",
+    "concept": "Correlated Subqueries vs Non-Correlated Subqueries",
+    "question": "How does the execution of a Correlated Subquery differ fundamentally from that of a standard Non-Correlated Subquery?",
+    "code": "",
+    "options": {
+      "A": "A correlated subquery executes only once for the entire query execution",
+      "B": "A correlated subquery references a column from the outer query table, requiring the DBMS engine to evaluate the subquery repeatedly for every row processed by the outer query",
+      "C": "Correlated subqueries can only return boolean values and cannot be used in WHERE clauses",
+      "D": "Non-correlated subqueries run on the client, whereas correlated subqueries execute in memory"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC DBT Mechanics:\n• **Non-Correlated Subquery**: Self-contained. Evaluated **once** by the query planner, and its resulting scalar or set is fed into the outer query.\n• **Correlated Subquery**: References columns from the outer query (e.g., `WHERE e.dept_id = d.dept_id`). It depends on the outer row context and must be re-evaluated **once per row** of the outer relation, leading to potential $O(N \\times M)$ performance overhead unless rewritten as a `JOIN`."
+  },
+  {
+    "id": 17,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% Concurrency & Isolation Question",
+    "concept": "Transaction Isolation Levels & Concurrency Anomalies",
+    "question": "Which ANSI SQL isolation level prevents both 'Dirty Reads' and 'Non-Repeatable Reads', yet still allows 'Phantom Reads' to occur?",
+    "code": "",
+    "options": {
+      "A": "Read Uncommitted",
+      "B": "Read Committed",
+      "C": "Repeatable Read",
+      "D": "Serializable"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Master ANSI SQL Isolation Matrix:\n| Isolation Level | Dirty Read | Non-Repeatable Read | Phantom Read |\n|---|---|---|---|\n| **Read Uncommitted** | ❌ Allowed | ❌ Allowed | ❌ Allowed |\n| **Read Committed** | ✅ Prevented | ❌ Allowed | ❌ Allowed |\n| **Repeatable Read** | ✅ Prevented | ✅ Prevented | ❌ Allowed |\n| **Serializable** | ✅ Prevented | ✅ Prevented | ✅ Prevented |\n\n*Note: InnoDB in MySQL uses Multi-Version Concurrency Control (MVCC) and Next-Key Locks to mitigate phantoms even in Repeatable Read, but standard ANSI classification designates Repeatable Read as permitting phantoms.*"
+  },
+  {
+    "id": 18,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "95% MySQL Programmability Concept",
+    "concept": "Stored Procedures vs Stored Functions in MySQL",
+    "question": "Which statement correctly distinguishes a Stored Procedure from a Stored Function in MySQL?",
+    "code": "",
+    "options": {
+      "A": "Functions are invoked using CALL; procedures are used in SELECT expressions",
+      "B": "A Stored Function MUST return a single value via the RETURN statement and can be embedded in SQL expressions, but cannot execute COMMIT/ROLLBACK; a Stored Procedure is invoked via CALL, returns results via OUT parameters/result sets, and supports transaction control",
+      "C": "Stored procedures cannot have input parameters; stored functions cannot have local variables",
+      "D": "Stored functions are stored on disk; stored procedures exist only in memory cache"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n• **Stored Function**:\n  1. Must declare `RETURNS <type>` in header and execute `RETURN <value>` in body.\n  2. Callable directly inside SQL statements: `SELECT emp_name, calc_bonus(salary) FROM emp;`.\n  3. Cannot manage transactions (no `COMMIT` or `ROLLBACK`).\n\n• **Stored Procedure**:\n  1. Invoked via `CALL proc_name(args)`.\n  2. Can take `IN`, `OUT`, and `INOUT` parameters.\n  3. Can execute transaction control commands (`COMMIT`, `ROLLBACK`)."
+  },
+  {
+    "id": 19,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "97% CDAC Trigger Mechanics",
+    "concept": "Database Triggers & Pseudorecords (OLD and NEW)",
+    "question": "In MySQL relational triggers, which pseudorecord qualifiers are legally accessible during an INSERT, DELETE, and UPDATE event?",
+    "code": "",
+    "options": {
+      "A": "NEW in INSERT; OLD in DELETE; both OLD and NEW in UPDATE",
+      "B": "OLD in INSERT; NEW in DELETE; neither in UPDATE",
+      "C": "Both OLD and NEW in all trigger events",
+      "D": "NEW only for row triggers; OLD only for statement triggers"
+    },
+    "answer": "A",
+    "explanation": "### 📌 Trigger Pseudorecord Rules:\n• **INSERT Event**: A new row is created. Only `NEW.column_name` is available (`OLD` is undefined/NULL).\n• **DELETE Event**: An existing row is removed. Only `OLD.column_name` is available (`NEW` is undefined/NULL).\n• **UPDATE Event**: An existing row (`OLD.col`) is modified to new values (`NEW.col`). Both `OLD` and `NEW` are available, allowing before/after delta comparisons."
+  },
+  {
+    "id": 20,
+    "section": "Section 2 · Database Technologies",
+    "subjectCode": "AC02",
+    "subjectName": "Database Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% Guaranteed MongoDB / NoSQL Question",
+    "concept": "MongoDB Document Model & Aggregation Pipeline",
+    "question": "MongoDB stores data internally as BSON (Binary JSON). In the MongoDB Aggregation Pipeline, which stage performs filtering identical to a SQL WHERE clause, and which stage groups documents by an identifier?",
+    "code": "",
+    "options": {
+      "A": "$project filters documents; $sort groups documents",
+      "B": "$filter filters documents; $aggregate groups documents",
+      "C": "$match filters documents; $group groups documents by an accumulator expression (_id)",
+      "D": "$where filters documents; $rollup groups documents"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC NoSQL / MongoDB Mappings:\n• `$match`: Filters the document stream so only matching documents pass to the next stage (equivalent to SQL `WHERE` or `HAVING`).\n• `$group`: Groups input documents by a specified `_id` expression and applies accumulators (`$sum`, `$avg`, `$min`, `$max`) (equivalent to SQL `GROUP BY`).\n• `$project`: Reshapes documents by adding, renaming, or projecting specific fields (equivalent to SQL `SELECT column_list`)."
+  },
+  {
+    "id": 21,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed JVM Architecture",
+    "concept": "JVM Memory Model: Stack vs Heap vs Metaspace",
+    "question": "In the JVM Runtime Data Areas, where are local primitive variables, object reference variables, and actual object instances stored?",
+    "code": "",
+    "options": {
+      "A": "Primitives on Heap; object instances on Stack; references in Metaspace",
+      "B": "Local primitive variables and object reference variables reside on the Thread Stack (stack frame); actual object instances and arrays are allocated on the Heap",
+      "C": "All variables and objects reside strictly on the Stack in Java 17",
+      "D": "Object references are stored in CPU registers; instances in Metaspace"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core JVM Memory Mechanics:\n1. **Thread Stack**: Each thread has its own private stack. When a method is invoked, a **Stack Frame** is pushed, containing local primitive variables (`int x = 5;`) and object reference pointers (`Student s;`).\n2. **Heap Memory**: Shared runtime area where all concrete **object instances** (`new Student()`) and array elements are allocated. Managed by the Garbage Collector (GC).\n3. **Metaspace**: Stores class metadata, bytecode, constant pools, and static variables (replaces PermGen since Java 8)."
+  },
+  {
+    "id": 22,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "100% Guaranteed Repeat in Java Mock",
+    "concept": "String Constant Pool, == vs .equals(), and intern()",
+    "question": "What is the exact console output of this Java code snippet?",
+    "code": "public class StringTest {\n    public static void main(String[] args) {\n        String s1 = \"CDAC\";\n        String s2 = new String(\"CDAC\");\n        String s3 = s2.intern();\n        \n        System.out.println((s1 == s2) + \" \" + (s1 == s3) + \" \" + s1.equals(s2));\n    }\n}",
+    "options": {
+      "A": "true true true",
+      "B": "false false true",
+      "C": "false true true",
+      "D": "true false false"
+    },
+    "answer": "C",
+    "explanation": "### 🔍 Step-by-Step Execution Trace:\n1. `s1 = \"CDAC\"`: String literal placed in the **String Constant Pool (SCP)**.\n2. `s2 = new String(\"CDAC\")`: Explicit `new` allocates a brand-new object on the general **Heap**, outside SCP. Therefore, `s1 == s2` checks memory reference identity -> **`false`**.\n3. `s3 = s2.intern()`: The `intern()` method searches SCP for a matching sequence; since `\"CDAC\"` exists from `s1`, it returns the exact SCP memory reference of `s1`. Therefore, `s1 == s3` -> **`true`**.\n4. `s1.equals(s2)`: Compares character-by-character string content -> **`true`**.\n\n### 🎯 Combined Output:\n`false true true`"
+  },
+  {
+    "id": 23,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC Overriding Rules Core",
+    "concept": "Method Overriding Constraints in Java",
+    "question": "Which of the following modifications is STRICTLY ILLEGAL when overriding a method in a Java subclass?",
+    "code": "",
+    "options": {
+      "A": "Returning a covariant subclass type instead of the superclass return type",
+      "B": "Narrowing / reducing the visibility of the method (e.g. overriding a protected method as private or package-private)",
+      "C": "Declaring fewer checked exceptions than the superclass method",
+      "D": "Adding the @Override annotation above the method"
+    },
+    "answer": "B",
+    "explanation": "### 📌 The Golden Rules of Method Overriding in Java:\n1. **Visibility Rule**: The overriding method CANNOT reduce visibility. It can widen visibility (`protected` -> `public`), but narrowing (`protected` -> `private`) causes a compile error!\n2. **Return Type Rule**: Can return the exact same type or a **covariant subtype** (legal since Java 5).\n3. **Exception Rule**: The overriding method cannot declare new or broader checked exceptions, but can declare fewer, narrower, or unchecked exceptions.\n4. **Static/Final/Private**: Cannot override `static`, `final`, or `private` methods."
+  },
+  {
+    "id": 24,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% High-Yield Java Core",
+    "concept": "Interfaces vs Abstract Classes in Modern Java",
+    "question": "Since Java 8, interfaces can contain concrete method logic via default and static methods. What foundational architectural distinction STILL separates an abstract class from an interface?",
+    "code": "",
+    "options": {
+      "A": "Interfaces can define private static methods, but abstract classes cannot",
+      "B": "An abstract class can maintain non-static instance state (fields) and define constructors; an interface cannot hold instance fields or constructors (interface variables are strictly public static final)",
+      "C": "Abstract classes support multiple inheritance; interfaces allow only single inheritance",
+      "D": "Abstract classes run faster because interfaces require reflection"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nEven with `default` and `static` methods in Java 8 and `private` methods in Java 9:\n• **Interfaces**: Cannot maintain mutable object state. Every variable declared in an interface is implicitly `public static final` (a constant). Interfaces have **no constructors**.\n• **Abstract Classes**: Can define constructors, instance variables (state), and lifecycle initializers. A class can extend only one abstract class (single inheritance), but can implement multiple interfaces."
+  },
+  {
+    "id": 25,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC Exception Flow Trap",
+    "concept": "Exception Handling & The finally Block Guarantee",
+    "question": "What is the exact console output of this Java program?",
+    "code": "public class ExceptionTest {\n    public static int compute() {\n        try {\n            int x = 10 / 2;\n            return x;\n        } catch (Exception e) {\n            return -1;\n        } finally {\n            System.out.print(\"FinallyClean \");\n        }\n    }\n    public static void main(String[] args) {\n        System.out.println(compute());\n    }\n}",
+    "options": {
+      "A": "5 FinallyClean",
+      "B": "FinallyClean 5",
+      "C": "5",
+      "D": "Compilation error"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nThe `finally` block **always executes** before a method returns control to the caller, even when a `return` statement is encountered inside `try` or `catch`!\n\n1. `int x = 10 / 2` evaluates to 5.\n2. The statement `return x;` prepares to return 5.\n3. Before returning, the `finally` block executes, printing `FinallyClean `.\n4. Control returns to `main()`, which then prints the returned integer `5` via `println()`.\n\n### 🎯 Combined Output:\n`FinallyClean 5`\n*(Note: The only scenario where `finally` does not execute is if `System.exit(0)` is invoked or a catastrophic JVM crash / infinite loop occurs).* "
+  },
+  {
+    "id": 26,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "97% Collections Framework Internals",
+    "concept": "HashMap Internals, Collision Resolution & Treeify Threshold",
+    "question": "In Java 8+, how does HashMap resolve hash collisions when multiple keys hash to the same bucket, and at what threshold does a bucket convert from a LinkedList into a balanced Red-Black Tree?",
+    "code": "",
+    "options": {
+      "A": "Uses open addressing linear probing; converts to binary search at 16 keys",
+      "B": "Uses separate chaining with a LinkedList; when bucket count reaches TREEIFY_THRESHOLD = 8 (and table capacity >= 64), it converts into a Red-Black Tree (TreeNode)",
+      "C": "Throws HashCollisionException; converts to TreeMap at 4 elements",
+      "D": "Uses double hashing with a load factor of 1.0"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC HashMap Internals:\n1. **Buckets & Chaining**: Java `HashMap` uses an array of buckets (`Node<K,V>[]`). Collisions are resolved using separate chaining.\n2. **Java 8 Treeification**: When collisions in a single bucket reach **`TREEIFY_THRESHOLD = 8`** and total table capacity is at least 64, Java converts that bucket's linked list into a balanced **Red-Black Tree (`TreeNode`)**.\n3. **Performance Impact**: Worst-case lookup time drops from $O(n)$ down to **$O(\\log n)$**.\n4. When elements in the bucket decrease to **`UNTREEIFY_THRESHOLD = 6`**, it reverts back to a standard linked list."
+  },
+  {
+    "id": 27,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "95% High-Yield Java Generics",
+    "concept": "Generics Bounded Wildcards & PECS Principle",
+    "question": "In Java Generics, what does the PECS mnemonic principle dictate when designing reusable APIs with wildcards?",
+    "code": "",
+    "options": {
+      "A": "Private Encapsulation, Constant Static: use static references for generic collections",
+      "B": "Producer Extends, Consumer Super: use <? extends T> when reading/producing items from a collection, and <? super T> when writing/consuming items into a collection",
+      "C": "Polymorphic Exception Catching Syntax: catch generic exceptions with super",
+      "D": "Package Exports Component Specification: export generics via modules"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n**PECS: Producer Extends, Consumer Super** (coined by Joshua Bloch):\n• `List<? extends T>`: The collection is a **Producer** of items. You can safely read `T` objects from it (covariance), but you cannot write new items into it (except `null`).\n• `List<? super T>`: The collection is a **Consumer** of items. You can safely write `T` instances into it (contravariance), but reading only guarantees `Object`."
+  },
+  {
+    "id": 28,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Concurrency Trap",
+    "concept": "Multithreading: Thread.start() vs Thread.run()",
+    "question": "What happens when you invoke t.run() instead of t.start() on a Thread instance t in Java?",
+    "code": "",
+    "options": {
+      "A": "It creates a background daemon thread that runs asynchronously",
+      "B": "It throws an IllegalThreadStateException at runtime",
+      "C": "No new thread is spawned; run() executes synchronously as a normal method call directly on the caller's currently executing thread",
+      "D": "It pauses the main thread until the GPU completes execution"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC Exam Trap:\n• `t.start()`: Instructs the JVM to register a new operating system thread, allocates a new call stack, transitions state to `RUNNABLE`, and asynchronously invokes `run()` on the new thread.\n• `t.run()`: Simply calls the `run()` method directly on the **calling thread** (e.g. `main` thread) like any standard Java method call. No multithreading or concurrency occurs!"
+  },
+  {
+    "id": 29,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% Java 17 LTS Feature Core",
+    "concept": "Modern Java 17 LTS: Records & Sealed Classes",
+    "question": "In Java 17 LTS, what is a record class, and what keyword is paired with sealed to restrict which specific classes can extend a hierarchy?",
+    "code": "",
+    "options": {
+      "A": "A mutable data structure; paired with restrict",
+      "B": "An immutable, transparent carrier for shallowly immutable data; paired with permits to strictly enumerate allowable subclasses",
+      "C": "A replacement for interfaces; paired with final",
+      "D": "A database mapping class; paired with native"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Modern Java 17 LTS Features:\n• **`record`**: Special class type declared as `public record User(String id, String name) {}`. Automatically synthesizes `private final` fields, canonical constructor, accessors (`id()`, `name()`), `equals()`, `hashCode()`, and `toString()`. Records cannot extend other classes.\n• **`sealed` & `permits`**: Declares a restricted inheritance hierarchy: `public sealed class Shape permits Circle, Square {}`. Only the enumerated classes are permitted to extend `Shape`."
+  },
+  {
+    "id": 30,
+    "section": "Section 3 · OOP with Java",
+    "subjectCode": "AC03",
+    "subjectName": "OOP with Java",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "97% Streams API Laziness Question",
+    "concept": "Java Streams API: Lazy Evaluation & Terminal Operations",
+    "question": "What is printed when this Java Stream code snippet executes?",
+    "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class StreamTest {\n    public static void main(String[] args) {\n        List<String> list = Arrays.asList(\"apple\", \"banana\", \"cherry\");\n        Stream<String> stream = list.stream().filter(s -> {\n            System.out.print(s + \" \");\n            return s.startsWith(\"b\");\n        });\n        System.out.println(\"Completed\");\n    }\n}",
+    "options": {
+      "A": "apple banana cherry Completed",
+      "B": "banana Completed",
+      "C": "Completed",
+      "D": "apple Completed"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n**Java Streams are lazily evaluated!**\nIntermediate operations (like `filter()`, `map()`, `sorted()`) do not perform any processing and produce no elements until a **terminal operation** (like `collect()`, `forEach()`, `count()`, `findFirst()`) is invoked on the stream pipeline.\n\nBecause no terminal operation is ever called on `stream`, the lambda inside `filter()` is never executed! Thus, only `Completed` is printed."
+  },
+  {
+    "id": 31,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed CDAC ADS Recurrence",
+    "concept": "Asymptotic Analysis & Master Theorem",
+    "question": "For the divide-and-conquer recurrence relation T(n) = 2T(n/2) + O(n) (standard MergeSort), what is the tight asymptotic time complexity according to the Master Theorem?",
+    "code": "",
+    "options": {
+      "A": "O(n)",
+      "B": "O(n log n)",
+      "C": "O(n^2)",
+      "D": "O(log n)"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Master Theorem Application:\nForm: $T(n) = a T(n/b) + f(n)$ where $a = 2, b = 2, f(n) = O(n^1)$.\n1. Calculate $\\log_b a = \\log_2 2 = 1$.\n2. Compare $f(n) = O(n^c)$ where $c = 1$.\n3. Since $\\log_b a = c$ ($1 = 1$), this falls under **Case 2** of the Master Theorem.\n4. Therefore, $T(n) = \\Theta(n^c \\log n) = \\mathbf{\\Theta(n \\log n)}$."
+  },
+  {
+    "id": 32,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "100% CDAC Sorting Benchmark",
+    "concept": "Sorting Complexities & In-Place Stability",
+    "question": "Which sorting algorithm guarantees O(n log n) time complexity across Best, Average, AND Worst cases, while maintaining stability, but requires O(n) auxiliary space?",
+    "code": "",
+    "options": {
+      "A": "QuickSort",
+      "B": "HeapSort",
+      "C": "MergeSort",
+      "D": "SelectionSort"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Master Sorting Comparison Table in CDAC Exams:\n• **MergeSort**: Best: $O(n \\log n)$, Worst: $O(n \\log n)$, Space: $O(n)$, **Stable**.\n• **QuickSort**: Best: $O(n \\log n)$, Worst: $O(n^2)$ (sorted/reverse array with naive pivot), Space: $O(\\log n)$, Unstable.\n• **HeapSort**: Best: $O(n \\log n)$, Worst: $O(n \\log n)$, Space: $O(1)$ in-place, Unstable.\n• **InsertionSort**: Best: $O(n)$, Worst: $O(n^2)$, Space: $O(1)$, Stable."
+  },
+  {
+    "id": 33,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "98% CDAC Queue Mechanics Core",
+    "concept": "Linear Queue vs Circular Queue & Modulo Arithmetic",
+    "question": "What specific flaw of an array-based Linear Queue does a Circular Queue eliminate, and what modulo arithmetic formula advances the rear pointer in an array of size N?",
+    "code": "",
+    "options": {
+      "A": "Eliminates stack overflow; rear = rear + 1",
+      "B": "Eliminates the 'false full' condition (unusable freed slots at front after dequeues); rear = (rear + 1) % N",
+      "C": "Provides O(1) searching for middle elements; rear = (rear + N) / 2",
+      "D": "Converts FIFO into LIFO; rear = (rear - 1) % N"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\nIn a linear array queue, `dequeue()` advances `front`. When `rear` reaches the last index `N-1`, the queue reports 'Queue Full' even if earlier slots `0, 1, 2...` are vacant ('false full').\n\nA **Circular Queue** wraps pointers around using modulo arithmetic: `rear = (rear + 1) % N` and `front = (front + 1) % N`, reusing vacant slots efficiently."
+  },
+  {
+    "id": 34,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% High-Yield Linked List Question",
+    "concept": "Singly vs Doubly Linked List Mechanics",
+    "question": "Which statement best describes the primary advantage and memory trade-off of a Doubly Linked List compared to a Singly Linked List?",
+    "code": "",
+    "options": {
+      "A": "Provides O(1) random access to middle elements by index",
+      "B": "Requires less memory because it eliminates node pointers",
+      "C": "Allows bidirectional traversal (forward and backward) and O(1) deletion of a given node, at the cost of extra memory overhead for a second pointer (prev) per node",
+      "D": "Guarantees no cycles can form in the list"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core Linked List Properties:\n• **Singly Linked List**: Each node stores data and a single `next` pointer. Deleting a given node requires finding its predecessor, which takes $O(n)$ unless the predecessor pointer is already passed.\n• **Doubly Linked List**: Each node contains `next` and `prev` pointers. Traversal can proceed in both directions. Deleting a given node is strictly **$O(1)$** (`node.prev.next = node.next; node.next.prev = node.prev;`), but costs an extra pointer reference per node."
+  },
+  {
+    "id": 35,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Repeat: Stack Applications",
+    "concept": "Stack Applications: Infix to Postfix Conversion",
+    "question": "When converting the infix expression A + B * C - D / E into postfix notation using an operator stack, what is the resulting postfix expression?",
+    "code": "",
+    "options": {
+      "A": "A B C * + D E / -",
+      "B": "+ A * B C - / D E",
+      "C": "A B + C * D - E /",
+      "D": "A B C D E * + / -"
+    },
+    "answer": "A",
+    "explanation": "### 🔍 Postfix Conversion Walkthrough:\nOperator precedence: `*`, `/` (high) > `+`, `-` (low), left-associative.\n1. Read `A` -> Output: `A`\n2. Read `+` -> Push `+` to stack\n3. Read `B` -> Output: `A B`\n4. Read `*` -> Precedence of `*` > `+`, push `*` to stack\n5. Read `C` -> Output: `A B C`\n6. Read `-` -> Precedence of `-` is less than `*` (pop `*` -> Output: `A B C *`), same as `+` (pop `+` -> Output: `A B C * +`), push `-` to stack\n7. Read `D` -> Output: `A B C * + D`\n8. Read `/` -> Push `/`\n9. Read `E` -> Output: `A B C * + D E`\n10. End of input -> Pop `/` then `-` -> **`A B C * + D E / -`**"
+  },
+  {
+    "id": 36,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "98% CDAC Heap & ACBT Formula",
+    "concept": "Binary Heap Array Representation & Node Indexing",
+    "question": "In an array-based representation of a Complete Binary Tree / Binary Heap where root is at index 0, what are the exact zero-based formulas for the Left Child, Right Child, and Parent of node i?",
+    "code": "",
+    "options": {
+      "A": "Left: 2i, Right: 2i+1, Parent: i/2",
+      "B": "Left: 2i + 1, Right: 2i + 2, Parent: (i - 1) / 2",
+      "C": "Left: i + 1, Right: i + 2, Parent: i - 1",
+      "D": "Left: 2i - 1, Right: 2i, Parent: i / 2 + 1"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Heap Formulas:\nFor **0-based indexing**:\n• Left Child of node $i$: **$2i + 1$**\n• Right Child of node $i$: **$2i + 2$**\n• Parent of node $i$: **$\\lfloor (i - 1) / 2 \\rfloor$**\n\n*(Note: For 1-based indexing, Left is $2i$, Right is $2i + 1$, Parent is $\\lfloor i / 2 \\rfloor$. CDAC questions typically default to 0-based indexing unless stated).* "
+  },
+  {
+    "id": 37,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "99% Guaranteed Tree Mechanics",
+    "concept": "BST Degeneration & AVL Balance Factor",
+    "question": "If sorted keys [10, 20, 30, 40, 50] are inserted into an unbalanced BST, what structure forms, and how does an AVL tree prevent this?",
+    "code": "",
+    "options": {
+      "A": "Forms a balanced tree with O(log n) search; AVL trees convert trees to graphs",
+      "B": "Degenerates into a right-skewed linked list with worst-case O(n) search time; AVL trees perform rotations to keep balance factor in {-1, 0, +1}, guaranteeing O(log n)",
+      "C": "Throws a duplicate key exception; AVL trees disallow sorted inputs",
+      "D": "Forms a complete binary tree automatically; AVL trees store keys in arrays"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Tree Diagnostic:\n1. Inserting sorted keys into a standard BST places each new key as the right child of the previous node. The tree becomes a **skewed line (linked list)** of height $n$, degrading search, insertion, and deletion to **$O(n)$**.\n2. An **AVL Tree** is a self-balancing BST where the balance factor: $\\text{Balance} = \\text{Height(Left)} - \\text{Height(Right)}$ must remain strictly in **$\\{-1, 0, +1\\}$** for every node. Whenever $|\\text{Balance}| > 1$, it triggers single or double rotations (LL, RR, LR, RL) to restore balance and guarantee **$O(\\log n)$** depth."
+  },
+  {
+    "id": 38,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "98% CDAC Hashing Question",
+    "concept": "Hash Table Collisions & Primary Clustering",
+    "question": "In an open addressing hash table, what is the 'Primary Clustering' phenomenon, and which collision resolution strategy causes it?",
+    "code": "",
+    "options": {
+      "A": "Hash keys hashing to the same bucket in Separate Chaining",
+      "B": "The buildup of long contiguous blocks of occupied slots in Linear Probing, increasing probe lengths for subsequent keys",
+      "C": "Hash table resizing causing memory fragmentation",
+      "D": "Prime numbers causing hash collisions in Quadratic Probing"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n• **Linear Probing** checks slots sequentially: `(h(k) + i) % m`.\n• Once a collision occurs, adjacent occupied slots merge into continuous occupied clusters. Any key whose hash lands anywhere inside this cluster must probe all the way to its end, growing the cluster even further. This exponential degradation is called **Primary Clustering**.\n• **Quadratic Probing** (`(h(k) + c_1 i + c_2 i^2) % m`) eliminates primary clustering (though it introduces milder secondary clustering)."
+  },
+  {
+    "id": 39,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Graph Question",
+    "concept": "Graph Traversals: BFS vs DFS Properties",
+    "question": "Which graph traversal algorithm guarantees finding the shortest path (minimum number of edges) between two vertices in an unweighted graph, and which data structure does it use?",
+    "code": "",
+    "options": {
+      "A": "Depth First Search (DFS) using a Stack",
+      "B": "Breadth First Search (BFS) using a Queue",
+      "C": "Prim's Algorithm using a Disjoint Set",
+      "D": "Topological Sort using an Array"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Exam Rule:\n• **BFS (Breadth-First Search)**: Explores vertices level-by-level using a **FIFO Queue**. Because it examines all neighbors at distance 1 before any at distance 2, the first time it reaches a destination vertex in an unweighted graph is **guaranteed to be the shortest path**.\n• **DFS (Depth-First Search)**: Explores deeply along paths using a **LIFO Stack** (or call stack recursion). Excellent for cycle detection and topological sorting, but does NOT guarantee shortest paths."
+  },
+  {
+    "id": 40,
+    "section": "Section 4 · Algorithms & DS",
+    "subjectCode": "AC04",
+    "subjectName": "Algorithms & Data Structures",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "97% Shortest Path Algorithm Core",
+    "concept": "Dijkstra's Algorithm Non-Negative Weight Invariance",
+    "question": "Why does Dijkstra's Algorithm fail to produce correct shortest paths on graphs containing negative edge weights?",
+    "code": "",
+    "options": {
+      "A": "It crashes with a StackOverflowError due to infinite recursive calls",
+      "B": "Dijkstra is a greedy algorithm assuming that once a vertex is finalized (extracted from the priority queue), its shortest distance is permanent; a subsequent negative edge can offer a cheaper path to an already finalized node that Dijkstra will never revisit",
+      "C": "Priority queues in Java cannot store negative numbers",
+      "D": "Negative edges convert directed graphs into undirected graphs"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core CDAC Algorithm Invariance:\nDijkstra's algorithm relies on the **Greedy Choice Property**: when a node $u$ with the minimum tentative distance is extracted from the priority queue, Dijkstra assumes its shortest path is permanently finalized ($dist[u]$ cannot decrease). This mathematical invariant holds **only if all edge weights are $\\ge 0$**.\n\nIf negative edges exist, a longer path with a negative edge could later yield a smaller overall distance to $u$. For graphs with negative weights, **Bellman-Ford Algorithm** ($O(V \\times E)$) must be used instead."
+  },
+  {
+    "id": 41,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "99% Guaranteed Repeat in WPT Exam",
+    "concept": "HTTP Methods & Idempotency",
+    "question": "According to the HTTP specification (RFC 7231), which of the following standard HTTP request methods is NOT idempotent?",
+    "code": "",
+    "options": {
+      "A": "GET",
+      "B": "PUT",
+      "C": "POST",
+      "D": "DELETE"
+    },
+    "answer": "C",
+    "explanation": "### 📌 HTTP Method Idempotency in CDAC WPT:\nAn HTTP method is **idempotent** if making multiple identical requests has the exact same side-effect on server state as making a single request.\n• `GET`: Safe and idempotent (retrieves data, zero state mutation).\n• `PUT`: Idempotent (replaces entire resource; doing it 10 times results in identical state).\n• `DELETE`: Idempotent (deletes resource; subsequent deletes result in 404 but resource remains deleted).\n• **`POST`**: **NOT idempotent**. Submitting `POST /orders` multiple times creates multiple duplicate orders!"
+  },
+  {
+    "id": 42,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "96% HTML5 Semantic Standard",
+    "concept": "HTML5 Semantic Document Architecture",
+    "question": "Which HTML5 semantic element is designed to represent self-contained, independently distributable and reusable content, such as a blog post or news article?",
+    "code": "",
+    "options": {
+      "A": "<section>",
+      "B": "<article>",
+      "C": "<aside>",
+      "D": "<div>"
+    },
+    "answer": "B",
+    "explanation": "### 📌 HTML5 Semantic Elements:\n• `<article>`: Represents complete, self-contained composition that makes sense on its own and could be syndicated/distributed independently (e.g. blog post, forum post, product card).\n• `<section>`: Thematic grouping of content, typically with a heading.\n• `<aside>`: Content tangentially related to the content around it (sidebars, callouts).\n• `<div>`: Non-semantic generic block container."
+  },
+  {
+    "id": 43,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "100% CDAC CSS Code Tracing Classic",
+    "concept": "CSS Box Model: content-box vs border-box Layout",
+    "question": "Analyze this CSS block. What is the total rendered width occupied by .box on the page layout, INCLUDING its margins?",
+    "code": ".box {\n    width: 200px;\n    padding: 20px;\n    border: 5px solid black;\n    margin: 10px;\n    box-sizing: content-box;\n}",
+    "options": {
+      "A": "200px",
+      "B": "250px",
+      "C": "260px",
+      "D": "270px"
+    },
+    "answer": "D",
+    "explanation": "### 🔍 CSS Box Model Step-by-Step Calculation:\nWith `box-sizing: content-box` (default CSS mode), the declared `width` applies **only to the inner content**:\n1. Content width: `200px`\n2. Padding (Left + Right): `20px + 20px = 40px`\n3. Border (Left + Right): `5px + 5px = 10px`\n   • Visible Box Width = $200 + 40 + 10 = \\mathbf{250px}$\n4. Margin (Left + Right): `10px + 10px = 20px`\n   • Total Layout Space = $250 + 20 = \\mathbf{270px}$!\n\n*(Note: If `box-sizing: border-box` were used, total box width would be fixed at 200px, and total layout space with margins would be 220px).* "
+  },
+  {
+    "id": 44,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "98% Modern CSS Layout Question",
+    "concept": "Flexbox Alignment: justify-content vs align-items",
+    "question": "In a CSS Flexbox container with default flex-direction: row, which property aligns flex items along the main (horizontal) axis, and which aligns them along the cross (vertical) axis?",
+    "code": "",
+    "options": {
+      "A": "align-items for main axis; justify-content for cross axis",
+      "B": "justify-content for main axis; align-items for cross axis",
+      "C": "text-align for main axis; vertical-align for cross axis",
+      "D": "flex-pack for main axis; flex-align for cross axis"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core Flexbox Mechanics:\nIn CSS Flexbox:\n• **Main Axis** (governed by `flex-direction: row` -> horizontal): Alignment is controlled by **`justify-content`** (`flex-start`, `center`, `flex-end`, `space-between`, `space-around`, `space-evenly`).\n• **Cross Axis** (perpendicular to main axis -> vertical in row mode): Alignment is controlled by **`align-items`** (`stretch`, `center`, `flex-start`, `flex-end`, `baseline`)."
+  },
+  {
+    "id": 45,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC CSS Specificity Question",
+    "concept": "CSS Specificity Hierarchy Calculation",
+    "question": "Given the following CSS selectors targeting the same link element, which selector has the highest specificity and will win?",
+    "code": "/* Selector 1 */  #nav .menu-link:hover { color: red; }\n/* Selector 2 */  nav ul li a.menu-link { color: blue; }\n/* Selector 3 */  .menu-link:hover       { color: green; }\n/* Selector 4 */  header nav a           { color: purple; }",
+    "options": {
+      "A": "Selector 2 (nav ul li a.menu-link)",
+      "B": "Selector 1 (#nav .menu-link:hover)",
+      "C": "Selector 3 (.menu-link:hover)",
+      "D": "Selector 4 (header nav a)"
+    },
+    "answer": "B",
+    "explanation": "### 📌 CSS Specificity Weight Calculation (ID, Class, Element):\n• **Selector 1 (`#nav .menu-link:hover`)**: 1 ID (`#nav`), 2 Classes/Pseudo-classes (`.menu-link`, `:hover`), 0 Elements -> **Specificity: (1, 2, 0) = 120**\n• **Selector 2 (`nav ul li a.menu-link`)**: 0 IDs, 1 Class (`.menu-link`), 4 Elements (`nav`, `ul`, `li`, `a`) -> **Specificity: (0, 1, 4) = 14**\n• **Selector 3 (`.menu-link:hover`)**: 0 IDs, 2 Classes (`.menu-link`, `:hover`), 0 Elements -> **Specificity: (0, 2, 0) = 20**\n• **Selector 4 (`header nav a`)**: 0 IDs, 0 Classes, 3 Elements -> **Specificity: (0, 0, 3) = 3**\n\n**Selector 1 wins overwhelmingly** due to the presence of an ID selector!"
+  },
+  {
+    "id": 46,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "99% Guaranteed JavaScript Scope Trap",
+    "concept": "JavaScript Scoping: var Hoisting vs let/const Temporal Dead Zone",
+    "question": "What is the exact execution behavior of this JavaScript code?",
+    "code": "console.log(a);\nconsole.log(b);\nvar a = 10;\nlet b = 20;",
+    "options": {
+      "A": "Logs undefined, then throws ReferenceError: Cannot access 'b' before initialization",
+      "B": "Logs 10, then logs 20",
+      "C": "Logs undefined, then logs undefined",
+      "D": "Throws SyntaxError on line 1"
+    },
+    "answer": "A",
+    "explanation": "### 📌 Core CDAC Exam JavaScript Diagnostic:\n1. `var a = 10;`: `var` declarations are hoisted to the top of their function/global scope and initialized with `undefined`. Therefore, `console.log(a)` succeeds and logs **`undefined`**.\n2. `let b = 20;`: `let` and `const` variables are also hoisted, but they are **NOT initialized**. From the start of the block until the declaration is evaluated, the variable resides in the **Temporal Dead Zone (TDZ)**. Accessing `b` before its declaration throws **`ReferenceError: Cannot access 'b' before initialization`**."
+  },
+  {
+    "id": 47,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "98% CDAC JS Closure Classic",
+    "concept": "JavaScript Closures & Lexical Scope Encapsulation",
+    "question": "What are the exact logged outputs of this JavaScript program?",
+    "code": "function makeCounter(start = 0) {\n    let count = start;\n    return {\n        increment() { return ++count; },\n        value() { return count; }\n    };\n}\n\nconst c1 = makeCounter(10);\nconst c2 = makeCounter();\n\nc1.increment();\nc1.increment();\nc2.increment();\n\nconsole.log(c1.value() + \", \" + c2.value());",
+    "options": {
+      "A": "12, 1",
+      "B": "12, 0",
+      "C": "10, 1",
+      "D": "11, 1"
+    },
+    "answer": "A",
+    "explanation": "### 🔍 Step-by-Step Closure Trace:\nEach call to `makeCounter()` creates a distinct lexical environment containing an independent `count` variable enclosed in the returned object's method closures.\n\n1. `c1` initialized with `start = 10` -> `c1.count = 10`.\n   • `c1.increment()`: `count` becomes 11\n   • `c1.increment()`: `count` becomes 12\n2. `c2` initialized with default `start = 0` -> `c2.count = 0`.\n   • `c2.increment()`: `count` becomes 1\n3. `c1.value()` returns 12; `c2.value()` returns 1.\n\n### 🎯 Result:\n`12, 1`"
+  },
+  {
+    "id": 48,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Hard",
+    "highYield": true,
+    "probability": "99% Guaranteed Event Loop Question",
+    "concept": "Event Loop: Microtask Queue vs Macrotask Queue",
+    "question": "What is the exact console log output order in modern JavaScript runtimes?",
+    "code": "console.log('1');\n\nsetTimeout(() => {\n    console.log('2');\n}, 0);\n\nPromise.resolve().then(() => {\n    console.log('3');\n}).then(() => {\n    console.log('4');\n});\n\nconsole.log('5');",
+    "options": {
+      "A": "1, 2, 3, 4, 5",
+      "B": "1, 5, 2, 3, 4",
+      "C": "1, 5, 3, 4, 2",
+      "D": "1, 3, 4, 5, 2"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core CDAC Event Loop Priority Rules:\n1. **Synchronous Call Stack**: Runs first immediately. Prints `1` then `5`.\n2. **Microtask Queue** (Promises, `queueMicrotask`): High priority! Before checking timers, the event loop drains the entire microtask queue.\n   • First promise `.then()` prints `3`.\n   • Second chained `.then()` prints `4`.\n3. **Macrotask Queue** (`setTimeout`, `setInterval`, I/O): The `setTimeout` callback in the timer queue executes only after all microtasks are exhausted, printing `2`.\n\n### 🎯 Output Order:\n`1, 5, 3, 4, 2`"
+  },
+  {
+    "id": 49,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "97% DOM Architecture Standard",
+    "concept": "DOM Event Propagation & Event Delegation",
+    "question": "In what chronological order do DOM event propagation phases occur, and why is Event Delegation computationally superior for dynamic lists?",
+    "code": "",
+    "options": {
+      "A": "Bubbling -> Target -> Capturing; delegation binds separate listeners to each child element",
+      "B": "Capturing Phase (window to target) -> Target Phase -> Bubbling Phase (target up to window); Event Delegation attaches one single listener to a common ancestor, handling events that bubble up from current and future dynamic children",
+      "C": "Target -> Capturing -> Bubbling; delegation uses WebSocket communication",
+      "D": "Propagation occurs randomly depending on CPU scheduling"
+    },
+    "answer": "B",
+    "explanation": "### 📌 Core DOM Event Lifecycle:\n1. **Capturing Phase**: Event trickles down from `window` through ancestors to the target element.\n2. **Target Phase**: The event reaches the actual target node.\n3. **Bubbling Phase**: The event bubbles up from the target back through ancestors to `window`.\n\n### 🚀 Event Delegation:\nInstead of binding 1,000 separate event listeners to 1,000 list items (which consumes massive memory and fails for newly injected DOM nodes), you attach a single listener on parent `<ul>`. Because click events bubble up, the parent intercepts them via `e.target`."
+  },
+  {
+    "id": 50,
+    "section": "Section 5 · Web Tech (WPT)",
+    "subjectCode": "AC05",
+    "subjectName": "Web Programming Technologies",
+    "difficulty": "Moderate",
+    "highYield": true,
+    "probability": "98% React Architecture Core",
+    "concept": "React Virtual DOM Reconciliation & Hook Rules",
+    "question": "Why is React's Virtual DOM diffing computationally faster than direct real DOM updates, and why must React Hooks NEVER be called inside loops or conditionals?",
+    "code": "",
+    "options": {
+      "A": "Virtual DOM uses multi-threading; Hooks are disabled inside loops to save RAM",
+      "B": "Virtual DOM bypasses JavaScript execution; Hooks require global variables",
+      "C": "Real DOM manipulations trigger expensive browser reflow and repaint calculations, whereas Virtual DOM computes minimal batch updates in memory; Hooks rely on strict identical call order across renders to match state with fiber nodes",
+      "D": "Virtual DOM runs on the backend Node.js server before rendering"
+    },
+    "answer": "C",
+    "explanation": "### 📌 Core React Architecture in CDAC Exams:\n1. **Virtual DOM**: The real DOM is slow because modifying elements forces the browser layout engine to recompute geometry (**reflow**) and redraw pixels (**repaint**). React maintains a lightweight JS representation (Virtual DOM), compares previous and current states using a heuristic $O(n)$ diffing algorithm (**Reconciliation**), and applies only the minimal batch of mutations to the real DOM.\n2. **Rules of Hooks**: React does NOT identify state by variable name; it tracks hooks using an internal **singly-linked list** keyed by **call index order**. Calling a hook inside an `if` statement changes the order of calls, corrupting subsequent state mappings."
+  }
+]

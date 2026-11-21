@@ -14,6 +14,7 @@ part3_qs = [q for q in all_questions if 51 <= q["num"] <= 90]
 part4_qs = [q for q in all_questions if 91 <= q["num"] <= 110]
 part5_qs = [q for q in all_questions if 111 <= q["num"] <= 140]
 part6_qs = [q for q in all_questions if 141 <= q["num"] <= 147]
+part7_qs = [q for q in all_questions if 148 <= q["num"] <= 182]
 
 def generate_quiz_html(title, subtitle, badge_text, quiz_questions, filename, is_booster=False):
     questions_json = json.dumps(quiz_questions, ensure_ascii=False)
@@ -1324,11 +1325,28 @@ generate_quiz_html(
     filename="Quiz_Full_Part_6_DBT_Paper_Drill.html"
 )
 
-# Master All 147 Questions
 generate_quiz_html(
-    title="Master CDAC CCME 147-Question Exam Simulator",
-    subtitle="Complete timed simulation across all 6 sections with full diagnostic score analysis and comprehensive explanations",
-    badge_text="Full Bank (147 Qs)",
+    title="Part 7: Codd's Rules, Storage Engines, MySQL Utilities & NoSQL Architecture",
+    subtitle="Codd's 12 Rules, InnoDB vs MyISAM vs MEMORY, mysqldump & CLI, Triggers (NEW/OLD), Handlers, CAP Theorem, and BSON",
+    badge_text="Questions 148 - 182 (35 Qs)",
+    quiz_questions=part7_qs,
+    filename="Quiz_Full_Part_7_Codd_StorageEngines_Utilities_NoSQL_Drill.html"
+)
+
+# Master All 182 Questions
+generate_quiz_html(
+    title="Master CDAC CCME 182-Question Exam Simulator",
+    subtitle="Complete timed simulation across all 7 sections with full diagnostic score analysis and comprehensive explanations",
+    badge_text="Full Bank (182 Qs)",
+    quiz_questions=all_questions,
+    filename="Quiz_Master_CDAC_182_Exam_Simulator.html",
+    is_booster=True
+)
+
+generate_quiz_html(
+    title="Master CDAC CCME 182-Question Exam Simulator",
+    subtitle="Complete timed simulation across all 7 sections with full diagnostic score analysis and comprehensive explanations",
+    badge_text="Full Bank (182 Qs)",
     quiz_questions=all_questions,
     filename="Quiz_Master_CDAC_147_Exam_Simulator.html",
     is_booster=True

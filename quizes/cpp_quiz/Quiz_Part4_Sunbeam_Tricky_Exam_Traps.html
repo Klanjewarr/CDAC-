@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 4: Sunbeam CCEE Core & Tricky Code Drills | CDAC CCME C++ Programming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning-light: #fffbeb;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding-bottom: 80px;
+        }
+
+        /* Header Bar */
+        .top-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .back-link:hover {
+            background: #dbeafe;
+        }
+
+        .quiz-title-nav {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .badge-nav {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            background: var(--primary-light); color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .score-pill {
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .score-val {
+            color: var(--primary);
+        }
+
+        /* Container Layout */
+        .main-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 310px;
+            gap: 24px;
+        }
+
+        /* Header Info Card */
+        .info-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            color: white;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-card h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            font-size: 14px;
+            color: #dbeafe;
+        }
+
+        .stats-strip {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .stat-num {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            color: #dbeafe;
+            text-transform: uppercase;
+        }
+
+        /* Question Cards Area */
+        .questions-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .q-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .q-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .q-card.flagged {
+            border-left: 5px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .q-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-number {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-section-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .diff-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .diff-Easy { background: #dcfce7; color: #15803d; }
+        .diff-Moderate { background: #fef3c7; color: #b45309; }
+        .diff-Hard { background: #fee2e2; color: #b91c1c; }
+        .diff-Advanced { background: #f3e8ff; color: #7e22ce; }
+        .diff-Expert { background: #ffe4e6; color: #be123c; }
+
+        .q-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flag-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #cbd5e1;
+            transition: color 0.2s;
+        }
+
+        .flag-btn.active {
+            color: var(--accent);
+        }
+
+        .q-text {
+            font-size: 15.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Code Block Styling */
+        .code-box {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-lang-tag {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .code-snippet {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13.5px;
+            color: #e6edf3;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        /* Options Grid */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .opt-item:hover:not(.locked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12.5px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-text {
+            font-size: 14.5px;
+            font-weight: 500;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+
+        /* Correct / Wrong States */
+        .opt-item.correct {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-item.correct .opt-letter {
+            background: var(--success) !important;
+            color: white !important;
+        }
+
+        .opt-item.wrong {
+            background: var(--danger-light) !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-item.wrong .opt-letter {
+            background: var(--danger) !important;
+            color: white !important;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-top: 14px;
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .exp-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .concept-tag {
+            font-size: 11px;
+            font-weight: 700;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .exp-text {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.65;
+            white-space: pre-line;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: sticky;
+            top: 86px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: fit-content;
+        }
+
+        .side-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .side-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .q-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-num {
+            width: 100%;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .grid-num:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .grid-num.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .grid-num.wrong {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .grid-num.flagged {
+            border: 2px solid var(--accent);
+        }
+
+        .side-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="index.html" class="back-link">← Hub Dashboard</a>
+            <span class="quiz-title-nav">Part 4: Sunbeam CCEE Core & Tricky Code Drills</span>
+            <span class="badge-nav">Module 4 · Q41-65</span>
+        </div>
+        <div class="nav-controls">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="btnModeInstant" onclick="setMode('instant')">⚡ Instant Feedback</button>
+                <button class="mode-btn" id="btnModeExam" onclick="setMode('exam')">⏱️ Exam Simulation</button>
+            </div>
+            <div class="score-pill">
+                <span>Score:</span>
+                <span class="score-val" id="scoreDisplay">0 / 25</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Header Banner -->
+        <div class="info-card">
+            <div>
+                <h1>Part 4: Sunbeam CCEE Core & Tricky Code Drills</h1>
+                <p>Questions 41 to 65: sizeof empty class, protected inheritance, copy constructors, operator precedence, indirection, dynamic_cast, and diamond problem.</p>
+            </div>
+            <div class="stats-strip">
+                <div class="stat-box">
+                    <div class="stat-num">25</div>
+                    <div class="stat-lbl">Questions</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">1</div>
+                    <div class="stat-lbl">Code Tracing</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">60m</div>
+                    <div class="stat-lbl">Target Time</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Cards Column -->
+        <div class="questions-area" id="questionsContainer">
+            <!-- Questions rendered via JS -->
+        </div>
+
+        <!-- Sticky Sidebar Navigation & Analytics -->
+        <div class="sidebar">
+            <div class="side-card">
+                <h3>
+                    <span>Question Navigator</span>
+                    <span id="answeredCount" style="font-size: 11px; color: var(--text-muted);">0 Answered</span>
+                </h3>
+                <div class="q-grid" id="questionGrid">
+                    <!-- Nav pills rendered via JS -->
+                </div>
+            </div>
+
+            <div class="side-card">
+                <h3>Quick Actions</h3>
+                <div class="side-actions">
+                    <button class="btn btn-secondary" onclick="toggleAllExplanations()">💡 Toggle All Explanations</button>
+                    <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset My Answers</button>
+                    <button class="btn btn-primary" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">⬆️ Back to Top</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [{"num": 41, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is the output of the following C++ program when compiled and executed?", "code": "class Empty {\nprivate:\npublic:\n};\n\nint main() {\n    Empty obj;\n    std::cout << sizeof(obj);\n    return 0;\n}", "options": {"A": "0", "B": "1", "C": "4", "D": "Compilation error"}, "answer": "B", "highYield": true, "concept": "Size of Empty Class in C++", "explanation": "In C++, the size of an empty class or struct is guaranteed to be non-zero—specifically **1 byte** on virtually all standard implementations. This ensures that two distinct objects of the same empty class allocated in memory have unique, distinct memory addresses (e.g., `&obj1 != &obj2`). If sizeof were 0, an array of empty objects `Empty arr[10];` would have elements with identical addresses, violating basic C++ object identity rules."}, {"num": 42, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "In C++ protected inheritance ('class Derived : protected Base'), how do the access levels of the base class members change inside the derived class?", "options": {"A": "Public members become public; protected members become protected; private members become private", "B": "Public members become protected; protected members become protected; private members remain inaccessible", "C": "All members of the base class become private in the derived class", "D": "Public members become protected; protected members become private; private members become accessible"}, "answer": "B", "highYield": true, "concept": "Inheritance Access Specifier Transformations", "explanation": "Under `protected` inheritance:\n• Base `public` members become `protected` in Derived.\n• Base `protected` members remain `protected` in Derived.\n• Base `private` members remain strictly hidden/inaccessible to Derived.\nRemember: Base `private` members are NEVER directly accessible by any derived class regardless of the inheritance mode (public, protected, or private)!"}, {"num": 43, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Easy", "question": "When the C++ compiler evaluates the expression 'A = B + C' where A, B, and C are objects of a user-defined class with overloaded operators, which overloaded operator is invoked first?", "options": {"A": "Operator + (addition)", "B": "Operator = (assignment)", "C": "Both operators are invoked concurrently", "D": "Compiler-dependent behavior"}, "answer": "A", "highYield": true, "concept": "Operator Overloading Precedence", "explanation": "Overloaded operators in C++ retain their fundamental language precedence and associativity rules. Because the addition operator `+` has higher precedence than the assignment operator `=`, the compiler first invokes `operator+(B, C)` (or `B.operator+(C)`). The temporary object returned by the addition is subsequently passed as an argument to `A.operator=(result)`."}, {"num": 44, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "In C++, the programming technique of using a pointer variable to reference, hold the address of, and access another variable's memory location is formally referred to as:", "options": {"A": "Indirection (or Dereferencing)", "B": "Direct addressing", "C": "Indexing", "D": "Subtyping"}, "answer": "A", "highYield": true, "concept": "Pointer Indirection Mechanics", "explanation": "Using pointers to reference other variables is called **Indirection** (or indirect addressing). The unary operator `*` is known as the indirection or dereference operator. It allows reading or modifying a value at a target address without directly naming the target variable."}, {"num": 45, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What happens when a member function that is redefined in a derived class WITHOUT the 'virtual' keyword in the base class is called through a base class pointer pointing to a derived object?", "options": {"A": "The derived class version is executed because of dynamic polymorphism", "B": "The base class version is executed because of early (compile-time / static) binding", "C": "A runtime segmentation fault occurs", "D": "The compiler issues an ambiguous call error"}, "answer": "B", "highYield": true, "concept": "Static Binding vs Virtual Dispatch", "explanation": "In C++, member functions are non-virtual by default. When calling a non-virtual member function through a pointer, the compiler binds the call at compile time based strictly on the **declared type of the pointer** (`Base*`), completely ignoring the actual runtime object (`Derived`) being pointed to. To enable runtime dispatch based on the object type, the function must be declared `virtual` in the base class."}, {"num": 46, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Hard", "question": "Suppose class Base has a virtual function, and class Derived adds a new member function 'void specialFunction()'. Given 'Base* ptr = new Derived();', what is the safe, modern C++ way to call 'specialFunction()' through 'ptr'?", "options": {"A": "ptr->specialFunction(); directly", "B": "static_cast<void*>(ptr)->specialFunction();", "C": "dynamic_cast<Derived*>(ptr)->specialFunction(); after verifying the returned pointer is not nullptr", "D": "It is completely impossible in C++ to access derived functions from a base pointer"}, "answer": "C", "highYield": true, "concept": "Downcasting & dynamic_cast", "explanation": "Because `specialFunction()` is only declared in `Derived`, the compiler rejects `ptr->specialFunction()` since `Base` does not declare it. To safely downcast from a base pointer to a derived pointer in a polymorphic hierarchy (base has at least one virtual function), use `dynamic_cast<Derived*>(ptr)`. If `ptr` indeed points to a `Derived` instance, `dynamic_cast` succeeds and returns a valid `Derived*`; otherwise it returns `nullptr`."}, {"num": 47, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is the consequence if dynamic_cast fails when downcasting a pointer versus when downcasting a reference?", "options": {"A": "Both return nullptr", "B": "Both throw std::bad_cast exception", "C": "Pointers return nullptr; references throw a std::bad_cast exception", "D": "Pointers throw std::bad_cast; references return nullptr"}, "answer": "C", "highYield": true, "concept": "dynamic_cast Failure Modes", "explanation": "In C++, references cannot be null (`nullptr`). Therefore:\n• When `dynamic_cast<Target*>(ptr)` fails on a pointer, it returns `nullptr`.\n• When `dynamic_cast<Target&>(ref)` fails on a reference, because there is no 'null reference', it throws a `std::bad_cast` exception (from `<typeinfo>`)."}, {"num": 48, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Easy", "question": "A class in C++ is classified as an 'Abstract Base Class' if and only if:", "options": {"A": "All of its member functions are declared private", "B": "It contains at least one pure virtual function (e.g., 'virtual void func() = 0;')", "C": "It does not have a default constructor", "D": "It is declared using the keyword 'abstract class'"}, "answer": "B", "highYield": true, "concept": "Abstract Classes & Pure Virtual Functions", "explanation": "In C++, there is no `abstract` keyword. A class becomes abstract if it contains at least one **pure virtual function**, declared with `= 0` (e.g., `virtual void draw() = 0;`). An abstract class cannot be instantiated directly with `new` or stack allocation; any derived class must provide definitions for all pure virtual functions, or it remains abstract as well."}, {"num": 49, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Hard", "question": "Why must the parameter of a copy constructor in C++ always be passed by reference ('ClassName(const ClassName &obj)') rather than by value ('ClassName(ClassName obj)')?", "options": {"A": "Passing by value is illegal because C++ does not allow const objects", "B": "Passing by value requires making a copy of the argument, which would call the copy constructor again, resulting in infinite recursive calls until stack overflow", "C": "References use less CPU cache lines than values", "D": "Passing by value causes the destructor to be invoked before the constructor body runs"}, "answer": "B", "highYield": true, "concept": "Copy Constructor Signature Rule", "explanation": "If a copy constructor were declared as `MyClass(MyClass obj)`, then whenever the copy constructor is called, the argument `obj` must be passed by value. Passing an object by value requires copying it, which in turn invokes the copy constructor, which requires passing by value, resulting in an infinite recursive chain. The C++ compiler detects this and generates a compile error if the parameter is not a reference."}, {"num": 50, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is the critical problem if a base class has virtual member functions but its destructor is NOT declared 'virtual', and a derived object is deleted via a base pointer ('Base* p = new Derived(); delete p;')?", "options": {"A": "The base class destructor is never called", "B": "The derived class destructor is not called, causing undefined behavior and resource/memory leaks", "C": "A compilation error occurs at 'delete p'", "D": "The operating system terminates the process immediately with SIGKILL"}, "answer": "B", "highYield": true, "concept": "Virtual Destructors & Memory Leak Prevention", "explanation": "When `delete p;` is executed on a `Base*`, the compiler statically dispatches `~Base()` if the destructor is not virtual. The derived class destructor `~Derived()` is never invoked! If `Derived` allocates heap memory (e.g., file handles, dynamically allocated buffers), those resources are leaked, and the C++ standard designates this as **Undefined Behavior**."}, {"num": 51, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "Which of the following sets of C++ operators CANNOT be overloaded under any circumstance?", "options": {"A": "+ , - , * , /", "B": "[] , () , -> , =", "C": ". (dot) , .* (pointer to member) , :: (scope resolution) , ?: (ternary) , sizeof , typeid", "D": "== , != , < , >"}, "answer": "C", "highYield": true, "concept": "Non-Overloadable Operators in C++", "explanation": "In C++, the following operators CANNOT be overloaded:\n1. `.` (Member access / dot operator)\n2. `.*` (Pointer-to-member operator)\n3. `::` (Scope resolution operator)\n4. `?:` (Ternary conditional operator)\n5. `sizeof` (Size of object/type operator)\n6. `typeid` (RTTI operator)\nAll other arithmetic, relational, logical, assignment, subscript `[]`, function call `()`, and arrow `->` operators can be overloaded."}, {"num": 52, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "Which of the following statements regarding static member functions in C++ is FALSE?", "options": {"A": "Static member functions can be called using the class name and scope resolution operator (MyClass::func()) without an instance", "B": "Static member functions do not possess a hidden 'this' pointer", "C": "Static member functions can directly access non-static member variables of the class", "D": "Static member functions can only directly access other static data members and call other static member functions"}, "answer": "C", "highYield": true, "concept": "Static Member Function Constraints", "explanation": "Statement C is FALSE (and thus the correct answer). Because static member functions are associated with the class itself rather than any specific instance, they do not receive the hidden `this` pointer. Consequently, they **cannot** directly access non-static member variables or call non-static member functions, because there is no instance object context."}, {"num": 53, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Easy", "question": "What is the syntactical rule regarding default arguments in C++ function parameter declarations?", "options": {"A": "Default arguments must be specified from right to left (trailing parameters first)", "B": "Default arguments must be specified from left to right", "C": "Only the first parameter can have a default argument", "D": "Default arguments can be placed in any arbitrary position in the parameter list"}, "answer": "A", "highYield": true, "concept": "Default Arguments Rules", "explanation": "In C++, default arguments must always be provided from **right to left** (trailing parameters). If any parameter has a default argument, all parameters to its right must also have default arguments. For example: `int sum(int a, int b = 5, int c = 10);` is valid, whereas `int sum(int a = 5, int b);` is a compilation error."}, {"num": 54, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Hard", "question": "In C++ multiple inheritance, how does the 'Diamond Problem' arise and how is it resolved?", "options": {"A": "It arises when multiple destructors conflict; resolved by making all constructors private", "B": "It arises when a derived class inherits from two classes that both inherit from a common base class, resulting in duplicate subobjects of the common base; resolved by inheriting the common base class using the 'virtual' keyword", "C": "It arises when dynamic_cast fails; resolved by using static_cast", "D": "It arises when an abstract class has multiple pure virtual functions; resolved by friend functions"}, "answer": "B", "highYield": true, "concept": "The Diamond Problem & Virtual Base Classes", "explanation": "The Diamond Problem occurs when class D inherits from both B and C, where both B and C inherit from base class A. Without virtual inheritance, D contains TWO separate copies of class A (one via B, one via C), leading to compiler ambiguity errors when accessing A's members (e.g., `d.x`). Specifying `class B : virtual public A` and `class C : virtual public A` ensures that D contains only ONE shared subobject of class A."}, {"num": 55, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is the exact execution order of constructors and destructors when an object of a derived class is created and then destroyed in C++?", "options": {"A": "Constructors: Derived then Base; Destructors: Derived then Base", "B": "Constructors: Base then Derived; Destructors: Base then Derived", "C": "Constructors: Base then Derived; Destructors: Derived then Base (exact reverse order)", "D": "Constructors and destructors are invoked randomly by the runtime scheduler"}, "answer": "C", "highYield": true, "concept": "Constructor and Destructor Invocation Sequence", "explanation": "When an object of a derived class is created:\n1. Base class constructor executes first (to build the foundation).\n2. Derived class constructor executes next.\nWhen the object goes out of scope and is destroyed:\n1. Derived class destructor executes first (cleaning up derived resources).\n2. Base class destructor executes last.\nDestruction always proceeds in the **exact reverse order** of construction (LIFO order)."}, {"num": 56, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "Which of the following statements about 'friend' functions in C++ is TRUE?", "options": {"A": "A friend function is a member of the class and receives a 'this' pointer", "B": "A friend function is not a member of the class, has no 'this' pointer, but is granted access to all private and protected members of the class", "C": "Friendship is automatically inherited by derived classes", "D": "Friendship is mutual by default (if A is a friend of B, then B is automatically a friend of A)"}, "answer": "B", "highYield": true, "concept": "Friend Functions & Friendship Properties", "explanation": "In C++, a `friend` function is NOT a member function of the class and therefore has no `this` pointer. However, the class grants it privileged access to its `private` and `protected` members. Key exam properties of friendship:\n1. Friendship is NOT mutual (A being B's friend doesn't make B A's friend).\n2. Friendship is NOT inherited (Derived class does not inherit Base's friends).\n3. Friendship is NOT transitive."}, {"num": 57, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "In C++, what does appending the 'const' qualifier to a member function declaration ('void display() const;') signify?", "options": {"A": "The function returns a constant value that cannot be reassigned", "B": "The function cannot modify any non-mutable member variables of the calling object, and inside the function, the 'this' pointer is of type 'const ClassName* const'", "C": "The function can only be called once during program execution", "D": "The function is executed at compile time only"}, "answer": "B", "highYield": true, "concept": "Const Member Functions & this Pointer", "explanation": "A `const` member function guarantees that it will not alter the logical state of the object (cannot modify non-mutable data members or call non-const member functions). Inside `void MyClass::display() const`, the type of `this` is `const MyClass* const` (a constant pointer to a constant object). If a member variable is declared with the `mutable` specifier, it can still be modified inside a const function."}, {"num": 58, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "Which of the following is a fundamental difference between a C++ Reference and a C++ Pointer?", "options": {"A": "Pointers can be re-assigned to point to different addresses; References cannot be reseated to refer to another object after initialization", "B": "References can be NULL; Pointers cannot be NULL", "C": "Pointers must be initialized when declared; References can be uninitialized", "D": "References require the dereference operator (*) to access the value; Pointers do not"}, "answer": "A", "highYield": true, "concept": "References vs Pointers", "explanation": "Key differences:\n1. **Reseating**: A pointer can be reassigned to point to different objects at runtime (`ptr = &x; ptr = &y;`). A reference is bound to an object upon initialization and **cannot be reseated**; assigning to a reference assigns a new value to the referenced object.\n2. **Nullability**: Pointers can be `nullptr`; references cannot be null.\n3. **Initialization**: References MUST be initialized at declaration; pointers can be left uninitialized."}, {"num": 59, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is 'Object Slicing' in C++ and under what circumstance does it happen?", "options": {"A": "Allocating objects on the heap using malloc instead of new", "B": "When a derived class object is assigned or passed by value to a base class object, causing the derived-specific member variables and behaviors to be sliced away", "C": "Splitting an array into multiple sub-arrays", "D": "Destructing an object while it is still in scope"}, "answer": "B", "highYield": true, "concept": "Object Slicing", "explanation": "Object slicing occurs when a derived class instance is assigned or passed by value to a base class variable (e.g., `Base b = derivedObj;` or `void fn(Base b)`). Because the destination variable `b` has the memory layout and size of only `Base`, the compiler copies only the base subobject of `derivedObj` and 'slices off' all derived data members and virtual function overrides."}, {"num": 60, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Easy", "question": "What is the primary motivation for declaring a function as 'inline' in C++?", "options": {"A": "To force the function to be placed in read-only memory", "B": "To request the compiler to replace the function call with the actual code of the function body at compile time, eliminating function call overhead (pushing registers, stack frame allocation)", "C": "To allow the function to be accessible across different threads without synchronization", "D": "To ensure the function is executed before main() starts"}, "answer": "B", "highYield": false, "concept": "Inline Functions Mechanics", "explanation": "The `inline` keyword advises the compiler to substitute the function body at each call site, eliminating the runtime overhead of stack frame creation, parameter passing, and jump instructions for small, frequently called routines. Note: `inline` is merely a hint or request; modern compilers may ignore it if the function is complex, contains loops, or is recursive."}, {"num": 61, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "In C++ exception handling, where must a 'catch(...)' (catch-all) block be positioned relative to other typed catch blocks?", "options": {"A": "At the very beginning of the catch sequence, before any typed catch blocks", "B": "At the very end of the catch sequence, as the final fallback handler", "C": "Between integer and floating-point catch handlers", "D": "Its position does not matter because C++ matches catch blocks by best fit"}, "answer": "B", "highYield": true, "concept": "Catch-All Handler Positioning", "explanation": "C++ matches catch blocks sequentially in the order they appear in source code. Because `catch(...)` catches every possible exception regardless of type, placing it before any typed handler would mask and make those typed handlers unreachable, resulting in a compilation error. Therefore, `catch(...)` must always be placed as the **last** catch block."}, {"num": 62, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "What is the difference between dynamic memory allocation using 'new' in C++ versus 'malloc()' in C?", "options": {"A": "malloc() calls constructors; new does not", "B": "new calls constructors and returns a type-safe pointer; malloc() merely allocates raw uninitialized bytes and returns void*, without calling constructors", "C": "new cannot fail; malloc() returns NULL on failure", "D": "new allocates memory on the stack; malloc() allocates on the heap"}, "answer": "B", "highYield": true, "concept": "new vs malloc() Differences", "explanation": "Key differences:\n1. `new` is an operator; `malloc()` is a library function.\n2. `new` allocates memory AND calls the constructor to initialize the object; `malloc()` only allocates raw memory bytes.\n3. `new` returns a type-safe pointer (`MyClass*`); `malloc()` returns `void*` requiring a cast.\n4. On memory failure, `new` throws `std::bad_alloc` (unless `std::nothrow` is specified); `malloc()` returns `NULL`."}, {"num": 63, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Hard", "question": "If an array of objects is allocated dynamically using 'int* arr = new MyClass[10];', what occurs if it is deallocated using scalar 'delete arr;' instead of 'delete[] arr;'?", "options": {"A": "All 10 objects are cleanly destroyed and memory is freed", "B": "Undefined behavior: only the first object's destructor is called (or heap corruption occurs), and remaining 9 destructors are skipped", "C": "The compiler automatically promotes delete to delete[]", "D": "The program enters an infinite loop"}, "answer": "B", "highYield": true, "concept": "new[] vs delete[] Pairing Rule", "explanation": "When allocating an array with `new[]`, the runtime stores an array cookie (length/count). `delete[]` reads this cookie and invokes the destructor for every single element before releasing the buffer. Using scalar `delete` on an array pointer leads to **Undefined Behavior**: typically, only the first element's destructor runs, heap bookkeeping is corrupted, and memory is leaked."}, {"num": 64, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "Can a class have a pure virtual destructor ('virtual ~MyClass() = 0;'), and if so, what special requirement must be fulfilled?", "options": {"A": "No, destructors cannot be pure virtual in C++", "B": "Yes, but the pure virtual destructor MUST have a function definition/body provided outside the class declaration", "C": "Yes, but derived classes must make their destructor private", "D": "No, because abstract classes cannot have destructors"}, "answer": "B", "highYield": true, "concept": "Pure Virtual Destructors", "explanation": "Yes, a class can declare a pure virtual destructor (`virtual ~MyClass() = 0;`) to make the class abstract without needing any other pure virtual member functions. However, because destructors in an inheritance hierarchy are always chained (the derived destructor calls the base destructor upon cleanup), a definition body for the pure virtual destructor **must** be provided outside the class (e.g., `MyClass::~MyClass() {}`). Failure to provide the body causes a linker error."}, {"num": 65, "section": "Sunbeam CCEE Core & Tricky Code Drills", "difficulty": "Moderate", "question": "In a non-const member function of class Sample, what is the exact type of the implicit 'this' pointer?", "options": {"A": "Sample*", "B": "const Sample*", "C": "Sample* const", "D": "const Sample* const"}, "answer": "C", "highYield": true, "concept": "this Pointer Constness", "explanation": "In a non-const member function, `this` is a **constant pointer to a non-constant object** (`Sample* const`). You cannot change the address stored in `this` (e.g., `this = &anotherObj;` is illegal), but you can modify the member variables of the object it points to. In a `const` member function, `this` becomes `const Sample* const` (a constant pointer to a constant object)."}];
+        const STORAGE_KEY = "cdac_cpp_Quiz_Part4_Sunbeam_Tricky_Exam_Traps";
+        let currentMode = "instant"; // 'instant' or 'exam'
+        let userState = {
+            answers: {},
+            flagged: {}
+        };
+
+        // Initialize from localStorage if exists
+        function loadState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    userState = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Failed to load saved state", e);
+                }
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(userState));
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById("questionsContainer");
+            const grid = document.getElementById("questionGrid");
+            container.innerHTML = "";
+            grid.innerHTML = "";
+
+            let answered = 0;
+            let correctCount = 0;
+
+            QUESTIONS.forEach((q, idx) => {
+                const qNum = idx + 1;
+                const userAnswer = userState.answers[qNum];
+                const isAnswered = userAnswer !== undefined;
+                const isFlagged = !!userState.flagged[qNum];
+                if (isAnswered) answered++;
+                if (isAnswered && userAnswer === q.answer) correctCount++;
+
+                // Build Card
+                const card = document.createElement("div");
+                card.className = `q-card ${isFlagged ? "flagged" : ""}`;
+                card.id = `q_${qNum}`;
+
+                let codeHtml = "";
+                if (q.code && q.code.trim().length > 0) {
+                    codeHtml = `
+                    <div class="code-box">
+                        <span class="code-lang-tag">C++17</span>
+                        <pre class="code-snippet">${escapeHtml(q.code)}</pre>
+                    </div>`;
+                }
+
+                let optionsHtml = "";
+                for (const [key, val] of Object.entries(q.options)) {
+                    let optClass = "opt-item";
+                    let suffixIcon = "";
+                    if (isAnswered) {
+                        optClass += " locked";
+                        if (currentMode === "instant") {
+                            if (key === q.answer) {
+                                optClass += " correct";
+                                suffixIcon = ' <span style="margin-left:auto; font-weight:700; color:var(--success);">✓ Correct</span>';
+                            } else if (key === userAnswer) {
+                                optClass += " wrong";
+                                suffixIcon = ' <span style="margin-left:auto; font-weight:700; color:var(--danger);">✗ Your Choice</span>';
+                            }
+                        } else {
+                            if (key === userAnswer) optClass += " selected";
+                        }
+                    }
+
+                    optionsHtml += `
+                    <div class="${optClass}" onclick="selectOption(${qNum}, '${key}')">
+                        <div class="opt-letter">${key}</div>
+                        <div class="opt-text">${escapeHtml(val)}</div>
+                        ${suffixIcon}
+                    </div>`;
+                }
+
+                const showExp = (isAnswered && currentMode === "instant") || card.getAttribute("data-force-exp") === "true";
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta">
+                            <span class="q-number">Q${qNum}</span>
+                            <span class="q-section-tag">${q.section}</span>
+                            <span class="diff-badge diff-${q.difficulty}">${q.difficulty}</span>
+                        </div>
+                        <div class="q-actions">
+                            <button class="flag-btn ${isFlagged ? "active" : ""}" onclick="toggleFlag(${qNum})" title="Flag for Review">★</button>
+                        </div>
+                    </div>
+                    <div class="q-text">${escapeHtml(q.question)}</div>
+                    ${codeHtml}
+                    <div class="options-list">${optionsHtml}</div>
+                    <div class="explanation-box ${showExp ? "show" : ""}" id="exp_${qNum}">
+                        <div class="exp-header">
+                            <div class="exp-title">
+                                <span>💡 Concept Deep Dive:</span>
+                                <span class="concept-tag">${q.concept || "Core Mechanism"}</span>
+                            </div>
+                            <span style="font-size:12px; font-weight:700; color:var(--success);">Correct Key: Option ${q.answer}</span>
+                        </div>
+                        <div class="exp-text">${escapeHtml(q.explanation)}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                // Grid Pill
+                const pill = document.createElement("a");
+                pill.className = `grid-num ${isFlagged ? "flagged" : ""}`;
+                pill.href = `#q_${qNum}`;
+                pill.innerText = qNum;
+                if (isAnswered && currentMode === "instant") {
+                    if (userAnswer === q.answer) pill.classList.add("correct");
+                    else pill.classList.add("wrong");
+                }
+                grid.appendChild(pill);
+            });
+
+            document.getElementById("scoreDisplay").innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById("answeredCount").innerText = `${answered} / ${QUESTIONS.length} Done`;
+        }
+
+        function selectOption(qNum, selectedKey) {
+            if (userState.answers[qNum]) return; // locked once clicked in instant mode
+            userState.answers[qNum] = selectedKey;
+            saveState();
+            renderQuiz();
+        }
+
+        function toggleFlag(qNum) {
+            userState.flagged[qNum] = !userState.flagged[qNum];
+            saveState();
+            renderQuiz();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById("btnModeInstant").classList.toggle("active", mode === "instant");
+            document.getElementById("btnModeExam").classList.toggle("active", mode === "exam");
+            renderQuiz();
+        }
+
+        let allExpanded = false;
+        function toggleAllExplanations() {
+            allExpanded = !allExpanded;
+            document.querySelectorAll(".explanation-box").forEach(el => {
+                if (allExpanded) el.classList.add("show");
+                else if (currentMode !== "instant") el.classList.remove("show");
+            });
+        }
+
+        function resetQuiz() {
+            if (confirm("Reset all your answers and progress for this quiz?")) {
+                userState = { answers: {}, flagged: {} };
+                localStorage.removeItem(STORAGE_KEY);
+                renderQuiz();
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        loadState();
+        renderQuiz();
+    </script>
+</body>
+</html>

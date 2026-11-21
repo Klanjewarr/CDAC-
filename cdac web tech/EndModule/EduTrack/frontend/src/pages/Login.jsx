@@ -7,7 +7,7 @@ export function Login() {
   return (
     <div>
     <div>
-    <span>Hello </span>
+    <span>Honesty is the best Policy </span>
 <InputField/>
     </div>
    

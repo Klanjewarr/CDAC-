@@ -1,0 +1,2025 @@
+import json
+import os
+
+questions = [
+    # ==========================================================
+    # SECTION 1: OOP WITH JAVA (50 Scenario & Code Tracing Questions)
+    # ==========================================================
+    {
+        "id": 1,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Arrays.asList Fixed-Size Backed Array Mutation",
+        "question": "What will be the output of the following Java program?",
+        "code": "import java.util.*;\n\npublic class Test {\n    public static void main(String[] args) {\n        String[] arr = {\"ispace\", \".\", \"iphone\", \".\"};\n        List<String> list = (List<String>) Arrays.asList(arr); // line 1\n        arr[3] = \".com\";                                        // line 2\n        for (String word : list) {\n            System.out.print(word);\n        }\n    }\n}",
+        "options": {
+            "A": "ispace.com",
+            "B": "ispace.iphone.com",
+            "C": "compilation error at line 1",
+            "D": "compilation error at line 2"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`Arrays.asList(arr)` does **NOT** create an independent copy of the array! It returns a **fixed-size wrapper list backed directly by the underlying array `arr`**.\n\n### ⚙️ Execution Trace:\n1. `list` is a view over `arr`. Any mutation to `arr` reflects immediately in `list`, and any non-structural update to `list` (`list.set()`) reflects in `arr`.\n2. `arr[3] = \".com\"` mutates the 4th element from `\".\"` to `\".com\"`.\n3. The loop prints: `ispace` + `.` + `iphone` + `.com` = `ispace.iphone.com`.\n\n### ⚠️ Critical Note:\nStructural changes like `list.add()` or `list.remove()` throw `UnsupportedOperationException`, but elements can be read and updated!"
+    },
+    {
+        "id": 2,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "String Immutability & Return Values",
+        "question": "What will be the output of the following code snippet?",
+        "code": "public class Test {\n    public static void main(String[] args) {\n        String x = \"xyz\";\n        x.toUpperCase();\n        String y = x.replace('Y', 'y');\n        y = y + \"abc\";\n        System.out.println(y);\n    }\n}",
+        "options": {
+            "A": "abcXyZ",
+            "B": "abcxyz",
+            "C": "xyzabc",
+            "D": "Xyzabc"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nStrings in Java are **strictly immutable**. Any method that appears to modify a String (e.g. `toUpperCase()`, `replace()`, `concat()`) returns a **new String object** and leaves the original completely unchanged.\n\n### ⚙️ Execution Trace:\n1. `x` points to `\"xyz\"` in the String Constant Pool.\n2. `x.toUpperCase()` creates a new object `\"XYZ\"`, but the return value is **discarded** because it is not reassigned to `x`. Thus `x` remains `\"xyz\"`.\n3. `x.replace('Y', 'y')`: In `\"xyz\"`, uppercase `'Y'` does not exist, so `replace()` returns the exact same string `\"xyz\"`. `y` is assigned `\"xyz\"`.\n4. `y = y + \"abc\"` concatenates `\"xyz\"` and `\"abc\"` to produce `\"xyzabc\"`."
+    },
+    {
+        "id": 3,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "String Concatenation in Loop vs StringBuffer Performance",
+        "question": "Which of the following is true for code snippets (a) and (b)?",
+        "code": "// Snippet (a)\npublic class A {\n    public static void main(String args[]) {\n        String s3 = \"Value1\";\n        String s2 = \"Value2\";\n        for (int i = 0; i < 100000; ++i) {\n            s3 = s3 + s2;\n        }\n    }\n}\n\n// Snippet (b)\npublic class B {\n    public static void main(String args[]) {\n        StringBuffer s3 = new StringBuffer(\"Value1\");\n        String s2 = \"Value2\";\n        for (int i = 0; i < 100000; ++i) {\n            s3.append(s2);\n        }\n    }\n}",
+        "options": {
+            "A": "Both (a) and (b) will compile and run successfully; (a) code block will perform better than (b) block",
+            "B": "Both (a) and (b) will compile and run successfully; (b) code block will perform better than (a) block",
+            "C": "Both (a) and (b) will not compile",
+            "D": "Both (a) and (b) will throw runtime exception"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n1. In snippet (a), `s3 = s3 + s2` in a loop constructs a new `StringBuilder` and allocates a brand new `String` object in every single iteration. This yields **$O(N^2)$ time complexity** and massive GC memory overhead.\n2. In snippet (b), `StringBuffer.append()` mutates the internal `char[]` buffer in-place without generating garbage objects, operating in amortized **$O(N)$ linear time**.\n3. Therefore, both compile cleanly, but (b) performs drastically faster."
+    },
+    {
+        "id": 4,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Serialization of Non-Serializable Member References",
+        "question": "What will be the output of the following program?",
+        "code": "import java.io.*;\n\nclass House implements Serializable {\n    Wall wall;\n    int number;\n    public House(int number) {\n        this.number = number;\n    }\n}\n\nclass Wall {\n    int length, breadth, color;\n}\n\npublic class TestSer {\n    public static void main(String[] args) throws Exception {\n        FileOutputStream fileStream = new FileOutputStream(\"Rectangle.ser\");\n        ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);\n        House h = new House(1);\n        h.wall = new Wall();\n        objectStream.writeObject(h);\n        objectStream.close();\n    }\n}",
+        "options": {
+            "A": "Compile time error",
+            "B": "Runtime exception (NotSerializableException)",
+            "C": "Will compile and run successfully",
+            "D": "None of these"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen an object is serialized via `writeObject()`, Java serializes its entire **object graph** recursively. If any referenced member class (`Wall`) does **not** implement `java.io.Serializable` and is **not** marked `transient`, Java throws `java.io.NotSerializableException` at **runtime**.\n\n### ⚠️ Common Trap:\n`House` implements `Serializable`, so code compiles completely fine. The failure occurs at runtime when the JVM attempts to serialize the `Wall` reference."
+    },
+    {
+        "id": 5,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Private Final Methods Cannot Be Overridden",
+        "question": "Predict the output of the following Java Program:",
+        "code": "class Clidder {\n    private final void flipper() {\n        System.out.println(\"Clidder\");\n    }\n}\n\npublic class Clidlet extends Clidder {\n    public final void flipper() {\n        System.out.println(\"Clidlet\");\n    }\n    public static void main(String[] args) {\n        new Clidlet().flipper();\n    }\n}",
+        "options": {
+            "A": "Clidlet",
+            "B": "Clidder",
+            "C": "Compile Error",
+            "D": "Runtime Error"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Trap:\nIn Java, `private` methods are **not visible** to child classes and therefore are **never inherited**. Because `Clidder.flipper()` is private, it is completely invisible to `Clidlet`. Thus, the `final` specifier on `Clidder`'s private method does NOT prevent `Clidlet` from declaring its own unrelated method named `flipper()`!\n\nWhen `new Clidlet().flipper()` executes, it calls `Clidlet`'s own public method and prints `Clidlet`."
+    },
+    {
+        "id": 6,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Fail-Fast Iterators & ConcurrentModificationException",
+        "question": "What will be the output of the following program?",
+        "code": "import java.util.*;\n\npublic class TestMap {\n    public static void main(String[] args) {\n        Map<String, String> map = new HashMap<String, String>();\n        map.put(\"key1\", \"value1\");\n        map.put(\"key2\", \"value2\");\n        map.put(\"key3\", \"value3\");\n        Iterator<String> iterator = map.keySet().iterator();\n        while (iterator.hasNext()) {\n            System.out.println(map.get(iterator.next()));\n            map.put(\"key4\", \"value4\");\n        }\n    }\n}",
+        "options": {
+            "A": "value1\\nvalue2\\nvalue3",
+            "B": "value1 followed by ConcurrentModificationException",
+            "C": "ConcurrentModificationException immediately before printing any value",
+            "D": "Compiler error"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`HashMap` iterators are **fail-fast**. They track an internal counter called `modCount`. If the map is structurally modified (`map.put()` or `map.remove()`) after the iterator is created by any means other than the iterator's own `remove()` method, the iterator detects `modCount != expectedModCount` during the next call to `iterator.next()` and throws `ConcurrentModificationException`.\n\n### ⚙️ Trace:\n1. First iteration: `iterator.next()` returns `\"key1\"` successfully. Prints `value1`.\n2. `map.put(\"key4\", \"value4\")` increments `modCount`.\n3. Second iteration: `iterator.hasNext()` returns true, but the subsequent `iterator.next()` throws `ConcurrentModificationException`."
+    },
+    {
+        "id": 7,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Collections.sort Modifying List During Active Iterator",
+        "question": "What will be the output of the following code?",
+        "code": "import java.util.*;\n\nclass Demo {\n    public void show() {\n        ArrayList<String> list = new ArrayList<String>();\n        list.add(\"banana\");\n        list.add(\"apple\");\n        Iterator itr = list.iterator();\n        Collections.sort(list); // Line 7\n        while (itr.hasNext()) {\n            System.out.print(itr.next() + \" \");\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new Demo().show();\n    }\n}",
+        "options": {
+            "A": "Compilation error at line 7",
+            "B": "apple banana",
+            "C": "banana apple",
+            "D": "ConcurrentModificationException"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Trap:\n`Collections.sort(list)` modifies the underlying `ArrayList` directly by writing sorted elements back into the internal array. This increments `list`'s internal `modCount`!\n\nBecause the iterator `itr` was created **before** sorting, its `expectedModCount` does not match the newly incremented `modCount`. When `itr.next()` is invoked inside the while loop, it throws `ConcurrentModificationException`!"
+    },
+    {
+        "id": 8,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Block Scope in Try-Catch Statements",
+        "question": "What will be the output of the below code?",
+        "code": "public class Test {\n    public static void main(String[] args) {\n        try {\n            int myNum = 0;\n            myNum = Integer.parseInt(\"123A\");\n        }\n        catch(Exception e) {\n            System.out.print(myNum);\n        }\n    }\n}",
+        "options": {
+            "A": "0",
+            "B": "123A",
+            "C": "Exception: NumberFormatException",
+            "D": "Compilation Error"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Trap:\n`int myNum = 0;` is declared **inside the `try` block**. In Java, local variables declared within a block are scoped strictly to that block `{ ... }`. The `catch` block has its own independent scope and cannot access variables declared inside `try`.\n\nThe compiler produces an error: `cannot find symbol: variable myNum`."
+    },
+    {
+        "id": 9,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Unreachable Code After Unconditional Throw",
+        "question": "What will be the output of the following try catch block?",
+        "code": "class Test {\n    public static void main(String args[]) {\n        try {\n            double x = 0.0;\n            throw new Exception(\"Thrown\");\n            return; // Line 6\n        }\n        catch(Exception e) {\n            System.out.println(\"Exception caught\");\n            return;\n        }\n        finally {\n            System.out.println(\"finally\");\n        }\n    }\n}",
+        "options": {
+            "A": "Exception caught finally",
+            "B": "Thrown Exception caught finally",
+            "C": "Unreachable statement error at line 6",
+            "D": "Unreachable statement error at line 10"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java, any statement that immediately follows an unconditional `throw`, `return`, `break`, or `continue` within the same block is detected at compile time as **unreachable code**.\n\nLine 6 (`return;`) can never possibly execute because `throw new Exception(\"Thrown\");` unconditionally redirects control flow. Thus, javac halts with: `unreachable statement at line 6`."
+    },
+    {
+        "id": 10,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Thread Instantiation vs Thread Execution (start vs run)",
+        "question": "Predict the output of the following Java Program:",
+        "code": "public class Juggler extends Thread {\n    public static void main(String[] args) {\n        try {\n            Thread t = new Thread(new Juggler());\n            Thread t2 = new Thread(new Juggler());\n        } catch (Exception e) {\n            System.out.print(\"e \");\n        }\n    }\n    public void run() {\n        for (int i = 0; i < 2; i++) {\n            try {\n                Thread.sleep(500);\n                System.out.print(\"T \" + i);\n            } catch (Exception e) {\n                System.out.print(\"e2 \");\n            }\n            System.out.print(Thread.currentThread().getName() + \" \");\n        }\n    }\n}",
+        "options": {
+            "A": "e2 e",
+            "B": "T 0T 1T 0T 1",
+            "C": "No Output",
+            "D": "T 0T 0T 1T 1"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Trap:\nLook closely at `main()`: `new Thread(new Juggler())` creates thread instances, but **`start()` is NEVER called** on either `t` or `t2`!\n\nA thread object is just a standard heap object until `start()` is invoked to register it with the OS thread scheduler. Since `start()` is never called, the `run()` method is never executed, and no exceptions are thrown. Console output is completely blank (**No Output**)."
+    },
+    {
+        "id": 11,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "User Threads vs Daemon Threads Counting",
+        "question": "How many user threads will get created when we execute the below program?",
+        "code": "public class TestMain {\n    public static void main(String[] args) {\n        System.out.println(\"In main method\");\n        Thread t1 = new Thread(\"thread1\");\n        Thread t2 = new Thread(\"thread2\");\n        t1.start();\n        t2.start();\n    }\n}",
+        "options": {
+            "A": "1",
+            "B": "2",
+            "C": "3",
+            "D": "4"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nBy default, threads created in Java inherit the daemon status of their creating thread. Since `main()` runs as a **user thread** (non-daemon), `t1` and `t2` are also spawned as **user threads**.\n\nTotal user threads = `main` thread (1) + `t1` (1) + `t2` (1) = **3 user threads**."
+    },
+    {
+        "id": 12,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Interface Fields are Implicitly Public Static Final",
+        "question": "What happens when myMethod method is invoked?",
+        "code": "interface MyInterface {\n    int x = 35;\n    void myMethod();\n}\n\nclass Test implements MyInterface {\n    public void myMethod() {\n        x = 78;\n        System.out.println(x);\n    }\n}",
+        "options": {
+            "A": "prints 35",
+            "B": "prints 78",
+            "C": "compilation error",
+            "D": "runtime error"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nEvery field declared inside an interface in Java is automatically and implicitly **`public static final`** whether specified or not.\n\nBecause `x` is `final`, attempting to reassign it via `x = 78;` generates a compile-time error: `cannot assign a value to final variable x`."
+    },
+    {
+        "id": 13,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Generics Lower Bounded Wildcards (? super Type)",
+        "question": "What will be the output of following code snippet?",
+        "code": "import java.util.*;\n\npublic class MyClass {\n    public static void main(String[] args) {\n        List<Number> numberList = new ArrayList<Number>();\n        numberList.add(2);\n        numberList.add(3);\n        foo(numberList);\n    }\n    static void foo(List<? super Double> numList) {\n        System.out.print(numList.get(0));\n        System.out.print(numList.get(1));\n    }\n}",
+        "options": {
+            "A": "Runtime Exception - NullPointer",
+            "B": "Runtime Exception - IndexOutOfBounds",
+            "C": "Compile time error",
+            "D": "23"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`? super Double` represents a lower-bounded wildcard. It accepts any `List` whose element type is `Double` or a superclass of `Double`. Since `Number` is the direct superclass of `Double`, `List<Number>` is completely compatible with `List<? super Double>`!\n\nWhen calling `numList.get(0)`, the return type safely defaults to `Object`. Printing `Object` invokes its `toString()` method, outputting `2` followed by `3` -> `23`."
+    },
+    {
+        "id": 14,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Java is Strictly Pass-By-Value for Primitives",
+        "question": "What will be the output of the following java program?",
+        "code": "class Test {\n    public static void main(String args[]) {\n        int localValue = 5;\n        calculate(localValue);\n        System.out.println(localValue);\n    }\n    static void calculate(int calcValue) {\n        calcValue = calcValue * 100;\n    }\n}",
+        "options": {
+            "A": "Compiler error",
+            "B": "Runtime Exception",
+            "C": "500",
+            "D": "5"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nJava is **strictly pass-by-value**. For primitive types (`int`, `double`, etc.), a copy of the bit-value (`5`) is passed to the method's stack frame. Modifications to `calcValue` inside `calculate()` alter only the local copy. The caller's `localValue` in `main()` remains completely untouched (`5`)."
+    },
+    {
+        "id": 15,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "== Reference Identity vs equals Content Equality",
+        "question": "What will be the output of the program?",
+        "code": "class Client {\n    private int id;\n    public Client(int id) {\n        this.id = id;\n    }\n    public static void main(String args[]) {\n        Client client1 = new Client(25);\n        Client client2 = new Client(25);\n        System.out.println(client1 == client2);\n    }\n}",
+        "options": {
+            "A": "True",
+            "B": "False",
+            "C": "Compile time error",
+            "D": "Runtime Exception"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nThe `==` operator when applied to objects compares **memory reference addresses (identity)**, not internal state. Because `client1` and `client2` were created via separate `new` statements, they occupy different memory locations on the heap. Thus, `client1 == client2` evaluates to `false`."
+    },
+    {
+        "id": 16,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Access Specifier Hierarchy for Cross-Package Subclasses",
+        "question": "You want subclasses in any package to have access to members of a superclass. Which is the most restrictive access modifier that accomplishes this objective?",
+        "code": "",
+        "options": {
+            "A": "private",
+            "B": "default (package-private)",
+            "C": "protected",
+            "D": "public"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n- `private`: Accessible only within the declaring class.\n- `default`: Accessible only within the same package.\n- `protected`: Accessible within the same package AND by subclasses in **any package** via inheritance.\n- `public`: Accessible universally from anywhere.\n\nThe *most restrictive* modifier that grants access to subclasses across packages is `protected`."
+    },
+    {
+        "id": 17,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "wait, notify, and notifyAll are Defined in java.lang.Object",
+        "question": "wait(), notify() & notifyAll() are methods of which of the following class or interface?",
+        "code": "",
+        "options": {
+            "A": "Thread class",
+            "B": "Runnable interface",
+            "C": "Object class",
+            "D": "Lock interface"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java, monitors and locks are associated with individual **objects**, not threads. Because every object has an intrinsic lock (monitor), `wait()`, `notify()`, and `notifyAll()` are defined directly in **`java.lang.Object`**, allowing any object to act as a synchronization coordination point."
+    },
+    {
+        "id": 18,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Abstract Classes Static Methods and Constructors",
+        "question": "Which of the following is FALSE about abstract classes in Java?",
+        "code": "",
+        "options": {
+            "A": "If we derive an abstract class and do not implement all the abstract methods, then the derived class should also be marked as abstract using 'abstract' keyword.",
+            "B": "Abstract classes can have constructors.",
+            "C": "A class can be made abstract without any abstract method.",
+            "D": "Abstract class cannot have static methods"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nOption D is completely false (which makes it the correct choice):\n1. An abstract class **can have static methods**, which can be invoked directly via `AbstractClassName.staticMethod()`.\n2. An abstract class **can have constructors** (invoked by subclass constructors via `super()`).\n3. An abstract class **does not need to have any abstract methods**."
+    },
+    {
+        "id": 19,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "FileOutputStream Append Mode Constructor Parameter",
+        "question": "Which of the following will open a file in append mode in Java?",
+        "code": "",
+        "options": {
+            "A": "BufferedOutputStream bos = new BufferedOutputStream();",
+            "B": "BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(\"test.txt\"));",
+            "C": "BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(\"test.txt\", true));",
+            "D": "BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(\"test.txt\", false));"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`new FileOutputStream(String name, boolean append)` takes a boolean flag as its second parameter. Passing `true` opens the file in **append mode** (writing at the end of the file instead of truncating/overwriting)."
+    },
+    {
+        "id": 20,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "HashMap vs ConcurrentHashMap Null Handling & Thread Safety",
+        "question": "Which of the following is a correct difference between HashMap and ConcurrentHashMap?",
+        "code": "",
+        "options": {
+            "A": "HashMap allows one null key and multiple null values; ConcurrentHashMap allows neither null keys nor null values.",
+            "B": "HashMap is thread-safe; ConcurrentHashMap is not.",
+            "C": "HashMap locks the whole table; ConcurrentHashMap locks the whole table on reads.",
+            "D": "ConcurrentHashMap permits null keys but forbids null values."
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n1. `HashMap` allows **one `null` key** and **any number of `null` values**; it is completely non-thread-safe.\n2. `ConcurrentHashMap` **strictly forbids `null` keys and `null` values** (passing null throws `NullPointerException`) because null ambiguity cannot be safely resolved in concurrent multi-threaded scenarios (`map.get(key) == null` could mean key absent or key mapped to null)."
+    },
+    {
+        "id": 21,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Java NIO Channels Capabilities",
+        "question": "Which of the following statement(s) is (are) true for channels in Java NIO class hierarchy?",
+        "code": "",
+        "options": {
+            "A": "Channels can read data from buffers",
+            "B": "Channels can write data to buffers",
+            "C": "Channels can do asynchronous read and write operations",
+            "D": "All of the above"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java NIO, `Channel` represents an open connection to a hardware device, file, socket, or software component. Unlike standard standard stream I/O (which is one-way), channels are bidirectional: they can both read from buffers and write into buffers, and support non-blocking asynchronous operations."
+    },
+    {
+        "id": 22,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "String substring Index Range Mechanics",
+        "question": "What is the output from the following code?",
+        "code": "public class Test {\n    public static void main(String[] args) {\n        String s = \"Advanced Computing\";\n        String s1 = s.substring(0, 7);\n        String s2 = s1.substring(2);\n        String s3 = s2.substring(0, 3);\n        System.out.println(s3);\n    }\n}",
+        "options": {
+            "A": "van",
+            "B": "nce",
+            "C": "computing",
+            "D": "ad"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`substring(beginIndex, endIndex)` includes `beginIndex` and excludes `endIndex` (length is `endIndex - beginIndex`).\n\n### ⚙️ Trace:\n1. `s.substring(0, 7)` from `\"Advanced Computing\"` extracts characters 0 to 6 -> `\"Advance\"`.\n2. `s1.substring(2)` slices from index 2 to end -> `\"vance\"`.\n3. `s2.substring(0, 3)` slices from index 0 to 2 -> `\"van\"`."
+    },
+    {
+        "id": 23,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "JDBC CallableStatement Stored Procedure Call Syntax",
+        "question": "To execute a stored procedure \"insertDetails\" in a database server, which of the following code snippet can be used?",
+        "code": "",
+        "options": {
+            "A": "Statement stmt = connection.createStatement(); stmt.execute(\"insertDetails()\");",
+            "B": "CallableStatement clbstmt = connection.prepareCall(\"{call insertDetails()}\"); clbstmt.execute();",
+            "C": "StoreProcedureStatement spstmt = connection.createStoreProcedure(\"insertDetails()\"); spstmt.executeQuery();",
+            "D": "PrepareStatement pstmt = connection.prepareStatement(\"insertDetails()\"); pstmt.execute();"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn JDBC, stored procedures are executed using `CallableStatement` created via `connection.prepareCall()`. The standard escape syntax is `\"{call procedure_name(? , ?)}\"`."
+    },
+    {
+        "id": 24,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "HashSet Contract (hashCode and equals)",
+        "question": "If user wants to store Employee class objects in a HashSet, which method needs to be overridden to check whether two Employee objects are same?",
+        "code": "",
+        "options": {
+            "A": "hashCode()",
+            "B": "equals()",
+            "C": "compareTo()",
+            "D": "Both A and B"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`HashSet` relies on hashing:\n1. First, it computes `hashCode()` to find the appropriate bucket index.\n2. If the bucket already contains entries (hash collision), it calls `equals()` to determine whether the object is an identical duplicate.\nOverriding only one without the other violates the Java equals/hashCode contract and causes duplicate elements to be inserted into the set!"
+    },
+    {
+        "id": 25,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Executors Factory Methods for Thread Pools",
+        "question": "Which of the following uses newFixedThreadPool() method to create a fixed thread pool in the Executor Framework?",
+        "code": "",
+        "options": {
+            "A": "ExecutorService",
+            "B": "Executors",
+            "C": "Callable",
+            "D": "Runnable"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`Executors` is the factory utility class in `java.util.concurrent` that contains static factory methods like `Executors.newFixedThreadPool(int nThreads)`, `Executors.newCachedThreadPool()`, and `Executors.newSingleThreadExecutor()`."
+    },
+    {
+        "id": 26,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "ServerSocket Port Conflict IOException",
+        "question": "What happens if ServerSocket is not able to listen on the specified port?",
+        "code": "",
+        "options": {
+            "A": "The system exits gracefully with appropriate message",
+            "B": "The system will wait till port is free",
+            "C": "IOException is thrown while opening the socket",
+            "D": "PortOccupiedException is thrown"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIf the specified port is already bound or cannot be opened, the `ServerSocket` constructor throws `java.io.IOException` (specifically a `java.net.BindException`, which is a subclass of `IOException`)."
+    },
+    {
+        "id": 27,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Default Object toString() Implementation",
+        "question": "What will be the output of below program?",
+        "code": "class Animal {\n    String name;\n    public Animal() {\n        super();\n        this.name = \"Default Name\";\n    }\n    public static void main(String[] args) {\n        Animal animal = new Animal();\n        System.out.println(animal);\n    }\n}",
+        "options": {
+            "A": "Will give compile time error",
+            "B": "Will throw runtime exception",
+            "C": "Will compile and run successfully printing the class name and hash code for animal object",
+            "D": "Default Name"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen an object reference is passed to `System.out.println()`, Java calls its `toString()` method. Since `Animal` does not override `toString()`, it inherits `Object.toString()`, which outputs: `getClass().getName() + '@' + Integer.toHexString(hashCode())` (e.g. `Animal@7ad041f3`)."
+    },
+    {
+        "id": 28,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Java Reflection Object Instantiation",
+        "question": "In reflection, which of the following is used to create objects of any class at runtime?",
+        "code": "",
+        "options": {
+            "A": "Class.forName()",
+            "B": "getConstructor().newInstance() of Class",
+            "C": "getObject method of Class",
+            "D": "All of the above"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`Class.forName()` loads the class into memory, but instantiation of an object is performed via `clazz.getConstructor().newInstance()` (or previously `clazz.newInstance()`)."
+    },
+    {
+        "id": 29,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "Need and Purpose of Wrapper Classes",
+        "question": "Reason(s) why we need Wrapper Classes in Java is/are:",
+        "code": "",
+        "options": {
+            "A": "null is a possible value",
+            "B": "To use primitive types in Collections (generics require objects)",
+            "C": "Methods that support Object-like creation from other types (e.g. Integer.parseInt())",
+            "D": "All of these"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWrapper classes wrap primitives into objects, enabling: null representation for optional data, usage in Java Collections Framework (which forbids primitive types), and providing conversion/parsing utility methods."
+    },
+    {
+        "id": 30,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC CCEE Real Paper",
+        "concept": "FileReader Checked Exceptions",
+        "question": "Which exception must be handled or declared for the below statement?\\nFileReader f = new FileReader(\"demo.txt\");",
+        "code": "",
+        "options": {
+            "A": "IOException / FileNotFoundException",
+            "B": "NullPointerException",
+            "C": "InputTypeMismatchException",
+            "D": "EOFException"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nThe constructor of `FileReader` declares `throws FileNotFoundException`, which is a direct checked subclass of `IOException`. The Java compiler mandates that it must be enclosed in a `try-catch` block or declared in the enclosing method's `throws` clause."
+    },
+    {
+        "id": 31,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Guaranteed CDAC Trap",
+        "concept": "Class Initialization Order: Static Block vs Instance Block vs Constructor",
+        "question": "What is the exact printed sequence when running this program?",
+        "code": "class Base {\n    static { System.out.print(\"S1 \"); }\n    { System.out.print(\"I1 \"); }\n    Base() { System.out.print(\"C1 \"); }\n}\n\npublic class Sub extends Base {\n    static { System.out.print(\"S2 \"); }\n    { System.out.print(\"I2 \"); }\n    Sub() { System.out.print(\"C2 \"); }\n\n    public static void main(String[] args) {\n        System.out.print(\"M \");\n        new Sub();\n    }\n}",
+        "options": {
+            "A": "S1 S2 M I1 C1 I2 C2",
+            "B": "M S1 S2 I1 C1 I2 C2",
+            "C": "S1 I1 C1 S2 I2 C2 M",
+            "D": "S2 S1 M I2 C2 I1 C1"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n1. **Static Initializers**: Execute **once** when classes are loaded, parent before child: Base static (`S1 `), then Sub static (`S2 `).\n2. **`main()` method body**: Executes next: prints `M `.\n3. **Object Instantiation**: For `new Sub()`:\n   - Base instance initializer (`I1 `)\n   - Base constructor (`C1 `)\n   - Sub instance initializer (`I2 `)\n   - Sub constructor (`C2 `)\nResult: `S1 S2 M I1 C1 I2 C2`."
+    },
+    {
+        "id": 32,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% CDAC Catch Hierarchy Standard",
+        "concept": "Catch Block Order & Subclass Exception Reachability",
+        "question": "What happens when compiling this exception handling snippet?",
+        "code": "class Test {\n    public static void main(String[] args) {\n        try {\n            int x = 10 / 0;\n        } catch (Exception e) {\n            System.out.println(\"Generic Exception\");\n        } catch (ArithmeticException ae) {\n            System.out.println(\"Arithmetic Exception\");\n        }\n    }\n}",
+        "options": {
+            "A": "Compiles and prints 'Arithmetic Exception'",
+            "B": "Compiles and prints 'Generic Exception'",
+            "C": "Compilation error: exception ArithmeticException has already been caught",
+            "D": "Runtime error"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nCatch blocks must always be ordered from **most specific (subclass)** to **most general (superclass)**. Because `Exception` is the parent of `ArithmeticException`, the first catch block intercepts all exceptions, rendering the second catch unreachable. The Java compiler halts with: `exception ArithmeticException has already been caught`."
+    },
+    {
+        "id": 33,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% CDAC Finally Block Trap",
+        "concept": "Finally Block Execution with System.exit()",
+        "question": "What is the console output of this code?",
+        "code": "public class ExitTest {\n    public static void main(String[] args) {\n        try {\n            System.out.print(\"Try \");\n            System.exit(0);\n        } finally {\n            System.out.print(\"Finally \");\n        }\n    }\n}",
+        "options": {
+            "A": "Try Finally",
+            "B": "Try",
+            "C": "Finally",
+            "D": "Compilation error"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nThe `finally` block almost always executes, EXCEPT in two scenarios:\n1. When `System.exit(status)` is invoked (the JVM halts immediately).\n2. Fatal JVM crash (e.g. sudden power cut or OS process kill).\nSince `System.exit(0)` terminates the runtime, `finally` does **NOT** run. Only `Try ` is printed."
+    },
+    {
+        "id": 34,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "96% Try-With-Resources Spec",
+        "concept": "Try-With-Resources AutoCloseable Close Order",
+        "question": "In what order are resources closed in a try-with-resources statement?",
+        "code": "class Res implements AutoCloseable {\n    String name;\n    Res(String n) { name = n; }\n    public void close() { System.out.print(name + \" \"); }\n}\npublic class Test {\n    public static void main(String[] args) {\n        try (Res r1 = new Res(\"R1\"); Res r2 = new Res(\"R2\")) {\n            System.out.print(\"Body \");\n        }\n    }\n}",
+        "options": {
+            "A": "Body R1 R2",
+            "B": "Body R2 R1",
+            "C": "R1 R2 Body",
+            "D": "R2 R1 Body"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java's `try-with-resources`, declared resources are automatically closed in **reverse order of their declaration** (LIFO order, identical to destructors on a stack). `r2` is closed first, then `r1`. Output is `Body R2 R1 `."
+    },
+    {
+        "id": 35,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% String Pool Trap",
+        "concept": "String Pool, Heap Objects, and intern() Method",
+        "question": "What does this code print?",
+        "code": "public class StringTest {\n    public static void main(String[] args) {\n        String s1 = new String(\"CDAC\");\n        String s2 = s1.intern();\n        String s3 = \"CDAC\";\n        System.out.println((s1 == s2) + \" \" + (s2 == s3));\n    }\n}",
+        "options": {
+            "A": "true true",
+            "B": "false false",
+            "C": "false true",
+            "D": "true false"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n1. `s1` is created with `new`, placing it on the normal heap memory.\n2. `s1.intern()` returns the canonical reference from the **String Constant Pool (SCP)**.\n3. `s3 = \"CDAC\"` points directly to that exact same literal in the SCP.\n4. Therefore, `s1 == s2` is `false` (heap object vs pool literal), but `s2 == s3` is `true` (both reference identical pool address)."
+    },
+    {
+        "id": 36,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Overloading Resolution Rule",
+        "concept": "Method Overloading with Null and Most Specific Type",
+        "question": "What is the output when calling test(null)?",
+        "code": "public class OverloadTest {\n    static void test(Object o) {\n        System.out.println(\"Object\");\n    }\n    static void test(String s) {\n        System.out.println(\"String\");\n    }\n    public static void main(String[] args) {\n        test(null);\n    }\n}",
+        "options": {
+            "A": "Object",
+            "B": "String",
+            "C": "Compile error: ambiguous call",
+            "D": "NullPointerException"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen multiple overloaded methods match an argument, the Java compiler always selects the **most specific method** (the most derived type in the inheritance hierarchy). Since `String` is a subtype of `Object`, `String` is more specific than `Object`. Thus `test(String)` is invoked."
+    },
+    {
+        "id": 37,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "97% Overloading Ambiguity",
+        "concept": "Ambiguous Method Overloading on Null",
+        "question": "What happens when running this code?",
+        "code": "public class AmbiguousTest {\n    static void test(Integer i) {\n        System.out.println(\"Integer\");\n    }\n    static void test(String s) {\n        System.out.println(\"String\");\n    }\n    public static void main(String[] args) {\n        test(null);\n    }\n}",
+        "options": {
+            "A": "Integer",
+            "B": "String",
+            "C": "Compile time error: reference to test is ambiguous",
+            "D": "NullPointerException"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Trap:\nUnlike `Object` and `String` (where one inherits the other), `Integer` and `String` are sibling classes on the exact same inheritance level. Neither is more specific than the other. The compiler cannot decide which method to bind to `null` and throws a compile-time error: `reference to test is ambiguous`."
+    },
+    {
+        "id": 38,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "95% Modern Java 17 LTS",
+        "concept": "Java 17 Records Rules and Inheritance",
+        "question": "Which of the following is TRUE regarding Records introduced in Modern Java?",
+        "code": "public record Student(int rollNo, String name) {}",
+        "options": {
+            "A": "Records can extend other classes using the extends keyword",
+            "B": "Records are implicitly final and cannot extend any class, but can implement interfaces",
+            "C": "Record fields are mutable by default",
+            "D": "Records cannot define static members"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java 17 LTS:\n1. A `record` is implicitly `final` (cannot be extended).\n2. All its components are `private final` fields with auto-generated accessors `rollNo()` and `name()`.\n3. A record implicitly extends `java.lang.Record`; because Java does not support multiple inheritance, a record **cannot extend any other class**.\n4. However, a record **can implement multiple interfaces**."
+    },
+    {
+        "id": 39,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "95% Modern Java 17 LTS",
+        "concept": "Java 17 Sealed Classes and Subclass Modifiers",
+        "question": "In Java 17 sealed classes, every permitted subclass MUST declare one of which three modifiers?",
+        "code": "public sealed class Vehicle permits Car, Truck, Bike {}",
+        "options": {
+            "A": "abstract, static, or final",
+            "B": "final, sealed, or non-sealed",
+            "C": "public, protected, or private",
+            "D": "synchronized, transient, or volatile"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java 17 sealed class hierarchies, permitted subclasses must explicitly define their extensibility by declaring exactly one of:\n1. **`final`**: Cannot be extended any further.\n2. **`sealed`**: Extensible only by its own specified permits list.\n3. **`non-sealed`**: Open for unrestricted extension by any class."
+    },
+    {
+        "id": 40,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "97% Streams API Laziness",
+        "concept": "Java Streams Lazy Evaluation and Terminal Operation Mandate",
+        "question": "What is the output of the following code snippet?",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class StreamTest {\n    public static void main(String[] args) {\n        List<String> items = List.of(\"one\", \"two\", \"three\");\n        Stream<String> s = items.stream().filter(item -> {\n            System.out.print(item + \" \");\n            return item.length() > 3;\n        });\n    }\n}",
+        "options": {
+            "A": "one two three",
+            "B": "three",
+            "C": "Nothing is printed",
+            "D": "Compilation error"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nJava Stream operations are divided into:\n1. **Intermediate Operations** (`filter`, `map`, `sorted`): Strictly **lazy**. They construct the stream pipeline but execute **zero processing** on elements.\n2. **Terminal Operations** (`collect`, `count`, `forEach`, `findFirst`): Eager. They trigger pipeline execution.\nSince no terminal operation was attached to stream `s`, the filter lambda never executes, and **nothing is printed**."
+    },
+    {
+        "id": 41,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "96% Interface Default Method Conflict",
+        "concept": "Interface Default Methods & Diamond Problem Disambiguation",
+        "question": "What happens when class C implements two interfaces defining the exact same default method?",
+        "code": "interface A { default void show() { System.out.println(\"A\"); } }\ninterface B { default void show() { System.out.println(\"B\"); } }\nclass C implements A, B {\n    // no implementation\n}",
+        "options": {
+            "A": "Compiles and chooses method from interface A (first in implements list)",
+            "B": "Compiles and chooses method from interface B",
+            "C": "Compilation error: class C inherits unrelated defaults for show() from types A and B",
+            "D": "Runtime exception"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen a class implements two interfaces containing conflicting default methods with identical signatures, Java refuses to guess. The compiler issues an error: `class inherits unrelated defaults`. Class `C` must explicitly override `show()` and resolve ambiguity, optionally calling `A.super.show();` or `B.super.show();`."
+    },
+    {
+        "id": 42,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "95% Interface Static Method Rules",
+        "concept": "Interface Static Methods Are NOT Inherited",
+        "question": "What happens when executing this code?",
+        "code": "interface Printable {\n    static void print() { System.out.println(\"Printing\"); }\n}\nclass Document implements Printable {\n    public static void main(String[] args) {\n        print(); // line 6\n    }\n}",
+        "options": {
+            "A": "Prints 'Printing'",
+            "B": "Compilation error at line 6: cannot find symbol method print()",
+            "C": "Runtime exception",
+            "D": "Prints null"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nStatic methods in interfaces are **NOT inherited** by implementing classes or subinterfaces! They must be invoked explicitly using the interface name: `Printable.print()`. Calling `print()` directly or via `Document.print()` fails with a compiler error."
+    },
+    {
+        "id": 43,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Covariant Return Types",
+        "concept": "Covariant Return Types in Method Overriding",
+        "question": "Which statement is valid regarding return types in overridden methods?",
+        "code": "class SuperClass {\n    public Number getVal() { return 1; }\n}\nclass SubClass extends SuperClass {\n    // Which overridden signature is legal?\n}",
+        "options": {
+            "A": "public Integer getVal() { return 2; }",
+            "B": "public Object getVal() { return 2; }",
+            "C": "public String getVal() { return \"2\"; }",
+            "D": "Return type must strictly match Number with zero variation"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nJava supports **Covariant Return Types**. An overriding method in a subclass is permitted to return a **subtype** of the return type declared in the superclass. Since `Integer` is a subtype of `Number`, `public Integer getVal()` is completely legal. Returning a supertype (`Object`) or unrelated type (`String`) causes a compile error."
+    },
+    {
+        "id": 44,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "97% Checked Exception Overriding Constraints",
+        "concept": "Overridden Method Exception Throwing Rules",
+        "question": "If superclass method declares 'void process() throws IOException', what is an overriding subclass method NOT allowed to throw?",
+        "code": "",
+        "options": {
+            "A": "FileNotFoundException (subclass of IOException)",
+            "B": "No exception at all",
+            "C": "Exception (broader checked exception)",
+            "D": "NullPointerException (unchecked runtime exception)"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen overriding a method:\n1. The subclass method **cannot throw newer or broader checked exceptions** than declared by the parent (it cannot throw `Exception`).\n2. It **can** throw narrower checked exceptions (`FileNotFoundException`), fewer exceptions, or no checked exceptions.\n3. It can throw any unchecked `RuntimeException` without restriction."
+    },
+    {
+        "id": 45,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "96% Static vs Instance Synchronization",
+        "concept": "Synchronized Instance Method vs Synchronized Static Method Locks",
+        "question": "If Thread 1 enters a synchronized static method of class X, can Thread 2 simultaneously execute a synchronized non-static method on an instance of class X?",
+        "code": "",
+        "options": {
+            "A": "No, Thread 2 is blocked because both methods belong to class X",
+            "B": "Yes, Thread 2 can execute because synchronized static locks the Class object (X.class) while synchronized non-static locks the instance (this)",
+            "C": "No, static methods acquire locks on all heap instances",
+            "D": "Runtime error"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`synchronized static` acquires the monitor lock on the class's `java.lang.Class` object (`X.class`). `synchronized` on an instance method acquires the monitor lock on the specific instance (`this`). Because these are two completely distinct lock objects, they do NOT block each other! Thread 2 executes concurrently."
+    },
+    {
+        "id": 46,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "95% Volatile Keyword Semantics",
+        "concept": "Volatile Keyword: Visibility vs Atomicity",
+        "question": "What guarantee does the 'volatile' keyword provide in Java?",
+        "code": "private volatile int counter = 0;",
+        "options": {
+            "A": "Guarantees both atomic increment (counter++) and visibility",
+            "B": "Guarantees memory visibility across thread CPU caches and establishes a happens-before relationship, but does NOT guarantee atomicity for compound operations like counter++",
+            "C": "Prevents the object from being garbage collected",
+            "D": "Forces the thread to acquire the object monitor lock"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`volatile` ensures that reads and writes go directly to main memory rather than thread CPU caches, ensuring immediate visibility. However, compound operations like `counter++` (which involves read-modify-write) are **NOT atomic**; multiple threads can still interleave and overwrite values unless `AtomicInteger` or `synchronized` is used."
+    },
+    {
+        "id": 47,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "96% Thread Lifecycle",
+        "concept": "Thread.join() Method Mechanics",
+        "question": "What is the exact effect of calling threadA.join() from within threadB?",
+        "code": "",
+        "options": {
+            "A": "threadA terminates immediately",
+            "B": "threadB terminates immediately",
+            "C": "threadB pauses execution and transitions to WAITING state until threadA terminates",
+            "D": "threadA and threadB merge into a single thread"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n`threadA.join()` called by threadB forces threadB to wait until threadA completes its execution. threadB enters the `WAITING` (or `TIMED_WAITING`) state and resumes only after threadA terminates."
+    },
+    {
+        "id": 48,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Comparable vs Comparator",
+        "concept": "Comparable vs Comparator Interface Contracts",
+        "question": "Which statement accurately distinguishes Comparable from Comparator?",
+        "code": "",
+        "options": {
+            "A": "Comparable defines compare(o1, o2); Comparator defines compareTo(o)",
+            "B": "Comparable provides natural single sorting via compareTo(o) inside the domain class; Comparator provides multiple custom sort sequences via compare(o1, o2) in separate classes/lambdas",
+            "C": "Comparable is in java.util; Comparator is in java.lang",
+            "D": "Both are identical and interchangeable"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n- `Comparable<T>` is in `java.lang`, implemented by the class itself via `compareTo(T other)` for natural order.\n- `Comparator<T>` is in `java.util`, implemented externally via `compare(T o1, T o2)` for custom or multiple sorting criteria."
+    },
+    {
+        "id": 49,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% HashMap Internal Architecture",
+        "concept": "HashMap Treeify Threshold & Collision Buckets",
+        "question": "In Java 8+, under what conditions does a HashMap bucket list convert into a balanced Red-Black Tree?",
+        "code": "",
+        "options": {
+            "A": "When number of elements in a bucket reaches 4",
+            "B": "When bucket count reaches 8 and overall table capacity is at least 64",
+            "C": "When load factor reaches 0.75",
+            "D": "HashMap never uses trees; it always uses linked lists"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Java 8+, when collisions cause a bucket linked list to reach `TREEIFY_THRESHOLD = 8` AND the table capacity is at least `MIN_TREEIFY_CAPACITY = 64`, the bucket converts to a balanced Red-Black tree. This reduces search from $O(n)$ worst-case to $O(\\log n)$."
+    },
+    {
+        "id": 50,
+        "section": "OOP with Java",
+        "subjectCode": "JAVA",
+        "subjectName": "OOP with Java",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "97% Garbage Collection Guarantees",
+        "concept": "System.gc() Non-Guaranteed Execution",
+        "question": "What is guaranteed when a program executes System.gc()?",
+        "code": "",
+        "options": {
+            "A": "All unreferenced objects are immediately reclaimed from heap",
+            "B": "The finalize() method is invoked synchronously on all objects",
+            "C": "It is merely a hint/request to the JVM that garbage collection may run; there is NO guarantee when or if it will run",
+            "D": "The JVM memory is reduced to zero"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nCalling `System.gc()` or `Runtime.getRuntime().gc()` simply suggests to the JVM that garbage collection should be initiated. The JVM makes zero guarantees about whether, when, or how thoroughly GC will run."
+    },
+
+    # ==========================================================
+    # SECTION 2: ALGORITHMS & DATA STRUCTURES (50 Scenario Questions)
+    # ==========================================================
+    {
+        "id": 51,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% CDAC Code Tracing Standard",
+        "concept": "Time Complexity: Geometric Progression Inner Loop",
+        "question": "What is the time complexity of the following code snippet?",
+        "code": "int count = 0;\nfor (int i = 1; i <= n; i *= 2) {\n    for (int j = 0; j < i; j++) {\n        count++;\n    }\n}",
+        "options": {
+            "A": "O(n log n)",
+            "B": "O(n)",
+            "C": "O(n^2)",
+            "D": "O((log n)^2)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Trap:\nMany students see an outer loop of $\\log n$ and inner loop up to $n$ and incorrectly guess $O(n \\log n)$.\n\n### ⚙️ Exact Mathematical Calculation:\n- When $i = 1$, inner loop executes 1 time.\n- When $i = 2$, inner loop executes 2 times.\n- When $i = 4$, inner loop executes 4 times.\n- ...\n- Up to $i \\le n$, inner loop executes $n$ times.\n\nTotal iterations = $1 + 2 + 4 + 8 + \\dots + n = 2n - 1 = O(n)$! This is a geometric series sum, resulting in strictly **linear $O(n)$ time**!"
+    },
+    {
+        "id": 52,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "98% Logarithmic Analysis Core",
+        "concept": "Logarithmic Loop Complexity",
+        "question": "What is the time complexity of this while loop?",
+        "code": "int count = 0;\nwhile (n > 1) {\n    n = n / 2;\n    count++;\n}",
+        "options": {
+            "A": "O(n)",
+            "B": "O(log n)",
+            "C": "O(n log n)",
+            "D": "O(1)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nEvery iteration halves the problem size ($n \\to n/2 \\to n/4 \\to \\dots \\to 1$). The total number of divisions required to reduce $n$ to 1 is $\\log_2 n$. Hence, time complexity is $O(\\log n)$."
+    },
+    {
+        "id": 53,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "100% Guaranteed Circular Queue Question",
+        "concept": "Circular Queue Full Condition with Modulo",
+        "question": "In a circular queue implemented using an array of size N where 'front' points to the first element and 'rear' points to the last element, what is the condition to check if the queue is FULL (leaving one slot empty to differentiate full from empty)?",
+        "code": "",
+        "options": {
+            "A": "rear == front",
+            "B": "(rear + 1) % N == front",
+            "C": "rear == N - 1",
+            "D": "(front + 1) % N == rear"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn array-based Circular Queues, if all slots were filled, the condition `rear == front` would mean BOTH empty and full, causing ambiguity. By reserving one unused slot:\n- **Queue Empty**: `front == rear`\n- **Queue Full**: `(rear + 1) % N == front`"
+    },
+    {
+        "id": 54,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Circular Queue Element Count",
+        "concept": "Circular Queue Size Calculation Formula",
+        "question": "What formula computes the current count of elements in a circular queue of capacity N?",
+        "code": "",
+        "options": {
+            "A": "rear - front",
+            "B": "(rear - front + N) % N",
+            "C": "(rear + front) % N",
+            "D": "N - (front - rear)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nBecause `rear` can wrap around past the start of the array (making `rear < front`), subtracting `rear - front` yields a negative number. Adding `N` before taking modulo `(rear - front + N) % N` guarantees a correct non-negative element count regardless of wrapping."
+    },
+    {
+        "id": 55,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Linear vs Circular Queue",
+        "concept": "Linear Queue 'False Full' Vulnerability",
+        "question": "What primary limitation of a linear array-based queue is solved by a circular queue?",
+        "code": "",
+        "options": {
+            "A": "Linear queue cannot store integers",
+            "B": "False Full condition: rear reaches end of array while front slots are empty after dequeues",
+            "C": "Linear queue operations run in O(n^2) time",
+            "D": "Linear queue requires a linked list"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn a linear queue, every `dequeue()` increments `front`. Once `rear == capacity - 1`, no new elements can be enqueued even if previous elements were dequeued leaving empty slots at the front (**False Full**). A circular queue connects index `N-1` back to `0` via modulo arithmetic to reuse empty space."
+    },
+    {
+        "id": 56,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% CDAC Stack Expression Standard",
+        "concept": "Infix to Postfix Conversion Operator Precedence",
+        "question": "What is the equivalent postfix expression for the infix expression: A + B * C - D / E ?",
+        "code": "",
+        "options": {
+            "A": "A B C * + D E / -",
+            "B": "A B + C * D - E /",
+            "C": "A B C + * D E - /",
+            "D": "+ A * B C - / D E"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Infix-to-Postfix Stack Steps:\nExpression: `A + B * C - D / E`\n1. `*` has higher precedence than `+`: `(B * C)` becomes `B C *`.\n2. Subexpression `A + (B C *)` becomes `A B C * +`.\n3. `/` has higher precedence than `-`: `(D / E)` becomes `D E /`.\n4. Combine with `-` (left-to-right associative): `(A B C * +) - (D E /)` becomes `A B C * + D E / -`."
+    },
+    {
+        "id": 57,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Postfix Evaluation Trace",
+        "concept": "Postfix Expression Stack Evaluation",
+        "question": "Evaluate the following postfix expression using a stack: 6 3 2 + * 5 -",
+        "code": "",
+        "options": {
+            "A": "25",
+            "B": "30",
+            "C": "15",
+            "D": "20"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Step-by-Step Stack Evaluation:\n1. Push `6`, Push `3`, Push `2`. Stack: `[6, 3, 2]`\n2. Operator `+`: Pop `2`, Pop `3`. Compute `3 + 2 = 5`. Push `5`. Stack: `[6, 5]`\n3. Operator `*`: Pop `5`, Pop `6`. Compute `6 * 5 = 30`. Push `30`. Stack: `[30]`\n4. Push `5`. Stack: `[30, 5]`\n5. Operator `-`: Pop `5`, Pop `30`. Compute `30 - 5 = 25`. Push `25`.\nFinal Result: **25**."
+    },
+    {
+        "id": 58,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Balanced Parentheses",
+        "concept": "Stack Application: Balanced Parentheses Matching",
+        "question": "Which data structure is optimal to verify whether an arithmetic expression has balanced parentheses, and in what scenario does it fail immediately?",
+        "code": "",
+        "options": {
+            "A": "Queue; fails when a closing bracket has no corresponding opening bracket",
+            "B": "Stack; fails if a closing bracket is encountered when the stack is empty, or if popped opening bracket type does not match",
+            "C": "Binary Search Tree; fails on duplicates",
+            "D": "Hash Table; fails on collision"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nA **Stack (LIFO)** is ideal: every opening bracket (`(`, `{`, `[`) is pushed. When a closing bracket is seen:\n1. If stack is empty -> **Unbalanced** (extra closing bracket).\n2. If stack is non-empty, pop top; if types do not match -> **Unbalanced**.\n3. If at end of expression stack is not empty -> **Unbalanced** (unclosed bracket)."
+    },
+    {
+        "id": 59,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Linked List Pointer Mechanics",
+        "concept": "Singly Linked List Deletion Pointer Sequence",
+        "question": "In a singly linked list, which single pointer assignment correctly bypasses and deletes the node immediately following 'temp'?",
+        "code": "",
+        "options": {
+            "A": "temp = temp.next;",
+            "B": "temp.next = temp.next.next;",
+            "C": "temp.next.next = temp.next;",
+            "D": "temp.next = null;"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nTo delete node `temp.next`, `temp`'s `next` pointer must be redirected to point to the node following `temp.next` (`temp.next.next`). In garbage-collected languages like Java, the bypassed node is automatically collected."
+    },
+    {
+        "id": 60,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Doubly Linked List Pointer Ordering",
+        "concept": "Doubly Linked List Node Insertion Order",
+        "question": "To insert newNode immediately after node 'p' in a doubly linked list, which sequence of pointer assignments is correct without losing references?",
+        "code": "",
+        "options": {
+            "A": "newNode.next = p.next; p.next = newNode; newNode.prev = p; p.next.prev = newNode;",
+            "B": "newNode.next = p.next; newNode.prev = p; if (p.next != null) p.next.prev = newNode; p.next = newNode;",
+            "C": "p.next = newNode; newNode.prev = p; newNode.next = p.next;",
+            "D": "p.next.prev = newNode; p.next = newNode; newNode.next = p;"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Trap:\nIf you execute `p.next = newNode` before linking `newNode.next = p.next`, you permanently lose the reference to the rest of the list! The correct non-destructive sequence is:\n1. `newNode.next = p.next;`\n2. `newNode.prev = p;`\n3. `if (p.next != null) p.next.prev = newNode;`\n4. `p.next = newNode;`"
+    },
+    {
+        "id": 61,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Cycle Detection Standard",
+        "concept": "Floyd's Tortoise and Hare Cycle Detection",
+        "question": "What are the time and auxiliary space complexities of Floyd's Cycle Detection algorithm in a singly linked list?",
+        "code": "",
+        "options": {
+            "A": "Time: O(n), Auxiliary Space: O(1)",
+            "B": "Time: O(n), Auxiliary Space: O(n)",
+            "C": "Time: O(n^2), Auxiliary Space: O(1)",
+            "D": "Time: O(log n), Auxiliary Space: O(1)"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nFloyd's algorithm uses two pointers (`slow` advancing 1 step, `fast` advancing 2 steps). If a cycle exists, `fast` catches up with `slow` inside the loop in at most $O(n)$ steps. It uses only two pointer variables, requiring strict **$O(1)$ auxiliary space**."
+    },
+    {
+        "id": 62,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "99% Binary Heap Indexing Formula",
+        "concept": "0-Indexed Array Representation of Binary Heap",
+        "question": "In a 0-indexed array representation of a binary heap, for a node at index i, what are the indices of its left child, right child, and parent respectively?",
+        "code": "",
+        "options": {
+            "A": "Left: 2i, Right: 2i + 1, Parent: i/2",
+            "B": "Left: 2i + 1, Right: 2i + 2, Parent: (i - 1) / 2",
+            "C": "Left: 2i - 1, Right: 2i, Parent: i/2",
+            "D": "Left: i + 1, Right: i + 2, Parent: i - 1"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Indexing Distinction:\n- **1-indexed array**: Left = $2i$, Right = $2i + 1$, Parent = $\\lfloor i/2 \\rfloor$.\n- **0-indexed array (Standard in Java/C++)**: Left = $2i + 1$, Right = $2i + 2$, Parent = $\\lfloor (i - 1)/2 \\rfloor$."
+    },
+    {
+        "id": 63,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Heap Construction Trace",
+        "concept": "Max Heap Successive Insertion Trace",
+        "question": "If elements 10, 20, 15, 30 are inserted one by one into an initially empty Max-Heap, what will be the root element?",
+        "code": "",
+        "options": {
+            "A": "10",
+            "B": "15",
+            "C": "20",
+            "D": "30"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Max-Heap Property:\nIn a Max-Heap, every parent node must be greater than or equal to its children. Therefore, the **root node always holds the maximum element** in the entire heap. After inserting 10, 20, 15, and 30, the root is unconditionally **30**."
+    },
+    {
+        "id": 64,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% Heap Root Deletion Mechanics",
+        "concept": "Heap Root Deletion and Heapify Down",
+        "question": "What is the procedure and time complexity for deleting the maximum element from a Max-Heap of size n?",
+        "code": "",
+        "options": {
+            "A": "Remove root, shift all array elements left by 1; O(n)",
+            "B": "Swap root with last leaf, reduce heap size by 1, and perform heapifyDown from root; O(log n)",
+            "C": "Search for second largest element, swap with root; O(n)",
+            "D": "Delete root and rebuild heap from scratch; O(n log n)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nRoot deletion in a heap:\n1. Replace root with the last element in the array (`arr[0] = arr[size - 1]`).\n2. Decrement size by 1.\n3. Call `heapifyDown(0)` to bubble down the new root until heap invariants are satisfied.\nSince the tree height is $\\log_2 n$, this takes **$O(\\log n)$** time."
+    },
+    {
+        "id": 65,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Strictly Binary Tree Math",
+        "concept": "Strictly Binary Tree Leaves vs Internal Nodes Relation",
+        "question": "In any strictly binary tree (where every non-leaf node has exactly 2 children), if there are I internal nodes, how many leaf nodes L are there?",
+        "code": "",
+        "options": {
+            "A": "L = I",
+            "B": "L = I + 1",
+            "C": "L = 2I",
+            "D": "L = 2I - 1"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Tree Math Theorem:\nFor any strictly (full) binary tree:\n$$\\text{Number of Leaves } (L) = \\text{Number of Internal Nodes } (I) + 1$$\nExample: A tree with 3 internal nodes always has exactly $3 + 1 = 4$ leaves."
+    },
+    {
+        "id": 66,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC Mock Question",
+        "concept": "Almost Complete Binary Tree (ACBT) Definition",
+        "question": "Which of the following correctly describes the properties of an Almost Complete Binary Tree (ACBT)?",
+        "code": "",
+        "options": {
+            "A": "The height difference between the left and right subtrees of any node is at most 1",
+            "B": "Every internal node has exactly two children, and all leaf nodes are at the same level",
+            "C": "It is a binary tree where left child < root < right child",
+            "D": "All levels are completely filled except possibly the last level, which is filled strictly from left to right"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Tree Taxonomy:\n- **D** describes an **Almost Complete Binary Tree (ACBT)** (foundation of Binary Heaps).\n- **A** describes an **AVL Tree** (height-balanced BST).\n- **B** describes a **Perfect Binary Tree**.\n- **C** describes a **Binary Search Tree (BST)**."
+    },
+    {
+        "id": 67,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "99% BST Traversal Invariant",
+        "concept": "BST Inorder Traversal Property",
+        "question": "Which traversal of a Binary Search Tree (BST) visits the nodes in strictly ascending sorted order?",
+        "code": "",
+        "options": {
+            "A": "Preorder Traversal",
+            "B": "Inorder Traversal",
+            "C": "Postorder Traversal",
+            "D": "Level-order Traversal"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nBy definition of a BST, for every node, `leftSubtree < node < rightSubtree`. **Inorder traversal** visits (Left $\\to$ Node $\\to$ Right), which guarantees elements are processed in **strictly non-decreasing sorted order**."
+    },
+    {
+        "id": 68,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% BST Degeneration Trap",
+        "concept": "BST Worst-Case Degeneration to Skewed Tree",
+        "question": "If keys 1, 2, 3, 4, 5 are inserted in ascending order into an unbalanced BST, what does the tree degenerate into and what is the search complexity?",
+        "code": "",
+        "options": {
+            "A": "Balanced tree with O(log n) search",
+            "B": "Right-skewed tree resembling a linked list with O(n) search",
+            "C": "Left-skewed tree with O(n) search",
+            "D": "Complete binary tree with O(1) search"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nInserting sorted keys into a standard BST causes every successive key to be inserted as the right child of the previous node. The tree degenerates into a **right-skewed linked list** of height $n$, degrading search, insertion, and deletion times from $O(\\log n)$ to **worst-case $O(n)$**."
+    },
+    {
+        "id": 69,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "99% AVL Balance Factor Definition",
+        "concept": "AVL Tree Balance Factor Constraints",
+        "question": "What is the formula for the Balance Factor of a node in an AVL tree, and what are its permissible values?",
+        "code": "",
+        "options": {
+            "A": "BF = height(left) - height(right); permissible values are {-1, 0, 1}",
+            "B": "BF = height(left) + height(right); permissible values are {0, 1, 2}",
+            "C": "BF = nodes(left) - nodes(right); permissible values are {-1, 0, 1}",
+            "D": "BF = height(right) / height(left); permissible values are {0, 1}"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn an AVL tree, the Balance Factor of any node is defined as:\n$$\\text{BF} = \\text{height}(\\text{leftSubtree}) - \\text{height}(\\text{rightSubtree})$$\nFor every node in a valid AVL tree, $\\text{BF} \\in \\{-1, 0, 1\\}$. If an insertion causes $\\text{BF}$ to become $\\pm 2$, a rotation must be performed immediately."
+    },
+    {
+        "id": 70,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% AVL Rotation Cases",
+        "concept": "AVL Rotation Scenarios (LL, RR, LR, RL)",
+        "question": "If a node becomes unbalanced with BF = +2 after an insertion into the RIGHT child of its LEFT subtree, which rotation is required?",
+        "code": "",
+        "options": {
+            "A": "Single Right Rotation (LL)",
+            "B": "Single Left Rotation (RR)",
+            "C": "Left-Right Rotation (LR Double Rotation)",
+            "D": "Right-Left Rotation (RL Double Rotation)"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC AVL Rotation Taxonomy:\n1. Insertion into Left child of Left subtree (**LL**): **Single Right Rotation**\n2. Insertion into Right child of Right subtree (**RR**): **Single Left Rotation**\n3. Insertion into **Right child of Left subtree** (**LR**): **Left-Right Rotation** (first Left rotation on child, then Right rotation on parent)\n4. Insertion into Left child of Right subtree (**RL**): **Right-Left Rotation** (first Right rotation on child, then Left rotation on parent)"
+    },
+    {
+        "id": 71,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC Mock Question",
+        "concept": "Hash Table Linear Probing & Primary Clustering",
+        "question": "In an open addressing hash table using Linear Probing to resolve collisions, what is the Primary Clustering problem?",
+        "code": "",
+        "options": {
+            "A": "A sequence of filled slots building up, increasing probe length for subsequent keys",
+            "B": "Hash values clustering around prime numbers, causing unused buckets",
+            "C": "The hash function distributing keys too uniformly",
+            "D": "Multiple keys hashing to the exact same index requiring a linked list"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn Linear Probing ($h(k, i) = (h(k) + i) \\bmod M$), whenever collisions occur, adjacent filled slots merge into long contiguous blocks called **clusters**. Any new key whose hash lands anywhere inside or adjacent to a cluster must probe through the entire cluster, making insertions and searches increasingly slow (**Primary Clustering**)."
+    },
+    {
+        "id": 72,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Quadratic Probing Mechanics",
+        "concept": "Quadratic Probing vs Primary Clustering",
+        "question": "How does Quadratic Probing overcome the primary clustering problem of linear probing?",
+        "code": "",
+        "options": {
+            "A": "By using a second hash function to calculate step size",
+            "B": "By probing slots at quadratic offsets: h(k, i) = (h(k) + c1*i + c2*i^2) % M, breaking contiguous linear blocks",
+            "C": "By doubling table size on every collision",
+            "D": "By attaching a binary tree to each slot"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nQuadratic Probing probes indices at offsets $1, 4, 9, 16, \\dots$ ($i^2$). This jumps over contiguous clusters, preventing long blocks of filled slots from forming and eliminating primary clustering (though keys with the same initial hash follow identical probe sequences, known as secondary clustering)."
+    },
+    {
+        "id": 73,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Separate Chaining Load Factor",
+        "concept": "Separate Chaining and Load Factor Alpha",
+        "question": "In a hash table using Separate Chaining, what is true regarding the Load Factor alpha = n / m (where n is elements and m is buckets)?",
+        "code": "",
+        "options": {
+            "A": "alpha can never exceed 1.0",
+            "B": "alpha can exceed 1.0 because each bucket contains a dynamic linked list",
+            "C": "alpha must always be a prime number",
+            "D": "alpha must equal 0"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn open addressing, $\\alpha = n/m$ must strictly stay $\\le 1.0$ because there are only $m$ fixed slots. In **Separate Chaining**, because each bucket is the head of an extensible linked list, $n$ can be much greater than $m$ (e.g. 500 items across 100 buckets means $\\alpha = 5.0$), which is completely valid."
+    },
+    {
+        "id": 74,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "99% Sorting Stability Core Definition",
+        "concept": "Definition of Stability in Sorting Algorithms",
+        "question": "What does it mean for a sorting algorithm to be 'STABLE'?",
+        "code": "",
+        "options": {
+            "A": "It operates in O(n log n) in all cases without crashing",
+            "B": "It preserves the relative original order of records with equal keys",
+            "C": "It does not allocate extra heap memory",
+            "D": "It sorts in-place using only O(1) auxiliary variables"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nA sort algorithm is **stable** if whenever two elements have identical keys ($K_i = K_j$) and $i < j$ in the original input, element $i$ appears before element $j$ in the sorted output."
+    },
+    {
+        "id": 75,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% CDAC Sorting Classification",
+        "concept": "Stable vs Unstable Sorting Algorithms Classification",
+        "question": "Which of the following groups contains ONLY STABLE sorting algorithms?",
+        "code": "",
+        "options": {
+            "A": "Merge Sort, Insertion Sort, Bubble Sort",
+            "B": "Quick Sort, Heap Sort, Selection Sort",
+            "C": "Merge Sort, Quick Sort, Selection Sort",
+            "D": "Heap Sort, Insertion Sort, Bubble Sort"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Sorting Classification:\n- **Stable Sorts**: **Merge Sort, Insertion Sort, Bubble Sort, Radix Sort, Counting Sort**.\n- **Unstable Sorts**: **Quick Sort, Heap Sort, Selection Sort**."
+    },
+    {
+        "id": 76,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Selection Sort Complexity Invariant",
+        "concept": "Selection Sort Always O(n^2) Invariant",
+        "question": "When evaluating the time complexity of the Selection Sort algorithm on an array that is ALREADY fully sorted, what is the time complexity?",
+        "code": "",
+        "options": {
+            "A": "Best Case: O(n)",
+            "B": "Best Case: O(n log n)",
+            "C": "Best Case: O(n^2)",
+            "D": "Best Case: O(1)"
+        },
+        "answer": "C",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nUnlike Insertion Sort or Bubble Sort (which can break early if no swaps occur), Selection Sort **always scans the entire remaining unsorted sub-array** to find the minimum element. It performs exactly $\\frac{n(n-1)}{2}$ comparisons **in all cases**. Thus, Best, Average, and Worst cases are **all strictly $O(n^2)$**!"
+    },
+    {
+        "id": 77,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Insertion Sort Best Case",
+        "concept": "Insertion Sort Best Case Linear Time O(n)",
+        "question": "What is the best-case time complexity of Insertion Sort, and when does it occur?",
+        "code": "",
+        "options": {
+            "A": "O(n^2) when array is reverse sorted",
+            "B": "O(n) when array is already sorted in ascending order",
+            "C": "O(n log n) when elements are random",
+            "D": "O(1) when array size is small"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIf the array is already sorted, each new element is compared to its immediate predecessor, finds it is already $\\ge$, and the inner while loop terminates on the very first comparison. With 1 comparison per element and 0 shifts, the total comparisons are $n - 1$, yielding **$O(n)$ best-case time**."
+    },
+    {
+        "id": 78,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Quick Sort Worst Case Triggers",
+        "concept": "Quick Sort Worst Case Degradation and Space Complexity",
+        "question": "Under what condition does standard Quick Sort degrade to O(n^2) time complexity, and what is its auxiliary stack space in that case?",
+        "code": "",
+        "options": {
+            "A": "When the array is already sorted and the first or last element is chosen as pivot; stack space O(n)",
+            "B": "When all elements are negative; stack space O(log n)",
+            "C": "When pivot always divides the array into two equal halves; stack space O(n)",
+            "D": "Quick sort never degrades to O(n^2)"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWhen the chosen pivot is consistently the minimum or maximum element (e.g. array already sorted and pivot is first/last element), partitioning produces partitions of size $0$ and $n - 1$. The recurrence becomes $T(n) = T(n-1) + O(n) = O(n^2)$, and recursion call stack depth reaches **$O(n)$**."
+    },
+    {
+        "id": 79,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Merge Sort Space and Invariant",
+        "concept": "Merge Sort Recurrence and Auxiliary Space",
+        "question": "What is the recurrence relation and auxiliary memory requirement for Merge Sort?",
+        "code": "",
+        "options": {
+            "A": "T(n) = T(n/2) + O(1); Auxiliary Space: O(1)",
+            "B": "T(n) = 2T(n/2) + O(n); Auxiliary Space: O(n)",
+            "C": "T(n) = 2T(n/2) + O(1); Auxiliary Space: O(n log n)",
+            "D": "T(n) = T(n-1) + O(n); Auxiliary Space: O(1)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nMerge Sort divides the array into 2 halves ($2T(n/2)$) and merges them in linear time ($O(n)$). By Master Theorem, $T(n) = O(n \\log n)$ in best, average, and worst cases! However, merging standard arrays requires a temporary array of size $n$, making its auxiliary space **$O(n)$** (not in-place)."
+    },
+    {
+        "id": 80,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "97% Binary Search Requirements",
+        "concept": "Binary Search Precondition & Complexity",
+        "question": "What is the mandatory prerequisite for applying Binary Search on an array, and what is its search time?",
+        "code": "",
+        "options": {
+            "A": "Array elements must be unique; O(n)",
+            "B": "Array must be sorted; O(log n)",
+            "C": "Array must be dynamically allocated on heap; O(1)",
+            "D": "Array size must be a power of 2; O(n log n)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nBinary Search requires the array to be **sorted**. By repeatedly halving the search space based on comparing the target with the midpoint, it finds elements in **$O(\\log n)$** time."
+    },
+    {
+        "id": 81,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Graph Space Tradeoffs",
+        "concept": "Graph Representations: Adjacency Matrix vs Adjacency List Space",
+        "question": "For a graph with V vertices and E edges, which statement correctly compares storage space?",
+        "code": "",
+        "options": {
+            "A": "Adjacency Matrix requires O(V^2); Adjacency List requires O(V + E)",
+            "B": "Adjacency Matrix requires O(V + E); Adjacency List requires O(V^2)",
+            "C": "Both require O(E^2)",
+            "D": "Adjacency List requires O(V * E)"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n- **Adjacency Matrix**: A $V \\times V$ boolean 2D array, consuming **$O(V^2)$ space** regardless of edge count (optimal for dense graphs).\n- **Adjacency List**: An array of $V$ lists containing $E$ edge nodes, consuming **$O(V + E)$ space** (optimal for sparse graphs)."
+    },
+    {
+        "id": 82,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "99% BFS Properties",
+        "concept": "Breadth-First Search (BFS) Data Structure and Shortest Path",
+        "question": "Which data structure does Breadth-First Search (BFS) use, and what property does BFS guarantee on an unweighted graph?",
+        "code": "",
+        "options": {
+            "A": "Stack; guarantees finding the longest path",
+            "B": "Queue; guarantees finding the shortest path (minimum edge count) from source to all reachable vertices",
+            "C": "Priority Queue; guarantees detecting negative cycles",
+            "D": "Set; guarantees visiting vertices in decreasing degree order"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nBFS uses a **FIFO Queue** to visit all immediate neighbors at depth $k$ before visiting vertices at depth $k+1$. On unweighted graphs, the first time BFS reaches a target vertex, it is guaranteed to be via the **shortest path**."
+    },
+    {
+        "id": 83,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC Mock Question",
+        "concept": "Depth-First Search (DFS) Traversal Characteristics",
+        "question": "What defines the Depth First Search (DFS) traversal of a Graph?",
+        "code": "",
+        "options": {
+            "A": "It guarantees finding the shortest path between a source and destination in an unweighted graph",
+            "B": "It explores all immediate neighbors of a vertex before moving deeper, typically using a Queue",
+            "C": "It visits vertices strictly in increasing order of their degree",
+            "D": "It explores as far as possible along each branch before backtracking, typically using a Stack or recursion"
+        },
+        "answer": "D",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nDFS explores deep into a graph's branches until reaching a dead-end or already visited node, then backtracks. It relies on a LIFO structure (**Stack** or system call stack via recursion). Time complexity is $O(V + E)$."
+    },
+    {
+        "id": 84,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% Topological Sorting Precondition",
+        "concept": "Topological Sort Directed Acyclic Graph (DAG) Condition",
+        "question": "On which type of graph is Topological Sorting possible, and what does it represent?",
+        "code": "",
+        "options": {
+            "A": "Any undirected graph with positive weights",
+            "B": "Strictly a Directed Acyclic Graph (DAG); represents a linear ordering where for every directed edge u -> v, u comes before v",
+            "C": "Any graph with cycles",
+            "D": "Complete graphs only"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nTopological sorting produces a linear sequence of tasks where prerequisites precede dependents. If a graph contains a directed cycle ($u \\to v \\to w \\to u$), no valid linear order can exist. Thus, topological sort is **strictly possible only on a DAG**."
+    },
+    {
+        "id": 85,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "99% Dijkstra Negative Weight Limitation",
+        "concept": "Dijkstra's Algorithm Negative Edge Failure",
+        "question": "Why does Dijkstra's shortest path algorithm FAIL when a graph contains negative weight edges?",
+        "code": "",
+        "options": {
+            "A": "Dijkstra uses too much memory for negative numbers",
+            "B": "It is based on a greedy assumption that once a vertex is marked visited with the minimum tentative distance, its shortest path is permanently finalized; a negative edge can later reduce that distance",
+            "C": "Negative weights cause division by zero",
+            "D": "It only works on trees"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nDijkstra greedily locks in the shortest distance to a vertex once it is extracted from the Priority Queue. It never re-examines finalized vertices. If a negative edge appears later in the graph, it could provide an even shorter path to an already finalized node, invalidating Dijkstra's greedy choice. (To handle negative edges, **Bellman-Ford** must be used)."
+    },
+    {
+        "id": 86,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "97% Bellman-Ford Negative Cycle Detection",
+        "concept": "Bellman-Ford Algorithm Relaxations and Time Complexity",
+        "question": "How many times does the Bellman-Ford algorithm relax all edges to compute shortest paths, and what is its time complexity?",
+        "code": "",
+        "options": {
+            "A": "V times; O(V^2)",
+            "B": "V - 1 times; O(V * E)",
+            "C": "E times; O(E^2)",
+            "D": "log V times; O(E log V)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn a graph with $V$ vertices, the shortest simple path contains at most $V - 1$ edges. Bellman-Ford relaxes all $E$ edges **$V - 1$ times**, taking **$O(V \\cdot E)$** time. A $V$-th iteration that still reduces any distance confirms the presence of a **negative weight cycle**."
+    },
+    {
+        "id": 87,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Kruskal's MST Mechanism",
+        "concept": "Kruskal's Minimum Spanning Tree (MST) Algorithm",
+        "question": "Which algorithmic design paradigm and data structure does Kruskal's algorithm use to construct an MST?",
+        "code": "",
+        "options": {
+            "A": "Dynamic Programming with a Matrix",
+            "B": "Greedy approach: sorts all edges by weight and uses Disjoint Set Union (Union-Find) to reject edges that form cycles",
+            "C": "Divide and Conquer with a Queue",
+            "D": "Backtracking with a Stack"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nKruskal's algorithm is **greedy**: it sorts all $E$ edges in ascending weight order ($O(E \\log E)$) and iterates through them, using the **Union-Find (Disjoint Set)** data structure to add edges that connect disjoint components while preventing cycles until $V - 1$ edges are chosen."
+    },
+    {
+        "id": 88,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Prim's MST Mechanism",
+        "concept": "Prim's vs Kruskal's Algorithm Differences",
+        "question": "How does Prim's algorithm fundamentally differ from Kruskal's algorithm in growing an MST?",
+        "code": "",
+        "options": {
+            "A": "Prim grows a single contiguous tree vertex-by-vertex from a start node; Kruskal grows multiple disconnected trees (a forest) by adding lowest-weight edges globally",
+            "B": "Prim works on directed graphs; Kruskal works on undirected graphs",
+            "C": "Prim requires sorting all edges upfront",
+            "D": "Kruskal cannot detect cycles"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n- **Prim's Algorithm**: Starts from a single seed vertex and greedily expands one tree by choosing the cheapest edge connecting the growing tree to an external vertex.\n- **Kruskal's Algorithm**: Considers edges globally across the entire graph, joining disconnected subtrees into a single component."
+    },
+    {
+        "id": 89,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "100% CDAC Mock Question",
+        "concept": "Divide and Conquer vs Dynamic Programming",
+        "question": "How does Dynamic Programming (DP) fundamentally differ from naive Divide and Conquer?",
+        "code": "",
+        "options": {
+            "A": "DP solves subproblems and stores their results (memoization/tabulation) to avoid redundant calculations of overlapping subproblems",
+            "B": "DP uses a queue instead of recursion to process subproblems",
+            "C": "DP only applies to problems with completely independent subproblems",
+            "D": "DP runs strictly in O(n!) factorial time"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n- **Divide and Conquer**: Breaks a problem into **independent** subproblems (e.g. Merge Sort). Subproblems do not repeat.\n- **Dynamic Programming**: Applies when subproblems **overlap** (are solved multiple times, like Fibonacci). DP caches answers in a table (memoization/tabulation) so each unique subproblem is computed exactly once."
+    },
+    {
+        "id": 90,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% Knapsack Problem Paradigm Choice",
+        "concept": "0/1 Knapsack vs Fractional Knapsack Paradigm",
+        "question": "Why can Fractional Knapsack be solved greedily in O(n log n), while 0/1 Knapsack CANNOT be solved greedily and requires Dynamic Programming?",
+        "code": "",
+        "options": {
+            "A": "In fractional knapsack, we can take partial fractions of items based on value-to-weight ratio; in 0/1 knapsack, an item must be taken whole or left, where greedy choice may prevent optimal capacity usage",
+            "B": "0/1 knapsack has negative weights",
+            "C": "Fractional knapsack requires a binary search tree",
+            "D": "Both can be solved greedily"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nWith **Fractional Knapsack**, taking fractions guarantees the greedy strategy (sorting by $\\text{value}/\\text{weight}$) fills the knapsack with highest density items. With **0/1 Knapsack**, taking an item whole might consume so much capacity that better combinations of smaller items cannot fit; greedy choice fails, requiring **Dynamic Programming ($O(n \\cdot W)$)**."
+    },
+    {
+        "id": 91,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "96% Recursion Stack Space",
+        "concept": "Recursion Stack Space and StackOverflowError",
+        "question": "What happens in Java when a recursive method lacks a terminating base case?",
+        "code": "void recurse(int n) {\n    recurse(n + 1);\n}",
+        "options": {
+            "A": "OutOfMemoryError in heap",
+            "B": "StackOverflowError in call stack",
+            "C": "Program terminates gracefully",
+            "D": "Compilation error"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nEach recursive call allocates a new stack frame on the thread's call stack. Without a base case, calls push infinitely until thread stack memory is exhausted, throwing **`java.lang.StackOverflowError`**."
+    },
+    {
+        "id": 92,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Recursion Tree Trace",
+        "concept": "Naive Fibonacci Recursion Complexity",
+        "question": "What is the time complexity and call tree growth of naive recursive Fibonacci without memoization?",
+        "code": "int fib(int n) {\n    if (n <= 1) return n;\n    return fib(n - 1) + fib(n - 2);\n}",
+        "options": {
+            "A": "O(n) time, O(1) stack space",
+            "B": "O(2^n) exponential time, O(n) recursion stack space",
+            "C": "O(n^2) polynomial time, O(log n) stack space",
+            "D": "O(log n) time, O(1) stack space"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nEach call branches into 2 recursive calls, forming a binary recursion tree of depth $n$. The number of nodes is $2^0 + 2^1 + \\dots + 2^n \\approx 2^{n+1} - 1$, yielding **$O(2^n)$ exponential time**. The maximum call stack depth is equal to tree height $n$, so auxiliary stack space is **$O(n)$**."
+    },
+    {
+        "id": 93,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Easy",
+        "highYield": True,
+        "probability": "98% Array vs Linked List Tradeoff",
+        "concept": "Array Random Access vs Linked List Sequential Access",
+        "question": "Why does an Array provide O(1) random access while a Singly Linked List takes O(n) to access the k-th element?",
+        "code": "",
+        "options": {
+            "A": "Arrays use pointers; linked lists use CPU cache",
+            "B": "Array elements occupy contiguous memory allowing instant address calculation: Base + (index * elementSize); linked lists occupy non-contiguous memory requiring traversal from head",
+            "C": "Arrays are stored in ROM",
+            "D": "Linked lists forbid loops"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Memory Rule:\nArrays use contiguous memory addresses: `Address(arr[i]) = BaseAddress + i * sizeof(dataType)`. The CPU calculates this in one addition and multiplication instruction ($O(1)$). Linked list nodes are scattered across the heap, requiring sequential pointer following ($O(k)$)."
+    },
+    {
+        "id": 94,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "96% Deque Abstract Data Type",
+        "concept": "Deque (Double-Ended Queue) Operations",
+        "question": "Which of the following operations are supported by a Double-Ended Queue (Deque) in O(1) time?",
+        "code": "",
+        "options": {
+            "A": "Insertion and deletion at both front and rear ends",
+            "B": "Insertion at rear, deletion in middle",
+            "C": "Binary search on unsorted elements",
+            "D": "Automatic sorting on every insert"
+        },
+        "answer": "A",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nA Deque supports `addFirst()`, `addLast()`, `removeFirst()`, and `removeLast()` all in **$O(1)$ constant time**, enabling it to simulate both a FIFO queue and a LIFO stack."
+    },
+    {
+        "id": 95,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "95% Trie Data Structure",
+        "concept": "Trie (Prefix Tree) Lookup Complexity",
+        "question": "What is the primary advantage of a Trie (Prefix Tree) when searching for a word of length L among N total dictionary words?",
+        "code": "",
+        "options": {
+            "A": "Search time is O(N * L)",
+            "B": "Search time is strictly O(L), completely independent of total dictionary size N",
+            "C": "Uses less memory than a simple array",
+            "D": "Automatically balances itself like an AVL tree"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn a Trie, each node represents a character. Searching for a string of length $L$ requires traversing down at most $L$ character edges. The search time is **$O(L)$**, completely unaffected by whether the dictionary holds 1,000 or 10,000,000 words."
+    },
+    {
+        "id": 96,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "97% Expression Trees",
+        "concept": "Expression Tree Node Types and Traversals",
+        "question": "In a binary expression tree for an arithmetic formula, which statements are TRUE?",
+        "code": "",
+        "options": {
+            "A": "Leaf nodes represent operators; internal nodes represent operands",
+            "B": "Leaf nodes represent operands; internal nodes represent operators; Inorder gives infix and Postorder gives postfix",
+            "C": "Root is always an operand",
+            "D": "Every node must have 3 children"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nIn an Expression Tree:\n- **Leaf Nodes**: Hold operands (numbers/variables).\n- **Internal Nodes**: Hold operators (`+`, `-`, `*`, `/`).\n- **Inorder Traversal** produces the **Infix expression**.\n- **Postorder Traversal** produces the **Postfix (RPN) expression**."
+    },
+    {
+        "id": 97,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "97% Master Theorem Case 2",
+        "concept": "Master Theorem Asymptotic Analysis",
+        "question": "For recurrence T(n) = 2T(n/2) + O(n), which case of the Master Theorem applies and what is the resulting time complexity?",
+        "code": "",
+        "options": {
+            "A": "Case 1: O(n^2)",
+            "B": "Case 2: O(n log n)",
+            "C": "Case 3: O(n^3)",
+            "D": "Master theorem does not apply"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Master Theorem Calculation:\n$$T(n) = aT(n/b) + f(n)$$\nHere $a = 2$, $b = 2$, and $f(n) = O(n)$.\nCalculate $n^{\\log_b a} = n^{\\log_2 2} = n^1 = n$.\nSince $f(n) = \\Theta(n^{\\log_b a}) = \\Theta(n)$, **Case 2** applies:\n$$T(n) = \\Theta(n^{\\log_b a} \\log n) = \\mathbf{O(n \\log n)}$$."
+    },
+    {
+        "id": 98,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Hard",
+        "highYield": True,
+        "probability": "98% Tree Traversal Tree Reconstruction",
+        "concept": "Reconstructing Unique Binary Tree from Traversals",
+        "question": "Which pair of tree traversals is SUFFICIENT to uniquely reconstruct any general binary tree?",
+        "code": "",
+        "options": {
+            "A": "Preorder and Postorder",
+            "B": "Inorder and Preorder (or Inorder and Postorder)",
+            "C": "Level-order and Preorder",
+            "D": "Inorder alone"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\n**Inorder traversal is mandatory** because it specifies which nodes belong to the left subtree and which belong to the right subtree of a given root. Preorder or Postorder identifies the root node. Hence, either **(Inorder + Preorder)** or **(Inorder + Postorder)** is required to uniquely reconstruct any binary tree."
+    },
+    {
+        "id": 99,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "96% Space Complexity of Recursive Algorithms",
+        "concept": "Auxiliary Space Complexity of Depth-First Algorithms",
+        "question": "In a balanced binary tree of n nodes, what is the auxiliary stack space used by recursive DFS / tree traversals?",
+        "code": "",
+        "options": {
+            "A": "O(1)",
+            "B": "O(log n)",
+            "C": "O(n)",
+            "D": "O(n log n)"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nThe maximum depth of the call stack in tree recursion is proportional to the tree height. In a balanced binary tree, height $h = \\log_2 n$, so auxiliary space is **$O(\\log n)$**. (In a skewed tree, it degrades to $O(n)$)."
+    },
+    {
+        "id": 100,
+        "section": "Algorithms & Data Structures",
+        "subjectCode": "ADS",
+        "subjectName": "Algorithms & Data Structures",
+        "difficulty": "Moderate",
+        "highYield": True,
+        "probability": "98% Graph Cycle Detection",
+        "concept": "Cycle Detection in Undirected Graph using DFS",
+        "question": "In an undirected graph, when does DFS detect a cycle?",
+        "code": "",
+        "options": {
+            "A": "When it visits an unvisited vertex",
+            "B": "When it encounters an already visited adjacent vertex that is NOT the direct parent of the current vertex",
+            "C": "When a vertex has an odd degree",
+            "D": "When the recursion depth reaches V"
+        },
+        "answer": "B",
+        "explanation": "### 📌 Core CDAC Exam Rule:\nDuring DFS on an undirected graph, if an edge leads to an already-visited vertex `v` and `v` is NOT the parent that led to the current vertex `u` (i.e. a back-edge), a cycle is definitively proven to exist."
+    }
+]
+
+print(f"Total curated questions: {len(questions)}")
+java_count = sum(1 for q in questions if q['section'] == 'OOP with Java')
+ads_count = sum(1 for q in questions if q['section'] == 'Algorithms & Data Structures')
+print(f"Java Questions: {java_count}")
+print(f"ADS Questions: {ads_count}")
+
+# Save JSON file
+out_json_path = "tomorrow_exam_questions.json"
+with open(out_json_path, "w", encoding="utf-8") as f:
+    json.dump(questions, f, indent=2)
+
+print(f"Saved JSON to {out_json_path}")

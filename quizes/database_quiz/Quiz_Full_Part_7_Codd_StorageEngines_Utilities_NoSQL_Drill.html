@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 7: Codd's Rules, Storage Engines, MySQL Utilities & NoSQL Architecture | CDAC CCME Database Technologies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning-light: #fffbeb;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .nav-logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+        }
+
+        .nav-title-group h1 {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .nav-title-group p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-badge.timer {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: white;
+            border-color: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+        .btn-warning:hover {
+            background: #fde68a;
+        }
+
+        /* Container Layout */
+        .layout {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 24px 20px 80px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+        }
+
+        /* Header Banner */
+        .quiz-hero {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hero-info h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-badge {
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--primary-light); color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .hero-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: #e2e8f0;
+            padding: 3px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .mode-option {
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+
+        .mode-option.active {
+            background: white;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Progress Bar */
+        .progress-bar-wrap {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 9999px;
+        }
+
+        /* Filter Controls */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-tab:hover {
+            border-color: #cbd5e1;
+            color: var(--text-dark);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Question Cards Area */
+        .questions-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .q-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .q-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .q-card.status-correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .q-card.status-incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            gap: 12px;
+        }
+
+        .q-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .q-number {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-topic {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .q-highyield-pill {
+            font-size: 11px;
+            font-weight: 700;
+            background: #fef3c7;
+            color: #b45309;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-flag {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.15s;
+            padding: 4px;
+        }
+
+        .btn-flag:hover {
+            transform: scale(1.15);
+            color: var(--accent);
+        }
+
+        .btn-flag.active {
+            color: var(--accent);
+        }
+
+        .q-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .q-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: white;
+            user-select: none;
+            gap: 12px;
+        }
+
+        .opt-item:hover:not(.disabled) {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+
+        .opt-item.selected .opt-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+
+        /* Feedback Styling in Instant Mode */
+        .opt-item.correct {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-item.correct .opt-letter {
+            background: var(--success) !important;
+            color: white !important;
+        }
+
+        .opt-item.wrong {
+            background: var(--danger-light) !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-item.wrong .opt-letter {
+            background: var(--danger) !important;
+            color: white !important;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-top: 16px;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .exp-text {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .exam-tip-box {
+            background: var(--warning-light);
+            border-left: 4px solid var(--accent);
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .tip-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tip-content {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        /* Sidebar Question Palette */
+        .sidebar {
+            position: sticky;
+            top: 86px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .pal-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pal-btn.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .pal-btn.wrong {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .pal-btn.flagged::after {
+            content: '★';
+            position: absolute;
+            top: 1px;
+            right: 2px;
+            font-size: 8px;
+            color: var(--accent);
+        }
+
+        .palette-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        /* Floating / Bottom Finish Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 40;
+        }
+
+        .bottom-bar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Score Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 520px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: modalPop 0.25s ease-out;
+        }
+
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) calc(var(--percent, 0) * 1%), #e2e8f0 0);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 86px;
+            height: 86px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: relative;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .score-headline {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .score-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+        }
+
+        .m-stat-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .m-stat-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-logo-icon">DB</div>
+            <div class="nav-title-group">
+                <h1>CDAC CCME Database Tech</h1>
+                <p>Part 7: Codd's Rules, Storage Engines, MySQL Utilities & NoSQL Architecture</p>
+            </div>
+        </a>
+
+        <div class="nav-stats">
+            <div class="stat-badge timer" id="timerBadge">⏱️ 00:00</div>
+            <div class="stat-badge" id="scoreBadge">🎯 Score: 0/35</div>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html" class="btn btn-outline">← All Quizzes</a>
+            <button class="btn btn-primary" onclick="showResultsModal()">Submit & Score</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <div class="layout">
+        
+        <!-- Hero Header -->
+        <div class="quiz-hero">
+            <div class="hero-info">
+                <h2>
+                    Part 7: Codd's Rules, Storage Engines, MySQL Utilities & NoSQL Architecture
+                    <span class="hero-badge">Questions 148 - 182 (35 Qs)</span>
+                </h2>
+                <p>Codd's 12 Rules, InnoDB vs MyISAM vs MEMORY, mysqldump & CLI, Triggers (NEW/OLD), Handlers, CAP Theorem, and BSON</p>
+            </div>
+            <div class="hero-controls">
+                <div class="mode-toggle">
+                    <div class="mode-option active" id="modePractice" onclick="setMode('practice')">Study Mode (Instant Key)</div>
+                    <div class="mode-option" id="modeExam" onclick="setMode('exam')">Mock Exam Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-bar-wrap">
+            <div class="progress-meta">
+                <span id="progressCount">Answered 0 of 35 questions</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Left: Question Flow -->
+        <div class="questions-area">
+            
+            <!-- Filters -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="setFilter('all', this)">All Questions (35)</button>
+                <button class="filter-tab" onclick="setFilter('unanswered', this)">Unanswered</button>
+                <button class="filter-tab" onclick="setFilter('incorrect', this)">Incorrect ❌</button>
+                <button class="filter-tab" onclick="setFilter('flagged', this)">Flagged ⭐</button>
+            </div>
+
+            <!-- Dynamic Question Cards -->
+            <div class="questions-flow" id="questionsFlow"></div>
+        </div>
+
+        <!-- Right: Question Palette Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">
+                    <span>Question Palette</span>
+                    <span id="paletteAnsweredCount" style="font-size: 12px; color: var(--text-muted);">0/35</span>
+                </div>
+                <div class="palette-grid" id="paletteGrid"></div>
+                <div class="palette-legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#e2e8f0;"></span> Unanswered</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--primary-light); border: 1px solid var(--primary);"></span> Answered</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--success);"></span> Correct</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:var(--danger);"></span> Wrong</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">Exam Day Strategies</div>
+                <ul style="font-size: 12.5px; color: #475569; padding-left: 18px; line-height: 1.6;">
+                    <li><strong>TRUNCATE vs DELETE:</strong> TRUNCATE is DDL, resets AUTO_INCREMENT, and cannot be rolled back in MySQL.</li>
+                    <li><strong>WHERE vs HAVING:</strong> WHERE filters individual rows before grouping; HAVING filters groups after.</li>
+                    <li><strong>NULL Checks:</strong> Never use <code>= NULL</code>. Always use <code>IS NULL</code>.</li>
+                    <li><strong>Window Functions:</strong> <code>RANK()</code> leaves gaps on ties (1,1,3); <code>DENSE_RANK()</code> does not (1,1,2).</li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="bottom-bar">
+        <div class="bottom-bar-content">
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-muted);" id="bottomStatus">
+                Ready to review. Select your answers above.
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="resetAll()">Reset Quiz</button>
+                <button class="btn btn-primary" onclick="showResultsModal()">Finish & View Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal-overlay" id="resultsModal">
+        <div class="modal-content">
+            <div class="score-circle" id="modalScoreCircle">
+                <span class="score-text" id="modalScoreText">0%</span>
+            </div>
+            <h3 class="score-headline" id="modalHeadline">Great Effort!</h3>
+            <p class="score-desc" id="modalSubheadline">Here is your CDAC CCME performance breakdown.</p>
+            
+            <div class="modal-stats">
+                <div>
+                    <div class="m-stat-val" id="statCorrect" style="color: var(--success);">0</div>
+                    <div class="m-stat-lbl">Correct</div>
+                </div>
+                <div>
+                    <div class="m-stat-val" id="statWrong" style="color: var(--danger);">0</div>
+                    <div class="m-stat-lbl">Wrong</div>
+                </div>
+                <div>
+                    <div class="m-stat-val" id="statUnanswered" style="color: #64748b;">0</div>
+                    <div class="m-stat-lbl">Skipped</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeResultsModal()">Review Questions</button>
+                <button class="btn btn-warning" onclick="filterOnlyMissed()">Review Missed (❌)</button>
+                <a href="index.html" class="btn btn-primary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [{"num": 148, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "According to Edgar F. Codd's 12 rules for an RDBMS, which rule is known as the 'Guaranteed Access Rule' and what does it mandate?", "options": {"A": "Rule 0: The system must manage database capabilities entirely through relational means", "B": "Rule 1: All information in the database must be represented at the logical level as table cell values", "C": "Rule 2: Every individual datum is guaranteed to be logically addressable by combining table name, primary key value, and column name", "D": "Rule 4: The database description and metadata must be stored in an active, online relational catalog"}, "correctAnswer": "C", "correctExplanation": "Codd's Rule 2 is the 'Guaranteed Access Rule'. It states that every atomic value in a relational database is logically accessible by providing: (1) Table Name, (2) Primary Key value (row identifier), and (3) Column Name. Rule 0 is the Foundation Rule, Rule 1 is the Information Rule, and Rule 4 is the Active Online Catalog Rule.", "highYield": true, "examTip": "CDAC Rule 2 Trap: Guaranteed access relies strictly on (Table Name + Primary Key + Column Name). No pointer arithmetic or direct storage offsets are allowed in the relational model.", "topic": "Codd's 12 Rules for RDBMS"}, {"num": 149, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which of Codd's rules mandates that changes made to the database storage layout, file allocations, or access paths must not require modifications to user application programs?", "options": {"A": "Rule 8: Physical Data Independence", "B": "Rule 9: Logical Data Independence", "C": "Rule 10: Integrity Independence", "D": "Rule 11: Distribution Independence"}, "correctAnswer": "A", "correctExplanation": "Rule 8 is 'Physical Data Independence': changes to physical storage structures, index access methods, or block allocation cannot impact application programs or ad-hoc queries. Rule 9 is 'Logical Data Independence' (view-level preservation when tables are split/joined). Rule 10 is 'Integrity Independence' (constraints stored in schema, not application code).", "highYield": true, "examTip": "Exam Distinction: Changing storage device/indexes = Physical Independence (Rule 8). Changing table schema/adding columns with views intact = Logical Independence (Rule 9).", "topic": "Codd's 12 Rules for RDBMS"}, {"num": 150, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "According to Codd's Rule 10 (Integrity Independence), where must database integrity constraints (such as primary keys, foreign keys, and checks) be stored and enforced?", "options": {"A": "Inside client-side business logic application programs", "B": "In external application configuration XML/JSON files", "C": "Directly in the relational database catalog/schema metadata", "D": "In operating system access control lists (ACLs)"}, "correctAnswer": "C", "correctExplanation": "Codd's Rule 10 (Integrity Independence) explicitly mandates that integrity constraints must be definable in the relational data sublanguage and stored directly in the active database catalog/data dictionary—never inside application programs. If constraints lived in application code, a different client program could easily bypass them and corrupt data.", "highYield": true, "examTip": "Key Takeaway: Centralized enforcement in the DBMS catalog ensures that no external script or client can bypass integrity constraints.", "topic": "Codd's 12 Rules for RDBMS"}, {"num": 151, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which rule among Codd's 12 rules is known as the 'Non-Subversion Rule' (Rule 12)?", "options": {"A": "If a relational system has a low-level (record-at-a-time) interface, that interface cannot be used to subvert or bypass integrity rules and constraints", "B": "All queries must return tabular sets without duplicates", "C": "Null values cannot be substituted with zeros or blank strings", "D": "A database system must support distributed transactions transparently"}, "correctAnswer": "A", "correctExplanation": "Rule 12 is the 'Non-Subversion Rule'. It states that if an RDBMS provides a low-level procedural API (record-at-a-time navigation), that low-level interface cannot be used to bypass security permissions or integrity constraints enforced by the high-level relational language (SQL).", "highYield": true, "examTip": "Codd's Rule 12: 'Non-subversion' means low-level APIs cannot bypass relational constraints.", "topic": "Codd's 12 Rules for RDBMS"}, {"num": 152, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MySQL, which storage engine provides full ACID transaction support, row-level locking, and foreign key referential integrity constraints, and serves as the default storage engine?", "options": {"A": "MyISAM", "B": "MEMORY", "C": "InnoDB", "D": "ARCHIVE"}, "correctAnswer": "C", "correctExplanation": "InnoDB is MySQL's default general-purpose storage engine (since MySQL 5.5). It provides ACID transactions, commit/rollback, crash recovery via write-ahead logging (redo logs), row-level locking for high concurrency, and true foreign key constraint enforcement.", "highYield": true, "examTip": "Guaranteed Question: Default MySQL engine = InnoDB. ACID compliance + Row-level locking + Foreign Keys = InnoDB. MyISAM uses table-level locking and lacks transactions.", "topic": "MySQL Storage Engines"}, {"num": 153, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is the primary characteristic of the MySQL MyISAM storage engine compared to InnoDB?", "options": {"A": "MyISAM supports row-level locking and distributed two-phase commits", "B": "MyISAM uses table-level locking, does not support transactions or foreign keys, but is optimized for read-heavy operations", "C": "MyISAM stores all data exclusively in RAM and loses all rows upon server restart", "D": "MyISAM is an append-only engine without support for indexes"}, "correctAnswer": "B", "correctExplanation": "MyISAM does not support transactions (no commit/rollback) or foreign keys. It employs table-level locking (a write locks the entire table against other reads/writes), making it suitable primarily for legacy or read-mostly environments. InnoDB is preferred for OLTP.", "highYield": true, "examTip": "MyISAM vs InnoDB Lock granularity: InnoDB = Row-level lock (high concurrency). MyISAM = Table-level lock (concurrent writes queue up).", "topic": "MySQL Storage Engines"}, {"num": 154, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which MySQL storage engine stores table data exclusively in system RAM for ultra-fast lookup, meaning all data is lost if the MySQL server restarts?", "options": {"A": "CSV", "B": "ARCHIVE", "C": "MEMORY (HEAP)", "D": "FEDERATED"}, "correctAnswer": "C", "correctExplanation": "The MEMORY storage engine (formerly known as HEAP) stores all data in RAM for extremely fast access. While table definitions (.frm / metadata) persist across restarts, all data rows vanish when the server restarts or crashes. It is typically used for temporary lookup caches.", "highYield": true, "examTip": "MEMORY Engine: In-memory table structure persists, but contents are lost upon server shutdown.", "topic": "MySQL Storage Engines"}, {"num": 155, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which MySQL storage engine is optimized for high-speed write-intensive logging and audit archiving, supporting only INSERT and SELECT statements with zlib compression, and prohibiting UPDATE and DELETE?", "options": {"A": "ARCHIVE", "B": "MyISAM", "C": "BLACKHOLE", "D": "InnoDB"}, "correctAnswer": "A", "correctExplanation": "The ARCHIVE storage engine is designed for storing large volumes of historical or audit data. It compresses rows on insertion using zlib and supports only INSERT and SELECT operations. It does not support UPDATE, DELETE, or indexes (except an AUTO_INCREMENT column).", "highYield": true, "examTip": "ARCHIVE engine keywords: Append-only, logging/audit, no UPDATE/DELETE, compressed storage.", "topic": "MySQL Storage Engines"}, {"num": 156, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which MySQL command-line utility program is used to perform logical backups by generating a text file containing SQL statements (CREATE TABLE, INSERT INTO) required to reconstruct the database?", "options": {"A": "mysqlimport", "B": "mysqldump", "C": "mysqladmin", "D": "mysqlcheck"}, "correctAnswer": "B", "correctExplanation": "`mysqldump` is a client utility that performs logical backups. It dumps database structure and table data as a sequence of executable SQL statements (DROP TABLE, CREATE TABLE, INSERT). To restore, one simply pipes the dump back into the `mysql` client.", "highYield": true, "examTip": "Backup CLI Utility: mysqldump = Logical backup (SQL script). mysqlimport = Fast bulk data import from text/CSV files.", "topic": "MySQL Programs & CLI Tools"}, {"num": 157, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which MySQL utility program acts as a command-line wrapper around the SQL statement 'LOAD DATA INFILE', allowing administrators to rapidly import tabular text and CSV data into database tables?", "options": {"A": "mysqldump", "B": "mysqladmin", "C": "mysqlimport", "D": "mysqlshow"}, "correctAnswer": "C", "correctExplanation": "`mysqlimport` is a client utility program that provides a command-line interface to the `LOAD DATA INFILE` SQL statement. The base name of the input file must match the name of the database table to be populated.", "highYield": true, "examTip": "mysqlimport connects to the server and sends a LOAD DATA statement. Fast bulk import of CSV/TSV.", "topic": "MySQL Programs & CLI Tools"}, {"num": 158, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which MySQL utility is used to perform administrative server tasks such as checking server status, monitoring thread count, pinging the daemon, and shutting down the server?", "options": {"A": "mysqladmin", "B": "mysqlshow", "C": "mysqldump", "D": "mysqlcheck"}, "correctAnswer": "A", "correctExplanation": "`mysqladmin` is the client utility for administrative operations. Common commands include `mysqladmin ping`, `mysqladmin status`, `mysqladmin processlist`, `mysqladmin create/drop dbname`, and `mysqladmin shutdown`.", "highYield": false, "examTip": "Administrative CLI = mysqladmin (ping, processlist, shutdown, status).", "topic": "MySQL Programs & CLI Tools"}, {"num": 159, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is the function of the MySQL SQL clause 'SELECT ... INTO OUTFILE'?", "options": {"A": "Imports external CSV rows directly into an existing table", "B": "Exports query result rows directly into a server-side formatted text/CSV file", "C": "Creates a permanent database view from a SELECT query", "D": "Redirects query results to the client's local printer queue"}, "correctAnswer": "B", "correctExplanation": "`SELECT ... INTO OUTFILE 'file_name'` writes selected rows directly to a file on the database server host. It allows formatting options like `FIELDS TERMINATED BY ','` and `LINES TERMINATED BY '\\n'` to generate CSV exports.", "highYield": true, "examTip": "Export query to file = SELECT ... INTO OUTFILE. Import file into table = LOAD DATA INFILE / mysqlimport.", "topic": "MySQL Programs & CLI Tools"}, {"num": 160, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MySQL stored procedures and loop constructs, what is the fundamental difference between the 'LEAVE' and 'ITERATE' statements?", "options": {"A": "LEAVE exits the procedure; ITERATE resets all local variables", "B": "LEAVE exits the labeled loop immediately (like 'break'); ITERATE skips remaining statements in the current iteration and starts the next iteration (like 'continue')", "C": "LEAVE is used only in WHILE loops; ITERATE is used only in REPEAT loops", "D": "LEAVE rolls back the current transaction; ITERATE commits the transaction"}, "correctAnswer": "B", "correctExplanation": "In MySQL stored procedure control flow: `LEAVE label` terminates execution of the labeled loop immediately and resumes after `END LOOP/WHILE` (analogous to C/Java `break`). `ITERATE label` abandons the rest of the current iteration and evaluates the loop condition for the next cycle (analogous to C/Java `continue`). Both require a labeled loop construct.", "highYield": true, "examTip": "Loop Flow: LEAVE = break. ITERATE = continue. Both require loop labels (e.g., my_loop: LOOP ... END LOOP my_loop;).", "topic": "Flow Control & Stored Procedures"}, {"num": 161, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "How do the WHILE and REPEAT loop constructs differ in MySQL stored programs?", "options": {"A": "WHILE is post-tested (executes at least once); REPEAT is pre-tested", "B": "WHILE evaluates its condition before executing the loop body (entry-controlled); REPEAT evaluates its condition after executing the body (exit-controlled, executing at least once)", "C": "WHILE loops can be nested; REPEAT loops cannot be nested", "D": "WHILE terminates when condition is TRUE; REPEAT continues as long as condition is TRUE"}, "correctAnswer": "B", "correctExplanation": "WHILE evaluates `WHILE condition DO ... END WHILE;` at the beginning of each iteration (pre-test). If the condition is false initially, the body is never executed. REPEAT executes `REPEAT ... UNTIL condition END REPEAT;` at least once before checking the condition at the end (post-test). Furthermore, REPEAT terminates when the UNTIL condition becomes TRUE.", "highYield": true, "examTip": "Exam Trap: REPEAT executes at least once and loops UNTIL condition is TRUE (it exits when TRUE!).", "topic": "Flow Control & Stored Procedures"}, {"num": 162, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In a MySQL stored procedure, what happens if an error condition occurs and NO handler has been defined using 'DECLARE ... HANDLER'?", "options": {"A": "The stored procedure ignores the error and continues executing the next line silently", "B": "The procedure execution halts immediately, and MySQL returns an unhandled error code/message to the client application", "C": "The database creates a default dummy table to store the error details", "D": "The transaction is automatically committed up to the point of error"}, "correctAnswer": "B", "correctExplanation": "If an exception occurs within a stored procedure or function (e.g., duplicate key, division by zero) and no `DECLARE ... HANDLER FOR SQLEXCEPTION` exists in the current or outer scope, the procedure immediately terminates execution and returns the unhandled error code to the caller.", "highYield": true, "examTip": "Exception Handling: Uncaught exception in stored procedure causes immediate abort and error reporting to client.", "topic": "Error Handling & Exceptions"}, {"num": 163, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MySQL stored procedure error handling, what statement is used inside an exception handler block to pass (rethrow) the caught error or custom diagnostic condition to the outer caller?", "options": {"A": "THROW", "B": "RAISE", "C": "RESIGNAL", "D": "RETRY"}, "correctAnswer": "C", "correctExplanation": "In MySQL (ANSI SQL:2003 standard), `SIGNAL` is used to raise a user-defined error condition, and `RESIGNAL` is used within an active handler to rethrow the current exception or modify its error attributes before propagating it up the call stack.", "highYield": true, "examTip": "MySQL Error Handling: SIGNAL raises an exception. RESIGNAL rethrows the exception from within a HANDLER.", "topic": "Error Handling & Exceptions"}, {"num": 164, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MySQL triggers, which pseudo-record variables are accessible during INSERT, UPDATE, and DELETE events respectively?", "options": {"A": "INSERT has NEW and OLD; UPDATE has NEW only; DELETE has OLD only", "B": "INSERT has NEW only; UPDATE has both NEW and OLD; DELETE has OLD only", "C": "INSERT has OLD only; UPDATE has NEW only; DELETE has both NEW and OLD", "D": "All three events have access to both NEW and OLD"}, "correctAnswer": "B", "correctExplanation": "In MySQL trigger logic:\n• INSERT: Only `NEW` is available (new row being created; no prior row exists).\n• UPDATE: Both `OLD` (original row values before update) and `NEW` (new proposed values) are accessible.\n• DELETE: Only `OLD` is available (row being erased; no new values exist).\nAttempting to reference `OLD` in an INSERT or `NEW` in a DELETE trigger causes a compile/runtime error.", "highYield": true, "examTip": "100% Guaranteed Trigger Question: INSERT -> NEW only. DELETE -> OLD only. UPDATE -> Both NEW and OLD.", "topic": "Triggers & Stored Programs"}, {"num": 165, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What happens if a MySQL trigger attempts to execute an INSERT, UPDATE, or DELETE on the exact same table that invoked the trigger?", "options": {"A": "The trigger executes cleanly in a separate background thread", "B": "The operation causes a recursive table lock / mutation error, and the trigger fails", "C": "MySQL silently skips the statement to prevent recursion", "D": "The table data is permanently deleted"}, "correctAnswer": "B", "correctExplanation": "In MySQL (and standard SQL), a trigger cannot modify the same table for which it is invoked using DML (INSERT, UPDATE, DELETE). Doing so triggers error 1442: 'Can't update table in stored function/trigger because it is already used by statement which invoked this stored function/trigger.' In a BEFORE trigger, one should modify column values directly via `SET NEW.col = val;` rather than issuing an UPDATE statement.", "highYield": true, "examTip": "Mutating Table Error: A trigger CANNOT execute DML on its own triggering table! Use SET NEW.column = value inside a BEFORE trigger instead.", "topic": "Triggers & Stored Programs"}, {"num": 166, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "According to the CAP Theorem (Brewer's Theorem) for distributed data systems, what fundamental guarantee is stated during a network partition?", "options": {"A": "A system can achieve all three: Consistency, Availability, and Partition Tolerance simultaneously", "B": "A distributed system can guarantee at most TWO of the three properties: Consistency (C), Availability (A), and Partition Tolerance (P)", "C": "Network partitions can be completely eliminated using fiber optic hardware", "D": "Distributed databases always choose Availability over Consistency"}, "correctAnswer": "B", "correctExplanation": "The CAP theorem states that a distributed data store can guarantee at most two of the three properties: Consistency (all nodes see the exact same data simultaneously), Availability (every non-failing node returns a response), and Partition Tolerance (system continues despite dropped/delayed messages between nodes). Since network partitions (P) are unavoidable in real networks, distributed systems must choose either CP (Consistent under partition, like MongoDB/HBase) or AP (Available under partition, like Cassandra/DynamoDB).", "highYield": true, "examTip": "CAP Theorem: Pick 2 out of 3. In a real distributed network, Partition Tolerance (P) is non-negotiable, so the real choice is CP (Consistency) vs AP (Availability).", "topic": "NoSQL Architecture & CAP Theorem"}, {"num": 167, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In the context of NoSQL databases, what does the BASE acronym stand for, and how does it contrast with RDBMS ACID?", "options": {"A": "Binary, Atomic, Scalable, Encrypted", "B": "Basically Available, Soft state, Eventual consistency", "C": "Balanced, Asynchronous, Shared, Enterprise", "D": "Block-based, Available, Structured, Extensible"}, "correctAnswer": "B", "correctExplanation": "BASE stands for:\n• Basically Available: System guarantees availability in terms of CAP theorem (yields a response even if stale).\n• Soft state: State of data may change over time even without new input, due to background replication.\n• Eventual consistency: Data across all replicas will converge to become consistent over time, but is not guaranteed to be strictly consistent immediately after a write.", "highYield": true, "examTip": "ACID vs BASE: RDBMS relies on strict ACID (immediate consistency). Distributed NoSQL relies on BASE (Basically Available, Soft state, Eventual consistency).", "topic": "NoSQL Architecture & CAP Theorem"}, {"num": 168, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Why does MongoDB use BSON (Binary JSON) internally for storing and traversing documents rather than standard text-based JSON?", "options": {"A": "BSON is human-readable and can be opened in standard text editors like Notepad", "B": "BSON encodes length prefixes and typed elements, enabling fast traversal, smaller serialized footprints, and support for additional data types like Date, ObjectId, and raw binary data", "C": "JSON cannot represent strings or nested objects", "D": "BSON converts all document fields into relational SQL tables"}, "correctAnswer": "B", "correctExplanation": "BSON is a binary-encoded serialization of JSON-like documents. Its primary advantages over standard JSON are:\n1. Traversability: Fields contain size prefixes, so MongoDB can skip fields during queries without parsing the entire document text.\n2. Rich Data Types: BSON supports types absent in JSON, such as raw Binary data, Date, ObjectId (12-byte), Int32, Int64, and Decimal128.\n3. Efficiency: Highly optimized for storage and network transmission.", "highYield": true, "examTip": "BSON vs JSON: BSON is binary-encoded, contains data type and length prefixes for fast traversal, and supports Date, Binary, and ObjectId.", "topic": "MongoDB & BSON Format"}, {"num": 169, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is the anatomy and composition of the default 12-byte '_id' ObjectId generated by MongoDB for newly inserted documents?", "options": {"A": "12 bytes containing an auto-incremented 64-bit integer padded with zeros", "B": "4-byte timestamp (seconds since Unix epoch) + 5-byte random value unique to machine/process + 3-byte incrementing counter", "C": "12 bytes representing an MD5 checksum of the document content", "D": "A random UUID string formatted in hexadecimal characters"}, "correctAnswer": "B", "correctExplanation": "A 12-byte BSON ObjectId is composed of:\n1. 4-byte timestamp representing the ObjectId's creation, measured in seconds since the Unix epoch.\n2. 5-byte random value generated once per process (unique to machine and process).\n3. 3-byte incrementing counter initialized to a random value.\nBecause the first 4 bytes are a timestamp, ObjectIds are naturally sorted chronologically!", "highYield": true, "examTip": "MongoDB ObjectId Anatomy: 4-byte timestamp + 5-byte random/machine value + 3-byte incrementing counter = 12 bytes total.", "topic": "MongoDB & BSON Format"}, {"num": 170, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MongoDB, what does the 'upsert' option do when specified in 'db.collection.updateOne(filter, update, { upsert: true })'?", "options": {"A": "Updates the collection schema definition", "B": "If a document matching the filter criteria is found, it updates it; if no document matches, it inserts a brand new document constructed from the filter and update operators", "C": "Upgrades the MongoDB engine to the latest version while inserting data", "D": "Performs an undo operation if the update fails"}, "correctAnswer": "B", "correctExplanation": "`UPSERT` = Update + Insert. When `{ upsert: true }` is passed to `updateOne()` or `updateMany()`, MongoDB checks if any document matches the filter query. If a match exists, it applies the update. If no match exists, MongoDB automatically synthesizes and inserts a new document combining the filter criteria and update specifications.", "highYield": true, "examTip": "UPSERT Definition: Updates matching document OR inserts a new document if no match found in a single atomic step.", "topic": "MongoDB CRUD Operations"}, {"num": 171, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which index is created AUTOMATICALLY by MongoDB when any new collection is created, and cannot be dropped?", "options": {"A": "Compound index on all string fields", "B": "Unique index on the '_id' field", "C": "Text index on the document body", "D": "Geospatial 2dsphere index"}, "correctAnswer": "B", "correctExplanation": "MongoDB automatically creates a unique index on the `_id` field during the creation of every collection. This `_id_` index prevents client applications from inserting two documents with the same `_id` value and cannot be dropped.", "highYield": true, "examTip": "MongoDB Default Index: Unique index on _id is created automatically and cannot be deleted.", "topic": "MongoDB Indexing"}, {"num": 172, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MongoDB architecture, what is the architectural difference between a 'Replica Set' and a 'Sharded Cluster'?", "options": {"A": "Replica sets provide horizontal write scaling; Sharded clusters provide only data compression", "B": "Replica sets provide high availability and automatic failover by replicating identical data across nodes (1 primary + secondaries); Sharded clusters provide horizontal data partitioning across multiple servers to distribute large volumes and high write loads", "C": "Replica sets are for SQL data; Sharded clusters are for NoSQL data", "D": "They are identical concepts with different configuration flags"}, "correctAnswer": "B", "correctExplanation": "In MongoDB:\n• Replica Set: A group of `mongod` instances maintaining the exact same data set. Provides redundancy, high availability, and automated failover (primary receives all writes; secondaries replicate).\n• Sharded Cluster: Partitions and distributes subsets of data (chunks) across multiple replica sets (shards) based on a shard key. Used for horizontal scaling when data volume or throughput exceeds single-machine limits.", "highYield": true, "examTip": "High Availability = Replica Set (redundant copies, 1 primary). Horizontal Scalability = Sharding (partitions data across shards).", "topic": "MongoDB Architecture"}, {"num": 173, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What are the classic '4 V' characteristics that define Big Data?", "options": {"A": "Validity, Visibility, Vulnerability, Vectorization", "B": "Volume (data scale), Velocity (speed of generation/streaming), Variety (diverse formats: structured/semi/unstructured), and Veracity (data uncertainty and trustworthiness)", "C": "Version, Virtual, Visual, Virtualization", "D": "Variable, Value, Vocation, Volatility"}, "correctAnswer": "B", "correctExplanation": "The foundational characteristics of Big Data are the 4 Vs:\n1. Volume: The immense size/scale of data (terabytes to petabytes).\n2. Velocity: The rapid speed at which new data is generated, ingested, and processed (real-time streams).\n3. Variety: The multiplicity of structured (RDBMS), semi-structured (JSON, XML), and unstructured (video, audio, text) formats.\n4. Veracity: The degree of trustworthiness, cleanliness, and accuracy of data originating from varied sources.", "highYield": true, "examTip": "4 Vs of Big Data: Volume (size), Velocity (speed), Variety (formats), Veracity (accuracy/truthfulness).", "topic": "Big Data Fundamentals"}, {"num": 174, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which of the following database models is an example of an Aggregate-Oriented NoSQL database where all data for an entity is accessed and updated as a cohesive structured unit?", "options": {"A": "Graph database (e.g., Neo4j)", "B": "Relational database (e.g., PostgreSQL)", "C": "Document store (e.g., MongoDB) and Key-Value store (e.g., Redis)", "D": "Network database (e.g., CODASYL)"}, "correctAnswer": "C", "correctExplanation": "In Martin Fowler's NoSQL classification, Key-Value, Document, and Column-Family databases are called 'Aggregate-Oriented' because data is organized in natural operational aggregates (a document or key-value blob containing all relevant entity attributes). Graph databases are not aggregate-oriented because nodes and edges connect arbitrary entities without a single self-contained aggregate boundary.", "highYield": false, "examTip": "Aggregate-oriented NoSQL: Document and Key-Value stores. Non-aggregate: Graph databases (focus on edges/relationships).", "topic": "NoSQL Architecture & CAP Theorem"}, {"num": 175, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In Relational Algebra, what is the cardinality of the Cartesian Product (R × S) if relation R has m tuples and relation S has n tuples?", "options": {"A": "m + n tuples", "B": "m × n tuples", "C": "max(m, n) tuples", "D": "m - n tuples"}, "correctAnswer": "B", "correctExplanation": "The Cartesian Product (Cross Product, denoted R × S) pairs every tuple of R with every tuple of S. Therefore, if R has m tuples and S has n tuples, R × S contains exactly m × n tuples. Furthermore, its degree (number of columns) is the sum of the degrees of R and S.", "highYield": true, "examTip": "Cartesian Product Formula: Number of tuples = m * n. Number of attributes (degree) = degree(R) + degree(S).", "topic": "Relational Algebra"}, {"num": 176, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is the key functional difference between the SQL aggregate function COUNT(*) and COUNT(column_name)?", "options": {"A": "COUNT(*) only counts primary keys, while COUNT(column_name) counts all columns", "B": "COUNT(*) counts all rows in the table or group including rows with NULL values; COUNT(column_name) counts only rows where the specified column is NOT NULL", "C": "COUNT(*) is slower because it scans disk twice; COUNT(column_name) is always an in-memory lookup", "D": "There is no difference; they are completely interchangeable aliases"}, "correctAnswer": "B", "correctExplanation": "`COUNT(*)` counts the total number of rows meeting the criteria, regardless of whether individual columns contain NULLs. In contrast, `COUNT(col)` evaluates the specified expression for each row and ignores/skips all rows where `col IS NULL`. If a column has 10 rows and 2 are NULL, `COUNT(*)` returns 10, whereas `COUNT(col)` returns 8.", "highYield": true, "examTip": "Classic CDAC Aggregate Trap: COUNT(*) counts rows containing NULL. COUNT(column) strictly ignores NULLs.", "topic": "SQL Aggregates & Null Handling"}, {"num": 177, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is the critical semantic and execution difference between the WHERE clause and the HAVING clause in an SQL SELECT query?", "options": {"A": "WHERE is executed after grouping; HAVING is executed before grouping", "B": "WHERE filters individual candidate rows BEFORE any aggregation or GROUP BY occurs; HAVING filters summary groups AFTER aggregation and GROUP BY have been calculated", "C": "WHERE can contain aggregate functions like AVG(); HAVING cannot", "D": "WHERE is required whenever HAVING is used"}, "correctAnswer": "B", "correctExplanation": "Execution order in SQL:\n1. `FROM` & `JOIN`\n2. `WHERE` filters individual rows *before* grouping (cannot contain aggregate functions like `SUM` or `COUNT`).\n3. `GROUP BY` aggregates rows into groups.\n4. `HAVING` filters aggregated groups based on summary conditions (can and typically does reference aggregate expressions like `HAVING COUNT(*) > 5`).", "highYield": true, "examTip": "WHERE vs HAVING: WHERE cannot use aggregate functions and filters individual rows. HAVING filters groups after GROUP BY.", "topic": "SQL Aggregates & Null Handling"}, {"num": 178, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "How does a NATURAL JOIN in SQL determine the join condition between two tables, and why can it be risky in production database schemas?", "options": {"A": "It joins tables using artificial intelligence based on table comments", "B": "It automatically joins on ALL columns that share the exact same column name and compatible data types; if someone adds a common audit column (e.g., 'created_at') to both tables later, the join condition silently changes and can return empty or corrupted results", "C": "It joins tables strictly by primary key regardless of column names", "D": "It performs a Cartesian cross product without matching columns"}, "correctAnswer": "B", "correctExplanation": "`NATURAL JOIN` automatically matches all columns with the same name across both tables. It is risky in production because adding a new column with the same name (like `last_updated` or `status`) to both tables unintentionally adds an extra equality predicate to the join condition, altering query output without warning. Best practice is to use explicit `INNER JOIN ... ON` or `USING (col)`.", "highYield": true, "examTip": "NATURAL JOIN joins on ALL common-named columns. Risky because schema evolution can break queries silently.", "topic": "SQL Joins & Relational Algebra"}, {"num": 179, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "What is a Correlated Subquery in SQL, and how does its query execution mechanism differ from a standard independent subquery?", "options": {"A": "A correlated subquery executes once and caches its results for all outer rows", "B": "A correlated subquery references a column from the outer query table, requiring the database engine to re-evaluate the inner query once for every single row processed by the outer query", "C": "A correlated subquery can only appear in the FROM clause", "D": "A correlated subquery cannot use comparison operators"}, "correctAnswer": "B", "correctExplanation": "A standard (uncorrelated) subquery is completely independent and evaluated only once; its single scalar or list result is then used by the outer query. A *correlated subquery* references a column from the outer query (e.g., `WHERE e1.salary > (SELECT AVG(e2.salary) FROM emp e2 WHERE e2.dept_id = e1.dept_id)`). Because of this dependency, the inner query must be executed repeatedly for each row evaluated by the outer query.", "highYield": true, "examTip": "Correlated Subquery: References outer query column; re-executed for each row of the outer query (row-by-row evaluation).", "topic": "Subqueries & SQL Execution"}, {"num": 180, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "Which SQL statement is used to copy BOTH the complete table structure and all existing data rows into a brand new table in MySQL?", "options": {"A": "CREATE TABLE new_table LIKE original_table;", "B": "CREATE TABLE new_table AS SELECT * FROM original_table;", "C": "DUPLICATE TABLE original_table TO new_table;", "D": "INSERT INTO new_table SELECT * FROM original_table;"}, "correctAnswer": "B", "correctExplanation": "`CREATE TABLE new_table AS SELECT * FROM original_table;` (CTAS) creates the new table and copies all data rows. Note: `CREATE TABLE new_table LIKE original_table;` copies only the table structure, primary keys, and indexes, but does NOT copy any data rows.", "highYield": true, "examTip": "Copying Tables in MySQL: CREATE TABLE ... LIKE copies structure + indexes (NO data). CREATE TABLE ... AS SELECT * copies structure + data (indexes/auto_increment omitted).", "topic": "DDL Operations & Schema Cloning"}, {"num": 181, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In MySQL, how can you copy the schema definition of a table (including its columns, data types, indexes, and primary key) WITHOUT copying any data rows?", "options": {"A": "CREATE TABLE new_table LIKE original_table;", "B": "CREATE TABLE new_table AS SELECT * FROM original_table WHERE 1=1;", "C": "CLONE TABLE original_table TO new_table EMPTY;", "D": "COPY TABLE original_table new_table;"}, "correctAnswer": "A", "correctExplanation": "`CREATE TABLE new_table LIKE original_table;` duplicates the exact table definition, including column specifications, PRIMARY KEY constraints, and indexes, producing an empty table. Alternatively, `CREATE TABLE new_table AS SELECT * FROM original_table WHERE 1=0;` copies columns but loses indexes and primary key metadata.", "highYield": true, "examTip": "CREATE TABLE new_table LIKE original_table; creates an empty clone preserving indexes and constraints.", "topic": "DDL Operations & Schema Cloning"}, {"num": 182, "section": "Section G – Codd's Rules, Storage Engines, Utilities & NoSQL Architecture", "question": "In a MongoDB document, which operator is used to increment the value of a numeric field by a specified amount (or create the field with that amount if it does not exist)?", "options": {"A": "$add", "B": "$plus", "C": "$inc", "D": "$set"}, "correctAnswer": "C", "correctExplanation": "The MongoDB `$inc` operator increments a field by a specified value: `db.collection.updateOne({ _id: 1 }, { $inc: { score: 5 } })`. If the field does not exist, `$inc` creates the field and sets its value to the specified amount. To decrement, pass a negative value (`$inc: { score: -5 }`).", "highYield": true, "examTip": "MongoDB Operators: $set updates or adds field. $inc increments numeric field. $unset removes field. $push appends to array.", "topic": "MongoDB CRUD Operations"}];
+        const STORAGE_KEY = "cdac_db_Quiz_Full_Part_7_Codd_StorageEngines_Utilities_NoSQL_Drill";
+        let currentMode = "practice"; // 'practice' or 'exam'
+        let currentFilter = "all";
+        let userAnswers = {}; // { qIndex: "A" }
+        let flagged = {};     // { qIndex: true }
+        let secondsElapsed = 0;
+        let timerInterval = null;
+
+        // Initialize state from localStorage
+        function loadSavedState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    userAnswers = parsed.answers || {};
+                    flagged = parsed.flagged || {};
+                    secondsElapsed = parsed.seconds || 0;
+                }
+            } catch(e) {
+                console.error("Failed to load saved state", e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    answers: userAnswers,
+                    flagged: flagged,
+                    seconds: secondsElapsed
+                }));
+            } catch(e) {}
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timerBadge').innerText = `⏱️ ${mins}:${secs}`;
+                if (secondsElapsed % 5 === 0) saveState();
+            }, 1000);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsFlow');
+            container.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const isAnswered = userAnswers[idx] !== undefined;
+                const userChoice = userAnswers[idx];
+                const isCorrect = userChoice === q.correctAnswer;
+                const isFlagged = !!flagged[idx];
+
+                // Filtering logic
+                let visible = true;
+                if (currentFilter === 'unanswered' && isAnswered) visible = false;
+                if (currentFilter === 'incorrect' && (!isAnswered || isCorrect)) visible = false;
+                if (currentFilter === 'flagged' && !isFlagged) visible = false;
+
+                if (!visible) return;
+
+                const card = document.createElement('div');
+                card.className = `q-card ${currentMode === 'practice' && isAnswered ? (isCorrect ? 'status-correct' : 'status-incorrect') : ''}`;
+                card.id = `qCard_${idx}`;
+
+                let highYieldBadge = q.highYield ? `<span class="q-highyield-pill">⭐ High-Yield</span>` : '';
+
+                let optionsHtml = '';
+                for (const [letter, text] of Object.entries(q.options)) {
+                    let itemClass = 'opt-item';
+                    if (userChoice === letter) itemClass += ' selected';
+                    
+                    if (currentMode === 'practice' && isAnswered) {
+                        if (letter === q.correctAnswer) {
+                            itemClass += ' correct';
+                        } else if (userChoice === letter && !isCorrect) {
+                            itemClass += ' wrong';
+                        }
+                    }
+
+                    optionsHtml += `
+                        <div class="${itemClass}" onclick="selectOption(${idx}, '${letter}')">
+                            <span class="opt-letter">${letter}</span>
+                            <span class="opt-text">${text}</span>
+                        </div>
+                    `;
+                }
+
+                let explanationClass = (currentMode === 'practice' && isAnswered) ? 'explanation-box show' : 'explanation-box';
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta-left">
+                            <span class="q-number">Q${q.num}</span>
+                            <span class="q-topic">${q.topic || 'Database'}</span>
+                            ${highYieldBadge}
+                        </div>
+                        <button class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${idx})" title="Flag for review">
+                            ★
+                        </button>
+                    </div>
+
+                    <div class="q-text">${q.question}</div>
+
+                    <div class="q-options">${optionsHtml}</div>
+
+                    <div class="${explanationClass}" id="exp_${idx}">
+                        <div class="exp-header">
+                            <span>💡 Detailed Explanation:</span>
+                            <span style="color: var(--success); font-weight: 700;">(Correct Answer: ${q.correctAnswer})</span>
+                        </div>
+                        <div class="exp-text">${q.correctExplanation}</div>
+                        <div class="exam-tip-box">
+                            <div class="tip-title">⚡ CDAC CCME Key Takeaway / Exam Trap:</div>
+                            <div class="tip-content">${q.examTip || 'Focus on correct syntax and relational semantics.'}</div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            renderPalette();
+            updateStats();
+        }
+
+        function selectOption(qIdx, letter) {
+            userAnswers[qIdx] = letter;
+            saveState();
+            renderQuestions();
+        }
+
+        function toggleFlag(qIdx) {
+            flagged[qIdx] = !flagged[qIdx];
+            saveState();
+            renderQuestions();
+        }
+
+        function renderPalette() {
+            const grid = document.getElementById('paletteGrid');
+            grid.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.innerText = idx + 1;
+
+                const isAnswered = userAnswers[idx] !== undefined;
+                const isCorrect = userAnswers[idx] === q.correctAnswer;
+
+                if (isAnswered) {
+                    if (currentMode === 'practice') {
+                        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+                    } else {
+                        btn.classList.add('answered');
+                    }
+                }
+
+                if (flagged[idx]) {
+                    btn.classList.add('flagged');
+                }
+
+                btn.onclick = () => {
+                    // Switch to 'all' filter if question is hidden
+                    if (currentFilter !== 'all') {
+                        setFilter('all', document.querySelector('.filter-tab'));
+                    }
+                    setTimeout(() => {
+                        const el = document.getElementById(`qCard_${idx}`);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.style.boxShadow = '0 0 0 3px #4f46e5';
+                            setTimeout(() => el.style.boxShadow = '', 1500);
+                        }
+                    }, 50);
+                };
+
+                grid.appendChild(btn);
+            });
+        }
+
+        function updateStats() {
+            const total = questions.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            let correctCount = 0;
+
+            for (const [idx, ans] of Object.entries(userAnswers)) {
+                if (questions[idx] && ans === questions[idx].correctAnswer) {
+                    correctCount++;
+                }
+            }
+
+            const percent = Math.round((answeredCount / total) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressCount').innerText = `Answered ${answeredCount} of ${total} questions`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('paletteAnsweredCount').innerText = `${answeredCount}/${total}`;
+            document.getElementById('scoreBadge').innerText = `🎯 Score: ${correctCount}/${total}`;
+            document.getElementById('bottomStatus').innerText = `Answered ${answeredCount}/${total} questions. Current score: ${correctCount} points.`;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modePractice').classList.toggle('active', mode === 'practice');
+            document.getElementById('modeExam').classList.toggle('active', mode === 'exam');
+            renderQuestions();
+        }
+
+        function setFilter(filterType, element) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            if (element) element.classList.add('active');
+            renderQuestions();
+        }
+
+        function filterOnlyMissed() {
+            closeResultsModal();
+            setMode('practice');
+            const incTab = document.querySelectorAll('.filter-tab')[2];
+            setFilter('incorrect', incTab);
+        }
+
+        function showResultsModal() {
+            const total = questions.length;
+            let correct = 0;
+            let answered = 0;
+
+            for (const [idx, ans] of Object.entries(userAnswers)) {
+                answered++;
+                if (questions[idx] && ans === questions[idx].correctAnswer) {
+                    correct++;
+                }
+            }
+
+            const wrong = answered - correct;
+            const unanswered = total - answered;
+            const scorePercent = Math.round((correct / total) * 100);
+
+            document.getElementById('statCorrect').innerText = correct;
+            document.getElementById('statWrong').innerText = wrong;
+            document.getElementById('statUnanswered').innerText = unanswered;
+
+            document.getElementById('modalScoreText').innerText = `${scorePercent}%`;
+            document.getElementById('modalScoreCircle').style.setProperty('--percent', scorePercent);
+
+            let headline = "Good Effort!";
+            let subheadline = "Keep drilling down on tricky normalization and joins to secure an A+ grade in CDAC CCME.";
+
+            if (scorePercent >= 85) {
+                headline = "🌟 CDAC Exam Topper Grade!";
+                subheadline = "Outstanding! You demonstrate exceptional mastery of Database Technologies concepts.";
+            } else if (scorePercent >= 70) {
+                headline = "👍 Strong CCME Foundation!";
+                subheadline = "Well done! Review the missed questions below to solidify your full score.";
+            }
+
+            document.getElementById('modalHeadline').innerText = headline;
+            document.getElementById('modalSubheadline').innerText = subheadline;
+
+            document.getElementById('resultsModal').classList.add('show');
+        }
+
+        function closeResultsModal() {
+            document.getElementById('resultsModal').classList.remove('show');
+        }
+
+        function resetAll() {
+            if (confirm("Are you sure you want to reset all answers and progress for this quiz?")) {
+                userAnswers = {};
+                flagged = {};
+                secondsElapsed = 0;
+                localStorage.removeItem(STORAGE_KEY);
+                renderQuestions();
+            }
+        }
+
+        // Startup
+        loadSavedState();
+        startTimer();
+        renderQuestions();
+    </script>
+</body>
+</html>

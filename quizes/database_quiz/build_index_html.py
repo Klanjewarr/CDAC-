@@ -473,9 +473,9 @@ html_content = """<!DOCTYPE html>
                 </div>
             </div>
             <div class="header-stats">
-                <div class="stat-pill">📚 147 Questions</div>
-                <div class="stat-pill high-yield">⭐ 108 High-Yield</div>
-                <div class="stat-pill">🎯 6 Modules</div>
+                <div class="stat-pill">📚 182 Questions</div>
+                <div class="stat-pill high-yield">⭐ 141 High-Yield</div>
+                <div class="stat-pill">🎯 7 Modules</div>
             </div>
         </div>
     </header>
@@ -489,14 +489,14 @@ html_content = """<!DOCTYPE html>
                 <span class="hero-tag">🔥 Maximum Score Strategy (80/20 Rule)</span>
                 <h2 class="hero-title">High-Yield CDAC CCME Exam Booster</h2>
                 <p class="hero-desc">
-                    Targeted study quiz containing the 108 highest-frequency, trap-heavy questions. Covers DDL vs DML, NULL traps, BCNF vs 3NF invariants, Window functions (RANK vs DENSE_RANK), PL/SQL cursors, and MongoDB aggregation pipelines.
+                    Targeted study quiz containing the 141 highest-frequency, trap-heavy questions from official question banks. Covers Codd's Rules, Storage Engines (InnoDB vs MyISAM), MySQL CLI tools, DDL vs DML, NULL traps, BCNF vs 3NF invariants, Window functions, PL/SQL cursors, and MongoDB aggregation pipelines.
                 </p>
                 <div class="hero-actions">
                     <a href="Quiz_High_Yield_CDAC_Booster.html" class="btn btn-gold">
-                        🚀 Launch High-Yield Booster (108 Qs)
+                        🚀 Launch High-Yield Booster (141 Qs)
                     </a>
-                    <a href="Quiz_Master_CDAC_147_Exam_Simulator.html" class="btn btn-white">
-                        ⏱️ Full 147 Mock Simulator
+                    <a href="Quiz_Master_CDAC_182_Exam_Simulator.html" class="btn btn-white">
+                        ⏱️ Full 182 Mock Simulator
                     </a>
                 </div>
             </div>
@@ -593,10 +593,10 @@ html_content = """<!DOCTYPE html>
             </div>
 
             <!-- Card 6 -->
-            <div class="quiz-card highlight">
+            <div class="quiz-card">
                 <div class="card-top">
                     <div class="card-meta">
-                        <span class="card-tag gold">Section F - CCME Paper</span>
+                        <span class="card-tag">Section F - CCME Paper</span>
                         <span class="card-count">7 Questions</span>
                     </div>
                     <h3 class="card-title">Part 6: DBT Exam Question Paper Review</h3>
@@ -604,7 +604,23 @@ html_content = """<!DOCTYPE html>
                 </div>
                 <div class="card-footer">
                     <span class="card-features">Q141 – Q147</span>
-                    <a href="Quiz_Full_Part_6_DBT_Paper_Drill.html" class="btn-card gold">Practice Drill →</a>
+                    <a href="Quiz_Full_Part_6_DBT_Paper_Drill.html" class="btn-card">Practice Drill →</a>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="quiz-card highlight">
+                <div class="card-top">
+                    <div class="card-meta">
+                        <span class="card-tag gold">Section G - Sunbeam Bank</span>
+                        <span class="card-count">35 Questions</span>
+                    </div>
+                    <h3 class="card-title">Part 7: Codd's Rules, Engines, CLI & NoSQL</h3>
+                    <p class="card-desc">Curated from 670 MCQ Bank: Codd's 12 Rules, InnoDB vs MyISAM vs MEMORY, mysqldump, Triggers (:NEW/:OLD), Handlers, CAP Theorem, and BSON.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-features">Q148 – Q182</span>
+                    <a href="Quiz_Full_Part_7_Codd_StorageEngines_Utilities_NoSQL_Drill.html" class="btn-card gold">Practice Drill →</a>
                 </div>
             </div>
 
@@ -760,6 +776,52 @@ html_content = """<!DOCTYPE html>
                                 <td>Unnest Array</td>
                                 <td><code>$unwind</code> stage</td>
                                 <td>Deconstructs array into separate documents</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Cheat Box 5: Storage Engines & Codd Invariants -->
+                <div class="cheat-box">
+                    <h4 class="cheat-box-title">⚙️ 5. MySQL Storage Engines & Codd Rules</h4>
+                    <table class="cheat-table">
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Core Behavior</th>
+                                <th>Exam Key</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>InnoDB</strong></td>
+                                <td>ACID transactions, Foreign Keys, Row-level lock</td>
+                                <td>MySQL Default engine since v5.5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MyISAM</strong></td>
+                                <td>Table-level lock, No ACID, No Foreign Keys</td>
+                                <td>Fast for static/read-mostly tables</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MEMORY</strong></td>
+                                <td>In-RAM temporary storage; lost on server restart</td>
+                                <td>Ultra-fast lookup cache</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ARCHIVE</strong></td>
+                                <td>Compressed storage, INSERT + SELECT only</td>
+                                <td>Audit/logging (no UPDATE/DELETE)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Codd Rule 2</strong></td>
+                                <td>Guaranteed Access: (Table + PK + Column)</td>
+                                <td>No pointer arithmetic allowed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Codd Rule 8 & 9</strong></td>
+                                <td>Rule 8 = Physical Independence, Rule 9 = Logical</td>
+                                <td>Disk layout vs view schema isolation</td>
                             </tr>
                         </tbody>
                     </table>
